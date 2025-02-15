@@ -64,11 +64,8 @@ Coworkers can search for workspaces based on:
 #### 🔹 Contacting Owners
 - Coworkers can access the **contact information** of a workspace’s owner.
 
----
-
-### 📌 Future Enhancements (Optional)
-- **Booking & Reservations**: Allow coworkers to book workspaces directly within the platform.
-- **Payment Integration**: Implement a secure payment system for renting workspaces.
-- **User Reviews & Ratings**: Enable users to review and rate workspaces.
-
 🚀 *Stay tuned for updates!*
+
+### 🍽️ Project Launch
+This project is cooking and ready to serve in April! 🚀
+
