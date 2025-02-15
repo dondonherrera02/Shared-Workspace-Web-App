@@ -64,8 +64,8 @@ Coworkers can search for workspaces based on:
 #### 🔹 Contacting Owners
 - Coworkers can access the **contact information** of a workspace’s owner.
 
-🚀 *Stay tuned for updates!*
-
 ### 🍽️ Project Launch
 This project is cooking and ready to serve in April! 🚀
+
+🚀 *Stay tuned for updates!*
 
