@@ -1,0 +1,39 @@
+:root {
+    --primary-color: #244D4D;
+    --secondary-color: #FF6601;
+    --dark-color: #193B3F;
+    --light-color: #357C85;
+}
+
+body {
+    font-family: Poppins, 'Segoe UI', Verdana, Tahoma,  sans-serif;
+    line-height: 1.7;
+}
+
+/* Navbar styles */
+.navbar-brand{
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.navbar-brand:hover,
+.nav-link:hover {
+    color: var(--secondary-color);
+}
+
+.btn-primary{
+    background-color: var(--primary-color);
+    border-radius: 0%;
+    border: none;
+}
+
+.btn-primary:hover{
+    background-color: var(--secondary-color);
+}
