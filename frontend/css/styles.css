@@ -61,6 +61,16 @@ body {
 }
 
 /* Landing Page */
+.landing-page {
+    padding: 8rem 0 4rem;
+    color: white;
+}
+
+.landingpage h1 {
+    font-size: 4.5rem;
+    font-weight: 700;
+}
+
 .lead {
     font-weight: 350;
 }
@@ -85,11 +95,6 @@ body {
 .auth-forms .btn-primary:hover {
     background-color: whitesmoke;
     color:black;
-}
-
-.landing-page h1 {
-    font-size: 4.5rem;
-    font-weight: 700;
 }
 
 .form-control {
