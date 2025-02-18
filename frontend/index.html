@@ -52,6 +52,83 @@
         </div>
     </header>
 
+    <!-- Landing Page -->
+    <section id="home" class="landing-page min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <!-- https://getbootstrap.com/docs/5.3/layout/grid/ -->
+            <div class="row align-items-center">
+                <div class="col-lg-4">
+                    <!-- used to style large headings -->
+                     <!-- https://getbootstrap.com/docs/5.3/content/typography/#global-settings -->
+                    <h1 class="display-2 fw-bold mb-4 primary-custom-color">Uncover Your Ideal Workspace</h1>
+                    <!-- Make the description presentable -->
+                    <!-- https://getbootstrap.com/docs/5.3/content/typography/#lead -->
+                    <p class="lead mb-4 general-custom-color">We Offer Flexible Workspaces Designed for Innovation and Collaboration</p>
+                </div>
+                <!-- to skip 1 column and make it center -->
+                <div class="col-lg-6 offset-lg-1">
+                    <!-- https://getbootstrap.com/docs/5.3/components/card/#about -->
+                     <!-- https://getbootstrap.com/docs/5.3/utilities/shadows/#examples -->
+                     <div class="card shadow p-4 mx-auto custom-card-bg" style="width: 65%;">
+                        <!-- padding-4 -->
+                        <div class="card-body p-4">
+                            <div class="auth-forms">
+
+                                <!-- Sign Up Form -->
+                                <form id="signupForm" class="active-form">
+                                    <h3 class="text-center mb-4">Sign Up</h3>
+                                    <div class="mb-4">
+                                        <input type="text" class="form-control" placeholder="Full Name" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="email" class="form-control" placeholder="Email" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="password" class="form-control" placeholder="Password" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <select class="form-control" id="roleSelect" name="role" required>
+                                            <option value="" disabled selected>Select your role</option>
+                                            <option value="co-worker">Co-worker</option>
+                                            <option value="workspace-owner">Workspace Owner</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                                </form>
+
+                                <!-- Login Form -->
+                                 <!-- https://getbootstrap.com/docs/5.3/utilities/display/#hiding-elements -->
+                                <form id="loginForm" class="d-none">
+                                    <h3 class="text-center mb-4">Login</h3>
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" placeholder="Email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="password" class="form-control" placeholder="Password" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                                </form>
+
+                                <!-- Form Toggle -->
+                                <div class="form-toggle text-center mt-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                       <!-- https://getbootstrap.com/docs/5.3/utilities/colors/ -->
+                                        <small class="text-light-emphasis">
+                                            <span id="toggleText">Already have an account?</span>
+                                        </small>
+                                        <div class="form-check form-switch ms-2">
+                                            <input class="form-check-input" type="checkbox" id="formToggle">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Bootstrap JS -->
      <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

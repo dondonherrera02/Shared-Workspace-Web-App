@@ -1,13 +1,35 @@
 :root {
-    --primary-color: #244D4D;
+    --primary-color: #244d4d;
     --secondary-color: #FF6601;
     --dark-color: #193B3F;
-    --light-color: #357C85;
+    --light-color: rgb(53, 124, 133);
+    --general-color: #58514D;
 }
 
 body {
     font-family: Poppins, 'Segoe UI', Verdana, Tahoma,  sans-serif;
     line-height: 1.7;
+}
+
+/* Generics */
+.primary-custom-color {
+    color: var(--primary-color);
+}
+
+.secondary-custom-color {
+    color: var(--secondary-color);
+}
+
+.dark-custom-color {
+    color: var(--dark-color);
+}
+
+.light-custom-color {
+    color: var(--light-color);
+}
+
+.general-custom-color {
+    color: var(--general-color);
 }
 
 /* Navbar styles */
@@ -36,4 +58,80 @@ body {
 
 .btn-primary:hover{
     background-color: var(--secondary-color);
+}
+
+/* Landing Page */
+.lead {
+    font-weight: 350;
+}
+
+.custom-card-bg {
+    background-color: var(--primary-color);
+    color:white;
+    border-radius: 0%;                        
+    border: none;
+}
+
+.auth-forms {
+    position: relative;
+}
+
+.auth-forms .btn-primary {
+    background-color: var(--secondary-color); 
+    border-radius: 0%;                        
+    border: none;
+}
+
+.auth-forms .btn-primary:hover {
+    background-color: whitesmoke;
+    color:black;
+}
+
+.landing-page h1 {
+    font-size: 4.5rem;
+    font-weight: 700;
+}
+
+.form-control {
+    color:white;
+    border-radius: 0;
+    background-color: var(--dark-color);
+    border: var(--light-color);
+}
+
+.form-control::placeholder{
+    color:white;
+}
+
+.form-control:focus{
+    color: white;
+    background-color: transparent;
+    border-color: var(--light-color);
+    box-shadow:0 0 0 0.25rem rgba(236, 238, 239, 0.25);
+}
+
+#roleSelect {
+    color:white;
+}
+
+#roleSelect option:disabled {
+    color: white; 
+}
+
+#roleSelect:focus {
+    background-color: var(--dark-color);
+}
+
+#toggleText {
+    color:white;
+}
+
+.form-check-input {
+    background-color: white;
+    border-color: white;
+}
+
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
 }
