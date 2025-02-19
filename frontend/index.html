@@ -3,16 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Co-Space</title>
+    <title>Co-Space Web App</title>
 
     <!-- Bootstrap CSS -->
+     <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+     <!-- Font Awesome -->
+    <!-- https://www.bootstrapcdn.com/fontawesome/ -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- local CSS -->
     <link rel="stylesheet" href="./css/styles.css">
 
 </head>
 <body>
+    <!-- Header -->
+     <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
+    <header class="navbar navbar-expand-lg fixed-top bg-white">
+        <div class="container">
+            <!-- pe - padding-right -->
+            <!-- me - margin-right -->
+            <!-- https://getbootstrap.com/docs/5.3/utilities/spacing/ -->
+            <a class="navbar-brand pe-5 me-5" href="#">Co-Space</a>
+            <!-- Hamburger icon -->
+            <!-- https://getbootstrap.com/docs/5.0/components/navbar/#toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cospace-menu">
+                <!-- hamburger menu icon -->
+                <span class="navbar-toggler-icon"></span> 
+            </button>
+            <div class="collapse navbar-collapse" id="cospace-menu">
+                <ul class="navbar-nav">
+                    <li class="nav-item pe-3">
+                        <a href="#home" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item pe-3">
+                        <a href="#about-us" class="nav-link">About Us</a>
+                    </li>
+                    <li class="nav-item pe-3">
+                        <a href="#workspace" class="nav-link">Workspace</a>
+                    </li>
+                    <li class="nav-item pe-3">
+                        <a href="#testimonials" class="nav-link">Testimonial</a>
+                    </li>
+                </ul>
+                <a href="#footer" class="btn btn-primary ms-auto">Contact Us</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Landing Page -->
+    <section id="home" class="landing-page min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <!-- https://getbootstrap.com/docs/5.3/layout/grid/ -->
+            <div class="row align-items-center">
+                <div class="col-lg-5">
+                    <!-- used to style large headings -->
+                     <!-- https://getbootstrap.com/docs/5.3/content/typography/#global-settings -->
+                    <h1 class="display-2 fw-bold mb-4 primary-custom-color">Uncover Your Ideal Workspace</h1>
+                    <!-- Make the description presentable -->
+                    <!-- https://getbootstrap.com/docs/5.3/content/typography/#lead -->
+                    <p class="lead mb-4 general-custom-color">We Offer Flexible Workspaces Designed for Innovation and Collaboration</p>
+                </div>
+                <!-- to skip 1 column and make it center -->
+                <div class="col-lg-6 offset-lg-1">
+                    <!-- https://getbootstrap.com/docs/5.3/components/card/#about -->
+                     <!-- https://getbootstrap.com/docs/5.3/utilities/shadows/#examples -->
+                     <div class="card shadow p-4 mx-auto custom-card-bg" style="width: 65%; height: 480px;">
+                        <!-- padding-4 -->
+                        <div class="card-body p-4 d-flex align-items-center justify-content-center">
+                            <div class="auth-forms" style="width: 100%;">
+
+                                <!-- Sign Up Form -->
+                                <form id="signupForm" class="active-form">
+                                    <h3 class="text-center mb-4">Sign Up</h3>
+                                    <div class="mb-4">
+                                        <input type="text" class="form-control" placeholder="Full Name" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="email" class="form-control" placeholder="Email" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="password" class="form-control" placeholder="Password" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <select class="form-control" id="roleSelect" name="role" required>
+                                            <option value="" disabled selected>Select your role</option>
+                                            <option value="co-worker">Co-worker</option>
+                                            <option value="workspace-owner">Workspace Owner</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                                </form>
+
+                                <!-- Login Form -->
+                                 <!-- https://getbootstrap.com/docs/5.3/utilities/display/#hiding-elements -->
+                                <form id="loginForm" class="d-none">
+                                    <h3 class="text-center mb-4">Login</h3>
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" placeholder="Email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="password" class="form-control" placeholder="Password" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                                </form>
+
+                                <!-- Form Toggle -->
+                                <div class="form-toggle text-center mt-3">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                       <!-- https://getbootstrap.com/docs/5.3/utilities/colors/ -->
+                                        <small class="text-light-emphasis">
+                                            <span id="toggleText">Already have an account?</span>
+                                        </small>
+                                        <div class="form-check form-switch ms-2">
+                                            <input class="form-check-input" type="checkbox" id="formToggle">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+     <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <!-- Main JS -->
     <script src="./js/main.js"></script>
 </body>
