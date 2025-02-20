@@ -13,8 +13,18 @@
     <!-- https://www.bootstrapcdn.com/fontawesome/ -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+    <!-- Include AlertifyJS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+
+    <!-- Include AlertifyJS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
     <!-- local CSS -->
     <link rel="stylesheet" href="./css/styles.css">
+
+    <!-- JQuery -->
+     <script src="./js/jquery-3.7.1.min.js"></script>
 
 </head>
 <body>
@@ -78,16 +88,16 @@
                                 <form id="signupForm" class="active-form">
                                     <h3 class="text-center mb-4">Sign Up</h3>
                                     <div class="mb-4">
-                                        <input type="text" class="form-control" placeholder="Full Name" required>
+                                        <input type="text" class="form-control" placeholder="Full Name" id="fullname" required>
                                     </div>
                                     <div class="mb-4">
-                                        <input type="email" class="form-control" placeholder="Email" required>
+                                        <input type="email" class="form-control" placeholder="Email" id="email" required>
                                     </div>
                                     <div class="mb-4">
-                                        <input type="password" class="form-control" placeholder="Password" required>
+                                        <input type="password" class="form-control" placeholder="Password" id="password" required>
                                     </div>
                                     <div class="mb-4">
-                                        <select class="form-control" id="roleSelect" name="role" required>
+                                        <select class="form-control" id="role" name="role" required>
                                             <option value="" disabled selected>Select your role</option>
                                             <option value="co-worker">Co-worker</option>
                                             <option value="workspace-owner">Workspace Owner</option>
@@ -129,11 +139,48 @@
         </div>
     </section>
 
+    <!-- Footer -->
+    <!-- py - vertical padding, top and bottom -->
+    <footer id="footer" class="footer py-5 dark-custom-bg-color text-white">
+        <div class="container">
+            <!-- g-4 spacing gutters -->
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5>Co-Space</h5>
+                    <p>Your space, your focus, your time.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Bootstrap JS -->
      <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <!-- Main JS -->
+    <!-- JS -->
     <script src="./js/main.js"></script>
+
+    <!-- Alertify JS -->
+    <script src="./js/alertify.js"></script>
+
+    <!-- Mock Auth Web Service -->
+    <script src="../backend/mockservices/mock-auth-manager.js"></script>
 </body>
 </html>
