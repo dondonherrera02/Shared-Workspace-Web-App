@@ -9,11 +9,14 @@
 // https://openjavascript.info/2022/06/29/save-data-to-the-browser-with-localstorage-and-sessionstorage/
 
 class UserRepositoryService {
+    // instance properties - shared values across all instances
+    usersObjectName = 'users';
+    userIdKey = 'co-space-';
 
-    // POST user to local storage
+    // POST save to local storage
     saveUser(userData){
         // get users
-        const userList =  this.getUsers(); // JSON Parsed Array
+        const userList =  helperUtilService.getList(this.usersObjectName); // JSON Parsed Array
         
         // find existing account
         const existingUser = userList.find(user => user.email.toLowerCase() === userData.email.toLowerCase());
@@ -25,38 +28,17 @@ class UserRepositoryService {
 
         // set user identifier
         // ref:https://rahmanfadhil.com/javascript-unique-id/
-        userData.id = `co-space-${Date.now().toString()}`;
+        userData.id = `${this.userIdKey}${Date.now().toString()}`;
         
         // add into array
         userList.push(userData);
 
         // save to local storage
-        this.saveToLocalStorage('users', userList);
+        helperUtilService.saveToLocalStorage(this.usersObjectName, userList);
         
         return userData;
     }
-
-
-    // GET users from local storage
-    getUsers(){
-        try {
-            // return users or an empty array
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            return users;
-        } catch (error) {
-            console.error('GET: Error JSON parse: ', error);
-            return[];
-        }
-    }
-
-
-     // Helper methods
-     saveToLocalStorage(objectName, data) {
-        localStorage.setItem(objectName, JSON.stringify(data));
-    }
 }
-
-  
 
 // export the service (if using modules) or instantiate directly
 const userRepository = new UserRepositoryService();
