@@ -18,7 +18,7 @@ function signUp(){
             
             // store the inputs in an array
             const userData = {
-                fullname: $('#fullname').val().trim(),
+                fullname: formatFullName($('#fullname').val().trim()),
                 email: $('#email').val().trim(),
                 password: $('#password').val().trim(),
                 role: $('#role').val().trim()
@@ -27,7 +27,10 @@ function signUp(){
             // validate user input data
             validateUserData(userData);
 
-            alertifyService.success('success!');
+            // save user
+            userRepository.saveUser(userData);
+
+            alertifyService.success(`Welcome to Co-Space, ${userData.fullname}!`);
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -79,4 +82,11 @@ function validateUserData(userData) {
     if(!['co-worker', 'workspace-owner'].includes(userData.role)) {
         throw new Error('Invalid role')
     }
+}
+
+function formatFullName(string) {
+    return string
+        .split(' ') // Split the string into words
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase the rest
+        .join(''); // Join the words back together without spaces
 }
