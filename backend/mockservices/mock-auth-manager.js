@@ -7,6 +7,7 @@
 
 $(document).ready(function() {
     signUp();
+    login();
 });
 
 // Functions
@@ -33,14 +34,39 @@ function signUp(){
             // login after sign up
             authRepository.login(userData.email, userData.password);
 
-            // redirect to dashboard by setting the windows location.
-            if (userData.role ==='workspace-owner') {
-                window.location.href = 'pages/owner-dashboard.html'
-            }else{
-                 window.location.href = 'pages/notfound.html'
-            }
+            // redirect to page-role
+            helperUtilService.redirectPage(userData.role);
 
             alertifyService.success(`Welcome to Co-Space, ${userData.fullname}!`);
+
+        } catch (error) {
+            alertifyService.error(error.message);
+        }
+    });
+}
+
+function login(){
+    $("#loginForm").on('submit', function(event) {
+        event.preventDefault(); // prevents form from submitting
+
+        try {
+            
+            const email = $('#login-email').val().trim();
+            const password = $('#login-password').val();
+
+            // Validate inputs
+            if (!email || !password) {
+                throw new Error('Please fill in all required fields');
+            }
+
+            // login
+            const currentUser = authRepository.login(email, password);
+
+            // redirect to page-role
+            helperUtilService.redirectPage(currentUser.role);
+
+            // success message
+            alertifyService.success(`Welcome back to Co-Space, ${currentUser.fullname}!`);
 
         } catch (error) {
             alertifyService.error(error.message);

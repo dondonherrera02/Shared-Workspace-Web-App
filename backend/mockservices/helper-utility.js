@@ -85,12 +85,22 @@ class HelperUtilService {
         }
     }
     
-    // Format name to Pascal Case
-    formatFullName(string) {
-        return string
-            .split(' ') // Split the string into words
+    // FORMAT name to Pascal Case
+    formatFullName(name) {
+        return name
+            .split(' ') // Split the name into words
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase the rest
             .join(''); // Join the words back together without spaces
+    }
+
+    // REDIRECT page
+    redirectPage(userRole) {
+        // redirect to dashboard by setting the windows location.
+        if (userRole ==='workspace-owner') {
+            window.location.href = 'pages/owner-dashboard.html'
+        } else {
+             window.location.href = 'pages/notfound.html'
+        }
     }
 }
 
