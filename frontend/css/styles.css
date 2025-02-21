@@ -24,6 +24,10 @@ body {
     color: var(--dark-color);
 }
 
+.dark-custom-bg-color {
+    background-color: var(--dark-color);
+}
+
 .light-custom-color {
     color: var(--light-color);
 }
@@ -31,6 +35,12 @@ body {
 .general-custom-color {
     color: var(--general-color);
 }
+
+.error-message{
+    color: red;
+    margin-bottom: 1rem;
+}
+
 
 /* Navbar styles */
 .navbar-brand{
@@ -115,15 +125,15 @@ body {
     box-shadow:0 0 0 0.25rem rgba(236, 238, 239, 0.25);
 }
 
-#roleSelect {
+#role {
     color:white;
 }
 
-#roleSelect option:disabled {
+#role option:disabled {
     color: white; 
 }
 
-#roleSelect:focus {
+#role:focus {
     background-color: var(--dark-color);
 }
 
