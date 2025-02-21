@@ -13,6 +13,9 @@
      
      <!-- Local CSS -->
      <link rel="stylesheet" href="../css/owner.css">
+
+     <!-- JQuery -->
+     <script src="/frontend/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
     <div class="d-flex">
@@ -24,11 +27,11 @@
                     <img src="../assets/img/user.png">
                 </div>
                 <div class="profile-usertitle">
-                    <div class="profile-usertitle-name">Dondon Herrera</div>
-                    <div class="profile-usertitle-position mt-1">Co-Space Owner</div>
+                    <div class="profile-usertitle-name" id="profile-usertitle-name"></div>
+                    <div class="profile-usertitle-position mt-1" id="profile-usertitle-position"></div>
                 </div>
                 <div class="profile-user-button">
-                    <button class="btn btn-danger btn-sm mt-3">Logout</button>
+                    <button class="btn btn-danger btn-sm mt-3" id="btnLogout">Logout</button>
                 </div>
             </div>
             <div class="profile-usermenu mt-3">
@@ -55,5 +58,16 @@
     
     <!-- Local JS -->
     <script src="../js/owner.js"></script>
+
+     <!-- Managers -->
+     <script src="/backend/mockservices/mock-auth-manager.js"></script>
+     <script src="/backend/mockservices/mock-user-manager.js"></script>
+
+     <!-- Repositories -->
+     <script src="/backend/mockservices/mock-user-repository.js"></script>
+     <script src="/backend/mockservices/mock-auth-repository.js"></script>
+ 
+     <!-- Helpers -->
+     <script src="/backend/mockservices/helper-utility.js"></script>
 </body>
 </html>

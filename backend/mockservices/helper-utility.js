@@ -8,6 +8,10 @@
 // Generic function
 class HelperUtilService {
 
+    // global variables
+    workspaceOwnerRole = 'workspace-owner';
+    coWorkerRole = 'co-worker';
+
      // POST to local storage
      saveToLocalStorage(objectName, data) {
         localStorage.setItem(objectName, JSON.stringify(data));
@@ -80,27 +84,34 @@ class HelperUtilService {
     
         // role validation
         // https://www.w3schools.com/Jsref/jsref_includes.asp
-        if(!['co-worker', 'workspace-owner'].includes(userData.role)) {
+        if(![this.coWorkerRole, this.workspaceOwnerRole].includes(userData.role)) {
             throw new Error('Invalid role')
         }
     }
     
     // FORMAT name to Pascal Case
-    formatFullName(name) {
+    formatTitle(name) {
         return name
             .split(' ') // Split the name into words
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase the rest
-            .join(''); // Join the words back together without spaces
+            .join(' '); // Join the words back together without spaces
     }
 
     // REDIRECT page
     redirectPage(userRole) {
-        // redirect to dashboard by setting the windows location.
-        if (userRole ==='workspace-owner') {
-            window.location.href = 'pages/owner-dashboard.html'
-        } else {
-             window.location.href = 'pages/notfound.html'
+        const baseUrl = '/frontend/pages/';
+
+        // define the routes
+        const routes = {
+            'workspace-owner': 'owner-dashboard.html',
+            'default': 'notfound.html' // fallback route for unrecognized roles
         }
+
+        // choose the correct route based on userRole
+        const targetPage = routes[userRole] || routes['default'];
+
+        // redirect to the target page using window.location.assign
+        window.location.assign(baseUrl + targetPage)
     }
 }
 

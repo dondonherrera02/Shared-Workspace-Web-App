@@ -33,7 +33,7 @@ class AuthRepositoryService {
     }
 
     logout() {
-        const currentUser = helperUtilService.getOne(this.currentUserObjectName);
+        let currentUser = helperUtilService.getOne(this.currentUserObjectName);
         currentUser = null;
         helperUtilService.deleteOne(this.currentUserObjectName);
     }

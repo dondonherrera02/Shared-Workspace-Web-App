@@ -8,6 +8,7 @@
 $(document).ready(function() {
     signUp();
     login();
+    logout();
 });
 
 // Functions
@@ -19,7 +20,7 @@ function signUp(){
             
             // store the inputs in an array
             const userData = {
-                fullname: helperUtilService.formatFullName($('#fullname').val().trim()),
+                fullname: $('#fullname').val().trim(),
                 email: $('#email').val().trim(),
                 password: $('#password').val().trim(),
                 role: $('#role').val().trim()
@@ -72,4 +73,17 @@ function login(){
             alertifyService.error(error.message);
         }
     });
+}
+
+function logout(){
+    const currentUser = helperUtilService.getOne('currentUser');
+
+    if(currentUser) {
+        $("#btnLogout").on('click', function(event) {
+            event.preventDefault();
+
+            authRepository.logout();
+            window.location.assign('/frontend/index.html');
+        });
+    }
 }
