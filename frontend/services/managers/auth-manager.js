@@ -1,5 +1,5 @@
 /**
-* @name: Co-Space Web App - Mock Auth Manager - Business Logic Layer
+* @name: Co-Space Web App - Auth Manager - Business Logic Layer
 * @Course Code: SODV1201
 * @class: Software Development Diploma program.
 * @author: Dondon Herrera
@@ -27,7 +27,7 @@ function signUp(){
             };
             
             // validate user input data
-            helperUtilService.validateUserData(userData);
+            commonHelperService.validateUserData(userData);
 
             // save user
             userRepository.saveUser(userData);
@@ -36,9 +36,7 @@ function signUp(){
             authRepository.login(userData.email, userData.password);
 
             // redirect to page-role
-            helperUtilService.redirectPage(userData.role);
-
-            alertifyService.success(`Welcome to Co-Space, ${userData.fullname}!`);
+            routerService.redirectPage(userData);
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -64,10 +62,7 @@ function login(){
             const currentUser = authRepository.login(email, password);
 
             // redirect to page-role
-            helperUtilService.redirectPage(currentUser.role);
-
-            // success message
-            alertifyService.success(`Welcome back to Co-Space, ${currentUser.fullname}!`);
+            routerService.redirectPage(currentUser);
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -76,14 +71,14 @@ function login(){
 }
 
 function logout(){
-    const currentUser = helperUtilService.getOne('currentUser');
+    const currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
 
     if(currentUser) {
         $("#btnLogout").on('click', function(event) {
             event.preventDefault();
 
             authRepository.logout();
-            window.location.assign('/frontend/index.html');
+            routerService.redirectIndex();
         });
     }
 }

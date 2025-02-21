@@ -9,14 +9,11 @@
 // https://openjavascript.info/2022/06/29/save-data-to-the-browser-with-localstorage-and-sessionstorage/
 
 class UserRepositoryService {
-    // instance properties - shared values across all instances
-    usersObjectName = 'users';
-    userIdKey = 'co-space-';
 
-    // POST save to local storage
+    // save to local storage
     saveUser(userData){
         // get users
-        const userList =  helperUtilService.getList(this.usersObjectName); // JSON Parsed Array
+        const userList =  databaseHelperService.getList(enumService.usersObjectName); // JSON Parsed Array
         
         // find existing account
         const existingUser = userList.find(user => user.email.toLowerCase() === userData.email.toLowerCase());
@@ -28,13 +25,13 @@ class UserRepositoryService {
 
         // set user identifier
         // ref:https://rahmanfadhil.com/javascript-unique-id/
-        userData.id = `${this.userIdKey}${Date.now().toString()}`;
+        userData.id = `${enumService.userIdKey}${Date.now().toString()}`;
         
         // add into array
         userList.push(userData);
 
         // save to local storage
-        helperUtilService.saveToLocalStorage(this.usersObjectName, userList);
+        databaseHelperService.saveToLocalStorage(enumService.usersObjectName, userList);
         
         return userData;
     }
