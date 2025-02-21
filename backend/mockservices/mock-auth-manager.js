@@ -36,9 +36,7 @@ function signUp(){
             authRepository.login(userData.email, userData.password);
 
             // redirect to page-role
-            helperUtilService.redirectPage(userData.role);
-
-            alertifyService.success(`Welcome to Co-Space, ${userData.fullname}!`);
+            helperUtilService.redirectPage(userData);
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -64,10 +62,7 @@ function login(){
             const currentUser = authRepository.login(email, password);
 
             // redirect to page-role
-            helperUtilService.redirectPage(currentUser.role);
-
-            // success message
-            alertifyService.success(`Welcome back to Co-Space, ${currentUser.fullname}!`);
+            helperUtilService.redirectPage(currentUser);
 
         } catch (error) {
             alertifyService.error(error.message);

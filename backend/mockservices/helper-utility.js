@@ -98,7 +98,7 @@ class HelperUtilService {
     }
 
     // REDIRECT page
-    redirectPage(userRole) {
+    redirectPage(userData) {
         const baseUrl = '/frontend/pages/';
 
         // define the routes
@@ -108,10 +108,10 @@ class HelperUtilService {
         }
 
         // choose the correct route based on userRole
-        const targetPage = routes[userRole] || routes['default'];
+        const targetPage = routes[userData.role] || routes['default'];
 
         // redirect to the target page using window.location.assign
-        window.location.assign(baseUrl + targetPage)
+        window.location.assign(baseUrl + targetPage);       
     }
 }
 
