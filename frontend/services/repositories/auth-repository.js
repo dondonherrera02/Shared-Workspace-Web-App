@@ -7,13 +7,10 @@
 
 class AuthRepositoryService {
 
-    // instance properties - shared values across all instances
-    currentUserObjectName = 'currentUser';
-    usersObjectName = 'users';
-
     login(email, password){
+        
         // get all registered users
-        const userList = helperUtilService.getList(this.usersObjectName); // JSON Parsed Array
+        const userList = databaseHelperService.getList(enumService.usersObjectName); // JSON Parsed Array
         
         // get the credentials
         const requestor = userList.find(user => user.email === email && user.password === password);
@@ -21,11 +18,11 @@ class AuthRepositoryService {
         // validate if the user is registered
         if(requestor){
             // get and set current user
-            let currentUser = helperUtilService.getOne(this.currentUserObjectName);
+            let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
             currentUser = requestor;
             
             // update the current user
-            helperUtilService.saveToLocalStorage(this.currentUserObjectName, currentUser);
+            databaseHelperService.saveToLocalStorage(enumService.currentUserObjectName, currentUser);
             return currentUser;
         }
 
@@ -33,9 +30,9 @@ class AuthRepositoryService {
     }
 
     logout() {
-        let currentUser = helperUtilService.getOne(this.currentUserObjectName);
+        let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
         currentUser = null;
-        helperUtilService.deleteOne(this.currentUserObjectName);
+        databaseHelperService.deleteOne(enumService.currentUserObjectName);
     }
 }
 

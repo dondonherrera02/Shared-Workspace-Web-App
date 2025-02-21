@@ -11,9 +11,9 @@ $(document).ready(function() {
 
 // Functions
 function getProfile(){
-    const currentUser = helperUtilService.getOne('currentUser');
-    const formattedName = helperUtilService.formatTitle(currentUser.fullname);
-    const formattedRole = currentUser.role === helperUtilService.coWorkerRole ? 'Co-Space Worker' : 'Co-Space Owner';
+    const currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+    const formattedName = commonHelperService.formatTitle(currentUser.fullname);
+    const formattedRole = currentUser.role === enumService.coWorkerRole ? 'Co-Space Worker' : 'Co-Space Owner';
 
     $('#profile-usertitle-name').text(formattedName);
     $('#profile-usertitle-position').text(formattedRole);
