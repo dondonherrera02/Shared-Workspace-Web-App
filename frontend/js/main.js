@@ -5,29 +5,26 @@
 * @author: Dondon Herrera
 */
 
-// Landing Page - Sign up and Login Switching
-const signupForm = document.getElementById('signupForm');
-const loginForm = document.getElementById('loginForm');
-const toggleSwitch = document.getElementById('formToggle');
-const toggleText = document.getElementById('toggleText');
-
-toggleSwitch.addEventListener('change', function() {
-    if (this.checked) {
-        // hide sign-up form
-        signupForm.classList.remove('active-form');
-        signupForm.classList.add('d-none');
-        // show login form
-        loginForm.classList.remove('d-none');
-        loginForm.classList.add('active-form');
-        toggleText.textContent = 'Need an account?';
-    } else {
-        // hide login form
-        loginForm.classList.remove('active-form');
-        loginForm.classList.add('d-none');
-
-        // show sign-up form
-        signupForm.classList.remove('d-none');
-        signupForm.classList.add('active-form');
-        toggleText.textContent = 'Already have an account?';
-    }
+$(document).ready(function() {
+    toggleSwitchAuthForm();
 });
+
+// Toggle the switch behavior in the Auth form by adding and removing the CSS class.
+function toggleSwitchAuthForm(){
+    const $signupForm = $('#signupForm');
+    const $loginForm = $('#loginForm');
+    const $toggleSwitch = $('#formToggle');
+    const $toggleText = $('toggleText');
+
+    $toggleSwitch.on('change', function() {
+        if(this.checked){
+            $signupForm.removeClass('active-form').addClass('d-none');
+            $loginForm.removeClass('d-none').addClass('active-form');
+            $toggleText.text('Need an account?');
+        }else{
+            $signupForm.removeClass('d-none').addClass('active-form');
+            $loginForm.removeClass('active-form').addClass('d-none');
+            $toggleText.text('Already have an account?');
+        }
+    });
+}

@@ -1,0 +1,16 @@
+ 
+// common helper
+workspaceOwnerRole = 'workspace-owner';
+coWorkerRole = 'co-worker';
+
+// router
+'workspace-owner': 'owner-dashboard.html',
+'co-owner': 'owner-dashboard.html',
+'default': 'notfound.html'
+
+// user identifier pre-key
+userIdKey = 'co-space-';
+
+// object names
+currentUserObjectName = 'currentUser';
+usersObjectName = 'users';
