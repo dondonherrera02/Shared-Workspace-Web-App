@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #244d4d;
+    --primary-color: rgb(36, 77, 77);
     --secondary-color: #FF6601;
     --dark-color: #193B3F;
     --light-color: rgb(53, 124, 133);
@@ -16,6 +16,9 @@ body {
 .profile-sidebar {
     width: 280px;
     min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
     background-color: var(--primary-color);
 }
 
@@ -46,6 +49,14 @@ body {
     align-items: center;
 }
 
+.profile-user-button #btnLogout{
+    color: white;
+}
+
+#btnEdit {
+    background-color: var(--general-color);
+}
+
 .profile-usermenu .nav-item .nav-link {
     color: white;
     padding: 0.75rem 1.5rem;
@@ -58,3 +69,101 @@ body {
 .nav-link.active {
     background-color: var(--dark-color);
 }
+
+.btn-xs {
+    padding: 0.25rem 0.5rem; 
+    font-size: 0.75rem;     
+    line-height: 1.25;        
+    border-radius: 0.2rem;
+  }
+
+/* Properties Main */
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    padding: 8px 10px;
+    font-size: 0.9em;
+    border: 1px solid #dee2e6;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color);
+    border: 1px solid #dee2e6;
+}
+
+.properties-main-content {
+    margin-left: 280px;
+    padding: 30px;
+    min-height: 100vh;
+    background-color: #f5f8fc;
+}
+
+.property-card {
+    color: var(--primary-color);
+    border: 0.1px solid #dde1e6;
+    border-radius: 15px;
+    box-shadow: 0 5px 6px rgba(0,0,0,0.05);
+    padding: 25px;
+    margin-bottom: 3px;
+    background-color: var(--white-color);
+}
+
+.property-state{
+    color: var(--dark-color);
+}
+
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.property-actions i {
+    cursor: pointer;
+    margin-left: 12px;
+    color: var(--dark-color)
+}
+
+.property-actions i:hover {
+    color: var(--secondary-color);
+}
+
+.property-details {
+    font-size: 0.85em;
+}
+
+/* Modals */
+.offcanvas-title {
+    color: var(--primary-color);
+}
+
+.offcanvas-header {
+    border-bottom: .5px solid var(--dark-color);
+    padding: 20px;
+}
+
+.offcanvas-body {
+    padding: 20px;
+}
+
+.offcanvas-footer {
+    text-align: right;
+    border-top: 2px solid #f8f9fa;
+    padding: 20px;
+}
+
+.form-label {
+    color: var(--dark-color);
+    font-size: 1em;
+}
+
+.form-control, .form-select {
+    border-radius: 5px;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 10px 30px rgba(36,77,77,0.1);
+    border-color: var(--primary-color);
+}
+
