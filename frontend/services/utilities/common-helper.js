@@ -16,6 +16,13 @@ class CommonHelperService {
             throw new Error('Fullname must be atleast 3 characters long');
         }
 
+        // phone number validation
+        // https://www.geeksforgeeks.org/how-to-validate-phone-numbers-using-javascript-with-regex/
+        const phoneNumberPattern = /^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$/;
+        if (!phoneNumberPattern.test(userData.phone)) {
+            throw new Error('Invalid phone number');
+        }
+
         // email validation
         // i got this idea from: https://www.geeksforgeeks.org/javascript-program-to-validate-an-email-address/
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
