@@ -8,12 +8,21 @@
 // Generic function
 class CommonHelperService {
 
+    // *********SIGN-UP FORM***********
+
     // USER regisration validation
     validateUserData(userData) {
 
         // full name validation
         if (userData.fullname.length < 5) {
             throw new Error('Fullname must be atleast 3 characters long');
+        }
+
+        // phone number validation
+        // https://www.geeksforgeeks.org/how-to-validate-phone-numbers-using-javascript-with-regex/
+        const phoneNumberPattern = /^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$/;
+        if (!phoneNumberPattern.test(userData.phone)) {
+            throw new Error('Invalid phone number');
         }
 
         // email validation
@@ -46,7 +55,7 @@ class CommonHelperService {
 
         // role validation
         // https://www.w3schools.com/Jsref/jsref_includes.asp
-        if (![enumService.coWorkerRole, enumService.workspaceOwnerRole].includes(userData.role)) {
+        if (![enumService.coWorker, enumService.workspaceOwner].includes(userData.role)) {
             throw new Error('Invalid role')
         }
     }
@@ -57,6 +66,47 @@ class CommonHelperService {
             .split(' ') // Split the name into words
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase the rest
             .join(' '); // Join the words back together without spaces
+    }
+
+    // *********PROPERTY FORM***********
+
+    // SET-UP property form
+    setUpPropertyForm(property = null) {
+        let $propertyForm = $('#propertyForm');
+    
+        if (property) {
+            // Update property set-up
+            $propertyForm.data("property-id", property.id); // set custom metadata in HTML eg. data-property-id
+            $('street').val() = property.street;
+            $('city').val() = property.city;
+            $('state').val() = property.state;
+            $('postalCode').val() = property.postalCode;
+            $('neighborhood').val() = property.neighborhood;
+            $('squareFeet').val() = property.squareFeet;
+            $('parkingGarage').val() = property.parkingGarage;
+            $('transportation').val() = property.transportation;
+    
+        }else {
+            $(propertyForm).trigger("reset"); // reset the form
+            $(propertyForm).removeData("property-id"); // remove stored property id value from cache
+        }
+    }
+
+    // PROPERTY registration validation
+    validatePropertyData(propertyData) {
+        
+        // Check for empty fields
+        for (let key in propertyData) {
+            if (!propertyData[key]) {
+                throw new Error(`${key} is required.`);
+            }
+        }
+
+        // Validate square feet (must be numbers)
+        let sqFeetPattern = /^[0-9]+$/;
+        if (!propertyData.squareFeet.match(sqFeetPattern)) {
+            throw new Error('Square Feet must be a number.');
+        }
     }
 
 

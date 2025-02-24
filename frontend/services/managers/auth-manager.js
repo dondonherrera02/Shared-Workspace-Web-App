@@ -21,6 +21,7 @@ function signUp(){
             // store the inputs in an array
             const userData = {
                 fullname: $('#fullname').val().trim(),
+                phone: $('#phone').val().trim(),
                 email: $('#email').val().trim(),
                 password: $('#password').val().trim(),
                 role: $('#role').val().trim()
@@ -71,7 +72,7 @@ function login(){
 }
 
 function logout(){
-    const currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+    const currentUser = databaseHelperService.getOne(enumService.currentUser);
 
     if(currentUser) {
         $("#btnLogout").on('click', function(event) {

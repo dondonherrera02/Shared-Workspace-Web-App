@@ -6,9 +6,14 @@
 */
 
 class EnumService {
+
+    // customize positon
+    coSpaceOwner = 'Co-Space Owner';
+    coSpaceWorker = 'Co-Space Worker';
+
     // common helper
-    workspaceOwnerRole = 'workspace-owner';
-    coWorkerRole = 'co-worker';
+    workspaceOwner = 'workspace-owner';
+    coWorker = 'co-worker';
 
     // router
     ownerRoute = 'owner-dashboard.html';
@@ -16,11 +21,12 @@ class EnumService {
     defaultRoute = 'notfound.html';
 
     // user identifier pre-key
-    userIdKey = 'co-space-';
+    coSpacePreIdKey = 'co-space-';
 
     // object names
-    currentUserObjectName = 'currentUser';
-    usersObjectName = 'users';
+    currentUser = 'currentUser';
+    users = 'users';
+    properties = 'properties';
 }
 
 // export the service (if using modules) or instantiate directly
