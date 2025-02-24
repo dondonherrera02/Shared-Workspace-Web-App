@@ -10,19 +10,20 @@ class AuthRepositoryService {
     login(email, password){
         
         // get all registered users
-        const userList = databaseHelperService.getList(enumService.usersObjectName); // JSON Parsed Array
+        const userList = databaseHelperService.getList(enumService.users); // JSON Parsed Array
         
-        // get the credentials
+        // get the credentials, find vs. map, find means get the first element based on the condition, map means get list elements..
+        // Reference: https://stackoverflow.com/questions/66992214/find-vs-map-in-javascript
         const requestor = userList.find(user => user.email === email && user.password === password);
 
         // validate if the user is registered
         if(requestor){
             // get and set current user
-            let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+            let currentUser = databaseHelperService.getOne(enumService.currentUser);
             currentUser = requestor;
             
             // update the current user
-            databaseHelperService.saveToLocalStorage(enumService.currentUserObjectName, currentUser);
+            databaseHelperService.saveToLocalStorage(enumService.currentUser, currentUser);
             return currentUser;
         }
 
@@ -30,9 +31,9 @@ class AuthRepositoryService {
     }
 
     logout() {
-        let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+        let currentUser = databaseHelperService.getOne(enumService.currentUser);
         currentUser = null;
-        databaseHelperService.deleteOne(enumService.currentUserObjectName);
+        databaseHelperService.deleteOne(enumService.currentUser);
     }
 }
 

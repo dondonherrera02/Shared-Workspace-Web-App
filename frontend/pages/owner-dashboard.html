@@ -59,7 +59,7 @@
         <!-- Add property  -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 style="color: #244d4d;">Properties</h3>
-            <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#addPropertyModal">
+            <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#addPropertyModal" id="addPropertyBtn">
                 <i class="fas fa-plus me-2"></i>Add Property
             </button>
         </div>
@@ -98,15 +98,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
-            <form>
+            <form id="propertyForm">
                 <div class="mb-3">
                     <label class="form-label">Street:</label>
-                    <input type="text" class="form-control" name="street" placeholder="Street">
+                    <input type="text" class="form-control" name="street" placeholder="Street" id="street">
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label">City:</label>
-                    <select class="form-select" name="city">
+                    <select class="form-select" name="city" id="city">
                         <option selected disabled>Select city</option>
                         <option value="calgary">Calgary</option>
                         <option value="edmonton">Edmonton</option>
@@ -116,7 +116,7 @@
                 
                 <div class="mb-3">
                     <label class="form-label">State:</label>
-                    <select class="form-select" name="state">
+                    <select class="form-select" name="state" id="state">
                         <option selected disabled>Select state</option>
                         <option value="ab">Alberta</option>
                         <option value="bc">British Columbia</option>
@@ -126,22 +126,22 @@
                 
                 <div class="mb-3">
                     <label class="form-label">Postal Code:</label>
-                    <input type="text" class="form-control" name="postalCode" placeholder="Postal Code">
+                    <input type="text" class="form-control" name="postalCode" placeholder="Postal Code" id="postalCode">
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label">Neighborhood:</label>
-                    <input type="text" class="form-control" name="neighborhood" placeholder="Neighborhood">
+                    <input type="text" class="form-control" name="neighborhood" placeholder="Neighborhood" id="neighborhood">
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label">Square Feet:</label>
-                    <input type="number" class="form-control" name="squareFeet" placeholder="Square Feet" min="1" required>
+                    <input type="number" class="form-control" name="squareFeet" placeholder="Square Feet" min="1" id="squareFeet" required>
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label">Parking:</label>
-                    <select class="form-select" name="parkingGarage">
+                    <select class="form-select" name="parkingGarage" id="parkingGarage">
                         <option selected disabled>Select availability</option>
                         <option value="available">Available</option>
                         <option value="not-available">Not Available</option>
@@ -150,7 +150,7 @@
                 
                 <div class="mb-3">
                     <label class="form-label">Transporation:</label>
-                    <select class="form-select" name="transportation">
+                    <select class="form-select" name="transportation" id="transportation">
                         <option selected disabled>Select access</option>
                         <option value="available">Available</option>
                         <option value="not-available">Not Available</option>

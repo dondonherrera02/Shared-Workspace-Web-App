@@ -72,7 +72,7 @@ function login(){
 }
 
 function logout(){
-    const currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+    const currentUser = databaseHelperService.getOne(enumService.currentUser);
 
     if(currentUser) {
         $("#btnLogout").on('click', function(event) {

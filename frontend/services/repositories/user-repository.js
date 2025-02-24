@@ -13,7 +13,7 @@ class UserRepositoryService {
     // save to local storage
     saveUser(userData){
         // get users
-        const userList =  databaseHelperService.getList(enumService.usersObjectName); // JSON Parsed Array
+        const userList =  databaseHelperService.getList(enumService.users); // JSON Parsed Array
         
         // find existing account
         const existingUser = userList.find(user => user.email.toLowerCase() === userData.email.toLowerCase());
@@ -25,13 +25,13 @@ class UserRepositoryService {
 
         // set user identifier
         // ref:https://rahmanfadhil.com/javascript-unique-id/
-        userData.id = `${enumService.userIdKey}${Date.now().toString()}`;
+        userData.id = `${enumService.coSpacePreIdKey}${Date.now().toString()}`;
         
         // add into array
         userList.push(userData);
 
         // save to local storage
-        databaseHelperService.saveToLocalStorage(enumService.usersObjectName, userList);
+        databaseHelperService.saveToLocalStorage(enumService.users, userList);
         
         return userData;
     }
