@@ -25,7 +25,7 @@ class UserRepositoryService {
 
         // set user identifier
         // ref:https://rahmanfadhil.com/javascript-unique-id/
-        userData.id = `${enumService.coSpacePreIdKey}${Date.now().toString()}`;
+        userData.id = `${userData.role}-${Date.now().toString()}`;
         
         // add into array
         userList.push(userData);

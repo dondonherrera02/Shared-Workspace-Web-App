@@ -34,7 +34,7 @@ class PropertyRepositoryService {
         }
 
         // set property identifier
-        propertyData.id = `${enumService.coSpacePreIdKey}${Date.now().toString()}`;
+        propertyData.id = `${enumService.propertyPreIdKey}${Date.now().toString()}`;
 
         // set property owner identifier
         propertyData.ownerId = currentUser.id;
