@@ -37,7 +37,7 @@ class PropertyRepositoryService {
         propertyData.id = `${enumService.coSpacePreIdKey}${Date.now().toString()}`;
 
         // set property owner identifier
-        property.ownerId = currentUser.id;
+        propertyData.ownerId = currentUser.id;
 
         // add into property list
         propertyList.push(propertyData);
