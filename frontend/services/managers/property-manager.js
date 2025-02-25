@@ -1,3 +1,10 @@
+/**
+* @name: Co-Space Web App - Property Manager - Business Logic Layer
+* @Course Code: SODV1201
+* @class: Software Development Diploma program.
+* @author: Dondon Herrera
+*/
+
 $(document).ready(function() {
     addProperty();
     propertyFormSubmitHandler();
