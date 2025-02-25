@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 // Functions
 function getProfile(){
-    const currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+    const currentUser = databaseHelperService.getOne(enumService.currentUser);
     const formattedName = commonHelperService.formatTitle(currentUser.fullname);
     const formattedRole = currentUser.role === enumService.coWorkerRole ? enumService.coSpaceWorker: enumService.coSpaceOwner;
 

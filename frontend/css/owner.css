@@ -86,8 +86,14 @@ body {
     border: 1px solid #dee2e6;
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+.btn-primary:hover {
     background-color: var(--primary-color);
+    border: 1px solid #dee2e6;
+    box-shadow: 0 10px 30px rgba(36,77,77,0.1);
+}
+
+.btn-primary:focus, .btn-primary:active {
+    background-color: var(--secondary-color);
     border: 1px solid #dee2e6;
     box-shadow: 0 10px 30px rgba(36,77,77,0.1);
 }
