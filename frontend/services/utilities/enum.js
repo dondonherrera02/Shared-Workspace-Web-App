@@ -20,8 +20,8 @@ class EnumService {
     workerRoute = 'owner-dashboard.html';
     defaultRoute = 'notfound.html';
 
-    // user identifier pre-key
-    coSpacePreIdKey = 'co-space-';
+    // identifier pre-key
+    propertyPreIdKey = 'property-';
 
     // object names
     currentUser = 'currentUser';
