@@ -109,7 +109,58 @@ class CommonHelperService {
         }
     }
 
+    // display property cards
+    displayPropertyCards() {
 
+        // get property list - html element
+        let $propertyList = $('#propertyList');
+
+        // get properties by current user
+        const propertyList = propertyRepository.getPropertyListByCurrentUser();
+
+        if (propertyList.length === 0) {
+            $propertyList.append('<p>No properties listed yet. Click "Add Property" to get started.</p>');
+            return;
+        }
+
+        $propertyList.empty();
+
+        propertyList.forEach((property) => {
+
+            const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)}`;
+            const address = `${commonHelperService.formatTitle(property.street)}, ${property.postalCode}`;
+            const neighborhood = `${commonHelperService.formatTitle(property.neighborhood)}`;
+            const parkingGarage = `${commonHelperService.formatTitle(property.parkingGarage)}`;
+            const transportation = `${commonHelperService.formatTitle(property.transportation)}`;
+
+            let eachProperty = $(
+                `
+                <div class="col-md-6 col-lg-4">
+                    <div class="property-card">
+                        <div class="property-header d-flex justify-content-between align-items-center">
+                           <h5 class="property-state mb-0"> ${cityState} </h5>
+                            <div class="property-actions">
+                                <i class="fas fa-add" data-bs-toggle="tooltip" title="Add Workspace"></i>
+                                <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal"></i>
+                                <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="property-address mb-4">${address}</div>
+                        <div class="property-details">
+                            <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
+                            <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
+                            <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
+                            <p class="mb-1"><strong>Public Transportation:</strong> ${transportation} </p>
+                            <p class="mb-1"><strong>No. Workspace:</strong> 0 </p>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            $propertyList.append(eachProperty);
+        });
+    }
 }
 
 // export the service (if using modules) or instantiate directly

@@ -103,6 +103,20 @@ class PropertyRepositoryService {
         return propertyList[currentPropertyIndex];
     }
 
+    // get property list by current user id
+    getPropertyListByCurrentUser() {
+         // get the current
+         const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+         // get property list
+        const propertyList = databaseHelperService.getList(enumService.properties);
+
+        // filter by current user id, returns an array of all properties by current user id
+        const propertiesByCurrentUser = propertyList.filter(property => property.ownerId === currentUser.id);
+
+        return propertiesByCurrentUser;
+    }
+
 }
 
 // export the service (if using modules) or instantiate directly

@@ -8,6 +8,9 @@
 $(document).ready(function() {
     addProperty();
     propertyFormSubmitHandler();
+
+    // initial load property cards
+    commonHelperService.displayPropertyCards();
 });
 
 // save property
@@ -53,13 +56,15 @@ async function propertyFormSubmitHandler() {
 
              // display success message
              alertifyService.success("Property saved successfully!");
+            
+             // load property cards
+             commonHelperService.displayPropertyCards();
 
         } catch (error) {
             alertifyService.error(error.message);
         }
     });
 }
-
 
 // edit property - onclick event
 async function editProperty(propertyId) {

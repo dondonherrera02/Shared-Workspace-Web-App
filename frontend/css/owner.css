@@ -116,6 +116,10 @@ body {
 }
 
 .property-state{
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--dark-color);
 }
 

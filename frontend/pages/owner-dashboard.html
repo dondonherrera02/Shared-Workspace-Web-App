@@ -65,28 +65,8 @@
         </div>
 
         <!-- Property Cards -->
-        <div class="row">
-             <!-- Property Card Sample -->
-             <div class="col-md-6 col-lg-4">
-                <div class="property-card">
-                    <div class="property-header">
-                        <h5 class="property-state mb-0">Calgary, Alberta</h5>
-                        <div class="property-actions">
-                            <i class="fas fa-add" data-bs-toggle="tooltip" title="Add Workspace"></i>
-                            <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal"></i>
-                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
-                        </div>
-                    </div>
-                    <div class="property-address mb-4">123 Main Street, ABC 987</div>
-                    <div class="property-details">
-                        <p class="mb-1"><strong>Neighborhood:</strong> Okotoks, Alberta</p>
-                        <p class="mb-1"><strong>Square Feet:</strong> 123 sqm</p>
-                        <p class="mb-1"><strong>Parking Garage:</strong> Available</p>
-                        <p class="mb-1"><strong>Public Transportation:</strong> Available </p>
-                        <p class="mb-1"><strong>No. Workspace:</strong> 0 </p>
-                    </div>
-                </div>
-            </div>
+        <div class="row g-4" id="propertyList" class="properties-grid">
+            <!-- Property cards will be added here dynamically -->
         </div>
     </div>
 
@@ -118,9 +98,9 @@
                     <label class="form-label">State:</label>
                     <select class="form-select" name="state" id="state">
                         <option selected disabled>Select state</option>
-                        <option value="ab">Alberta</option>
-                        <option value="bc">British Columbia</option>
-                        <option value="on">Ontario</option>
+                        <option value="alberta">Alberta</option>
+                        <option value="british columbia">British Columbia</option>
+                        <option value="ontario">Ontario</option>
                     </select>
                 </div>
                 
@@ -144,7 +124,7 @@
                     <select class="form-select" name="parkingGarage" id="parkingGarage">
                         <option selected disabled>Select availability</option>
                         <option value="available">Available</option>
-                        <option value="not-available">Not Available</option>
+                        <option value="not available">Not Available</option>
                     </select>
                 </div>
                 
@@ -153,7 +133,7 @@
                     <select class="form-select" name="transportation" id="transportation">
                         <option selected disabled>Select access</option>
                         <option value="available">Available</option>
-                        <option value="not-available">Not Available</option>
+                        <option value="not available">Not Available</option>
                     </select>
                 </div>
             </form>
