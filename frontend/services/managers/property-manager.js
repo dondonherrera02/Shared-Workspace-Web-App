@@ -11,6 +11,12 @@ $(document).ready(function() {
 
     // initial load property cards
     commonHelperService.displayPropertyCards();
+
+    try {
+        commonHelperService.getCityState();
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 });
 
 // save property
@@ -28,14 +34,14 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
-                street: $('#street').val().trim(),
-                city: $('#city').val().trim(),
-                state: $('#state').val().trim(),
-                postalCode: $('#postalCode').val().trim().replace(/\s+/g, ''), // remove spaces
-                neighborhood: $('#neighborhood').val().trim(),
-                squareFeet: $('#squareFeet').val().trim(),
-                parkingGarage: $('#parkingGarage').val().trim(),
-                transportation: $('#transportation').val().trim(),
+                street: $('#street').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+                postalCode: $('#postalCode').val().replace(/\s+/g, ''), // remove spaces
+                neighborhood: $('#neighborhood').val(),
+                squareFeet: $('#squareFeet').val(),
+                parkingGarage: $('#parkingGarage').val(),
+                transportation: $('#transportation').val()
             };
 
             // validate the input property data

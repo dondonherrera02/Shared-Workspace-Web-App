@@ -73,7 +73,7 @@ class CommonHelperService {
     // SET-UP property form
     setUpPropertyForm(property = null) {
         let $propertyForm = $('#propertyForm');
-    
+
         if (property) {
             // Update property set-up
             $propertyForm.data("property-id", property.id); // set custom metadata in HTML eg. data-property-id
@@ -85,8 +85,8 @@ class CommonHelperService {
             $('squareFeet').val() = property.squareFeet;
             $('parkingGarage').val() = property.parkingGarage;
             $('transportation').val() = property.transportation;
-    
-        }else {
+
+        } else {
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
         }
@@ -94,18 +94,25 @@ class CommonHelperService {
 
     // PROPERTY registration validation
     validatePropertyData(propertyData) {
-        
+
         // Check for empty fields
         for (let key in propertyData) {
             if (!propertyData[key]) {
-                throw new Error(`${key} is required.`);
+                throw new Error(`${this.formatTitle(key)} is required.`);
             }
+        }
+
+        // postal code for Canada - Validation
+        if (propertyData.postalCode.length < 6){
+            throw new Error('Postal code must be atleast 6 characters long.');
+        }else{
+            propertyData.postalCode = propertyData.postalCode.slice(0,3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
         }
 
         // Validate square feet (must be numbers)
         let sqFeetPattern = /^[0-9]+$/;
         if (!propertyData.squareFeet.match(sqFeetPattern)) {
-            throw new Error('Square Feet must be a number.');
+            throw new Error('Square Feet must be a positive number.');
         }
     }
 
@@ -159,6 +166,49 @@ class CommonHelperService {
             `);
 
             $propertyList.append(eachProperty);
+        });
+    }
+
+    // Function to populate the dropdowns
+    // Ref: https://github.com/aosimeon/canadian-cities-provinces/blob/main/canadian_provinces.json
+    getCityState() {
+        // load state and cities
+        $.getJSON("/assets/metadata/canadian_provinces.json", function (data) {
+            let $state = $("#state");
+            let $city = $("#city");
+
+            // get and sort states
+            let sortedStates = Object.keys(data).sort();
+
+            // append sorted states
+            $.each(sortedStates, function (index, state) {
+                $state.append($("<option>", {
+                    value: state,
+                    text: state
+                }));
+            });
+
+            // when state is selected, update cities
+            $state.change(function () {
+                $city.empty().append('<option value="">Select a city</option>');
+
+                let selectedState = $(this).val();
+
+                if (selectedState) {
+                    // Sort the cities
+                    let sortedCities = data[selectedState].sort();
+
+                    $.each(sortedCities, function (index, city) {
+                        $city.append($("<option>", {
+                            value: city,
+                            text: city
+                        }));
+                    });
+                }
+            });
+        })
+        .fail(function () {
+            throw new Error('Could not locations data.');
         });
     }
 }
