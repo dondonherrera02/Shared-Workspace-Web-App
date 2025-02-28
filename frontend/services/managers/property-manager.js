@@ -1,6 +1,22 @@
+/**
+* @name: Co-Space Web App - Property Manager - Business Logic Layer
+* @Course Code: SODV1201
+* @class: Software Development Diploma program.
+* @author: Dondon Herrera
+*/
+
 $(document).ready(function() {
     addProperty();
     propertyFormSubmitHandler();
+
+    // initial load property cards
+    commonHelperService.displayPropertyCards();
+
+    try {
+        commonHelperService.getCityState();
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 });
 
 // save property
@@ -18,14 +34,14 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
-                street: $('#street').val().trim(),
-                city: $('#city').val().trim(),
-                state: $('#state').val().trim(),
-                postalCode: $('#postalCode').val().trim().replace(/\s+/g, ''), // remove spaces
-                neighborhood: $('#neighborhood').val().trim(),
-                squareFeet: $('#squareFeet').val().trim(),
-                parkingGarage: $('#parkingGarage').val().trim(),
-                transportation: $('#transportation').val().trim(),
+                street: $('#street').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+                postalCode: $('#postalCode').val().replace(/\s+/g, ''), // remove spaces
+                neighborhood: $('#neighborhood').val(),
+                squareFeet: $('#squareFeet').val(),
+                parkingGarage: $('#parkingGarage').val(),
+                transportation: $('#transportation').val()
             };
 
             // validate the input property data
@@ -46,13 +62,15 @@ async function propertyFormSubmitHandler() {
 
              // display success message
              alertifyService.success("Property saved successfully!");
+            
+             // load property cards
+             commonHelperService.displayPropertyCards();
 
         } catch (error) {
             alertifyService.error(error.message);
         }
     });
 }
-
 
 // edit property - onclick event
 async function editProperty(propertyId) {

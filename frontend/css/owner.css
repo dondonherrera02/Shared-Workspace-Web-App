@@ -116,6 +116,10 @@ body {
 }
 
 .property-state{
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--dark-color);
 }
 
@@ -175,5 +179,5 @@ body {
 }
 
 select.form-select {
-    color: #595c5f;;
+    color: #595c5f;
 }
