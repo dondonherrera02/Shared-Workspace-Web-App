@@ -308,6 +308,13 @@ class CommonHelperService {
                 $workspaceList.append('<p>No workspaces listed yet.</p>');
                 return;
             }
+
+            // Sort workspaces by propertyId in ascending order
+            workspaces.sort((a, b) => {
+                const numA = parseInt(a.propertyId.replace('property-', ''), 10);
+                const numB = parseInt(b.propertyId.replace('property-', ''), 10);
+                return numA - numB;
+            });
         }
 
         // append workspace cards
