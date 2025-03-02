@@ -309,7 +309,7 @@ class CommonHelperService {
                 return;
             }
 
-            // Sort workspaces by propertyId in ascending order
+            // sort workspaces by propertyId in ascending order
             workspaces.sort((a, b) => {
                 const numA = parseInt(a.propertyId.replace('property-', ''), 10);
                 const numB = parseInt(b.propertyId.replace('property-', ''), 10);
