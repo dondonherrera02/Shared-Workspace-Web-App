@@ -57,11 +57,6 @@ class PropertyRepositoryService {
          // find by id
          const property = propertyList.find(property => property.id === propertyId);
 
-         // validate
-         if (!property){
-            throw new Error('Property not found');
-         }
-
          return property;
     }
 

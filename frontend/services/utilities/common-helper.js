@@ -96,7 +96,7 @@ class CommonHelperService {
     // PROPERTY registration validation
     validatePropertyData(propertyData) {
 
-        // Check for empty fields
+        // check for empty fields
         for (let key in propertyData) {
             if (!propertyData[key]) {
                 throw new Error(`${this.formatTitle(key)} is required.`);
@@ -110,7 +110,7 @@ class CommonHelperService {
             propertyData.postalCode = propertyData.postalCode.slice(0, 3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
         }
 
-        // Validate square feet (must be numbers)
+        // validate square feet (must be numbers)
         let sqFeetPattern = /^[0-9]+$/;
         if (!propertyData.squareFeet.match(sqFeetPattern)) {
             throw new Error('Square Feet must be a positive number.');
@@ -134,7 +134,7 @@ class CommonHelperService {
         $propertyList.empty();
 
         propertyList.forEach((property) => {
-            
+
             const workspaces = workspaceRepository.getWorkspaceListByPropertyId(property.id);
 
             const pName = `${commonHelperService.formatTitle(property.pName)}`;
@@ -158,7 +158,7 @@ class CommonHelperService {
                         </div>
                         
                         <div class="property-state mb-4">${cityState}</div>
-                        <div class="property-details">
+                        <div class="property-details" onclick="getPropertyWorkspaces('${property.id}')">
                             <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
@@ -176,6 +176,7 @@ class CommonHelperService {
 
     // Function to populate the dropdowns
     // Ref: https://github.com/aosimeon/canadian-cities-provinces/blob/main/canadian_provinces.json
+    // https://menyhartmedia.com/2022/08/01/create-country-state-city-zip-code-drop-down-list-using-javascript/
     getCityState() {
         // load state and cities
         $.getJSON("/assets/metadata/canadian_provinces.json", function (data) {
@@ -280,6 +281,73 @@ class CommonHelperService {
         if (new Date(workspaceData.availabilityDate) < new Date()) {
             throw new Error('Availability date must be a future date.');
         }
+    }
+
+    // display and create workspace cards
+    displayWorkspaceCards(propertyId = null) {
+        const $workspaceList = $('#workspaceList');
+        $workspaceList.empty();
+
+        let workspaces = [];
+        let workspaceAddress = '';
+
+        if (propertyId) {
+            // get workspaces by current user and property id
+            workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+            const workspaceProperty = propertyRepository.getPropertyById(propertyId);
+
+            if (workspaceProperty) {
+                $('#workspaceHeader').text(`Workspaces for ${commonHelperService.formatTitle(workspaceProperty.pName)}`);
+                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
+            }
+        } else {
+            // get workspaces by current user
+            workspaces = workspaceRepository.getWorkspaceListByCurrentUser();
+
+            if (workspaces.length === 0) {
+                $workspaceList.append('<p>No workspaces listed yet.</p>');
+                return;
+            }
+        }
+
+        // append workspace cards
+        workspaces.forEach((workspace) => {
+            const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
+
+            if (workspaceProperty) {
+                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
+            }
+
+            const eachWorkspace = this.createWorkspaceCard(workspace, workspaceAddress);
+            $workspaceList.append(eachWorkspace);
+        });
+    }
+
+    createWorkspaceCard(workspace, workspaceAddress) {
+        const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
+
+        return $(`
+            <div class="col-md-6 col-lg-4">
+                <div class="property-card">
+                    <div class="property-header d-flex justify-content-between align-items-center">
+                        <h5 class="property-name mb-0"> ${workspaceType} </h5>
+                        <div class="property-actions">
+                            <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Workspace" data-bs-target="#addWorkspaceModal"></i>
+                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
+                        </div>
+                    </div>
+    
+                    <div class="property-state mb-4">${workspaceAddress}</div>
+                    <div class="property-details">
+                        <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
+                        <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
+                        <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+                </div>
+            </div>
+        `);
     }
 }
 

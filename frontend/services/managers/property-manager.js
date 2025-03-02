@@ -24,6 +24,12 @@ function addProperty(){
    $('#addPropertyBtn').on('click', () => commonHelperService.setUpPropertyForm());
 }
 
+// get all workspaces and redirected to new page
+function getPropertyWorkspaces(propertyId){
+    commonHelperService.displayWorkspaceCards(propertyId);
+    routerService.redirectToOwnerWorkspacePage(propertyId);
+ }
+
 // property form submit event handler
 async function propertyFormSubmitHandler() {
     

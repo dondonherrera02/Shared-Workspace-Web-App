@@ -23,37 +23,35 @@ class WorkspaceRepositoryService {
         // validate property id existence
         const propertyData = propertyRepository.getPropertyById(workspaceData.propertyId);
 
-        if (propertyData.ownerId !== currentUser.id) {
+        if (!propertyData || propertyData.ownerId !== currentUser.id) {
             throw new Error('Unauthorized property owner');
         }
 
         // get the current workspace list by property id
-        const workspaceList = this.getWorkspaceListByPropertyId(workspaceData.propertyId);
+        const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
-        // Validate workspace existence
-        if (workspaceList.length !== 0) {
-            // check if existing workspace by property id, type and lease term
-            const existingWorkspace = workspaceList.find(workspace =>
-                workspace.type.toLowerCase() === workspaceData.type.toLowerCase() &&
-                workspace.leaseTerm.toLowerCase() === workspaceData.leaseTerm.toLowerCase()
-            );
+         // check if existing workspace by property id, type and lease term
+         const existingWorkspace = workspaceList.find(workspace =>
+            workspace.propertyId === workspaceData.propertyId &&
+            workspace.type.toLowerCase() === workspaceData.type.toLowerCase() &&
+            workspace.leaseTerm.toLowerCase() === workspaceData.leaseTerm.toLowerCase()
+        );
 
-            if (existingWorkspace) {
-                throw new Error('Workspace already exists.');
-            }
-        } else {
-            // set workspace identifier
-            workspaceData.id = `${enumService.workspacePreIdKey}${Date.now().toString()}`;
-
-            // set property owner identifier
-            workspaceData.ownerId = currentUser.id;
-
-            // add into workspaces list
-            workspaceList.push(workspaceData);
-
-            // save to local storage
-            databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
+        if (existingWorkspace) {
+            throw new Error('Workspace already exists.');
         }
+
+         // set workspace identifier
+         workspaceData.id = `${enumService.workspacePreIdKey}${Date.now().toString()}`;
+
+         // set property owner identifier
+         workspaceData.ownerId = currentUser.id;
+
+         // add into workspaces list
+         workspaceList.push(workspaceData);
+
+         // save to local storage
+         databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
 
         return workspaceData;
     }
@@ -77,11 +75,15 @@ class WorkspaceRepositoryService {
 
     // get Workspace List by propertyId
     getWorkspaceListByPropertyId(propertyId) {
+        
+        // get the current
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
         // Get workspace list
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
         // Find workspaces by propertyId
-        const workspaces = workspaceList.filter(workspace => workspace.propertyId === propertyId);
+        const workspaces = workspaceList.filter(workspace => workspace.propertyId === propertyId && workspace.ownerId === currentUser.id);
 
         return workspaces;
     }
@@ -125,7 +127,7 @@ class WorkspaceRepositoryService {
     }
 
     // get workspace list by current user id
-    getPropertyListByCurrentUser() {
+    getWorkspaceListByCurrentUser() {
         // get the current
         const currentUser = databaseHelperService.getOne(enumService.currentUser);
 

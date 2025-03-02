@@ -5,21 +5,31 @@
 * @author: Dondon Herrera
 */
 
-$(document).ready(function() {
-    
+$(document).ready(function () {
+
     workspaceFormSubmitHandler();
 
     // initial load workspace cards
+    // Ref: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+    const urlParams = new URLSearchParams(window.location.search); // get the url params
+    const propertyId = urlParams.get('propertyId');
+
+    // If propertyId exists, filter workspaces by it
+    if (propertyId) {
+        commonHelperService.displayWorkspaceCards(propertyId);
+    } else {
+        commonHelperService.displayWorkspaceCards();
+    }
 });
 
 // set-up workspace form - preparation for save or edit.
-function addWorkspace(propertyId){
-   commonHelperService.setUpWorkspaceForm(propertyId, null);
+function addWorkspace(propertyId) {
+    commonHelperService.setUpWorkspaceForm(propertyId, null);
 }
 
 // property form submit event handler
 async function workspaceFormSubmitHandler() {
-    $('#saveWorkspace').on('click', async function(event) {
+    $('#saveWorkspace').on('click', async function (event) {
         event.preventDefault();
 
         let $workspaceForm = $('#workspaceForm');
@@ -27,8 +37,8 @@ async function workspaceFormSubmitHandler() {
         try {
             // set up the workspace data to save
             const workspaceData = {
-                propertyId:  $('#propertyId').val(), // this foreign key set up during preparation step, should always have value
-                type:  $('#type').val(),
+                propertyId: $('#propertyId').val(), // this foreign key set up during preparation step, should always have value
+                type: $('#type').val(),
                 capacity: $('#capacity').val(),
                 leaseTerm: $('#leaseTerm').val(),
                 availabilityDate: $('#availabilityDate').val(),
@@ -52,13 +62,13 @@ async function workspaceFormSubmitHandler() {
             $(workspaceForm).trigger("reset"); // reset the form
             $(workspaceForm).removeData("workspace-id"); // remove stored workspace id value from cache
 
-             // display success message
-             alertifyService.success("Workspace saved successfully!");
-            
-             // route to wokpsace page and load workspace cards
+            // display success message
+            alertifyService.success("Workspace saved successfully!");
 
-             // optional: upddate the length of the number workspace in property card
-
+            // route to wokspace page and load workspace cards
+            setTimeout(() => {
+                routerService.redirectToOwnerWorkspacePage(workspaceData.propertyId);
+            }, 1000);
 
         } catch (error) {
             alertifyService.error(error.message);

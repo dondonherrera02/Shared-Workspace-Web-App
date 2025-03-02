@@ -17,7 +17,7 @@ class EnumService {
 
     // router
     ownerRoute = 'owner-dashboard.html';
-    workerRoute = 'owner-dashboard.html';
+    workerRoute = 'co-worker-dashboard.html';
     defaultRoute = 'notfound.html';
 
     // identifier pre-key
