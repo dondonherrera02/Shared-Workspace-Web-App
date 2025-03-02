@@ -22,11 +22,18 @@ class EnumService {
 
     // identifier pre-key
     propertyPreIdKey = 'property-';
+    workspacePreIdKey = 'workspace-';
 
     // object names
     currentUser = 'currentUser';
     users = 'users';
     properties = 'properties';
+    workspaces = 'workspaces';
+
+    // Workspace Types
+    meetingRoom = 'Meeting Room';
+    privateOffice = 'Private Office';
+    desk = 'Desk';
 }
 
 // export the service (if using modules) or instantiate directly

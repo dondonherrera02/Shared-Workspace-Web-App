@@ -19,13 +19,14 @@ $(document).ready(function() {
     }
 });
 
-// save property
+// set-up property form - preparation for save or edit.
 function addProperty(){
    $('#addPropertyBtn').on('click', () => commonHelperService.setUpPropertyForm());
 }
 
 // property form submit event handler
 async function propertyFormSubmitHandler() {
+    
     $('#saveProperty').on('click', async function(event) {
         event.preventDefault();
 
