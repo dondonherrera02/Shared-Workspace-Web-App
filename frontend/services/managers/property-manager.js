@@ -34,6 +34,7 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
+                pName:  $('#pName').val(),
                 street: $('#street').val(),
                 city: $('#city').val(),
                 state: $('#state').val(),

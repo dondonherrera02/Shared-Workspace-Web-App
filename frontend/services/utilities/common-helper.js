@@ -77,6 +77,7 @@ class CommonHelperService {
         if (property) {
             // Update property set-up
             $propertyForm.data("property-id", property.id); // set custom metadata in HTML eg. data-property-id
+            $('pName').val() = property.pName;
             $('street').val() = property.street;
             $('city').val() = property.city;
             $('state').val() = property.state;
@@ -103,8 +104,8 @@ class CommonHelperService {
         }
 
         // postal code for Canada - Validation
-        if (propertyData.postalCode.length < 6){
-            throw new Error('Postal code must be atleast 6 characters long.');
+        if (propertyData.postalCode.length !== 6){
+            throw new Error('Postal code must be 6 characters long.');
         }else{
             propertyData.postalCode = propertyData.postalCode.slice(0,3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
         }
@@ -134,8 +135,9 @@ class CommonHelperService {
 
         propertyList.forEach((property) => {
 
-            const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)}`;
-            const address = `${commonHelperService.formatTitle(property.street)}, ${property.postalCode}`;
+            const pName = `${commonHelperService.formatTitle(property.pName)}`;
+            const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)},  ${property.postalCode}`;
+            const address = `${commonHelperService.formatTitle(property.street)}`;
             const neighborhood = `${commonHelperService.formatTitle(property.neighborhood)}`;
             const parkingGarage = `${commonHelperService.formatTitle(property.parkingGarage)}`;
             const transportation = `${commonHelperService.formatTitle(property.transportation)}`;
@@ -145,7 +147,7 @@ class CommonHelperService {
                 <div class="col-md-6 col-lg-4">
                     <div class="property-card">
                         <div class="property-header d-flex justify-content-between align-items-center">
-                           <h5 class="property-state mb-0"> ${cityState} </h5>
+                           <h5 class="property-name mb-0"> ${pName} </h5>
                             <div class="property-actions">
                                 <i class="fas fa-add" data-bs-toggle="tooltip" title="Add Workspace"></i>
                                 <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal"></i>
@@ -153,8 +155,9 @@ class CommonHelperService {
                             </div>
                         </div>
                         
-                        <div class="property-address mb-4">${address}</div>
+                        <div class="property-state mb-4">${cityState}</div>
                         <div class="property-details">
+                            <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
                             <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>

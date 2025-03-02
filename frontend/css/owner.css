@@ -115,7 +115,7 @@ body {
     background-color: var(--white-color);
 }
 
-.property-state{
+.property-name{
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
