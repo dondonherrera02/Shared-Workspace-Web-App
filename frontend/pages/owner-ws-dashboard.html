@@ -66,6 +66,73 @@
         </div>
     </div>
 
+     <!-- Workspace Modal -->
+     <div class="modal fade" id="addWorkspaceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Workspace</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="workspaceForm">
+
+                        <!-- property id - determine the relationship : foreign key -->
+                        <input type="hidden" id="propertyId" name="propertyId"> 
+
+                        <div class="mb-3">
+                            <label class="form-label">Workspace Type</label>
+                            <select class="form-select" id="type" required>
+                                <option value="">Select type</option>
+                                <option value="Meeting Room">Meeting Room</option>
+                                <option value="Private Office">Private Office</option>
+                                <option value="Desk">Desk in Open Area</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Seating Capacity</label>
+                            <input type="number" class="form-control" id="capacity" placeholder="Seating Capacity" required min="1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Lease Term</label>
+                            <select class="form-select" id="leaseTerm" required>
+                                <option value="">Select term</option>
+                                <option value="Day">Day</option>
+                                <option value="Week">Week</option>
+                                <option value="Month">Month</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Availability Date:</label>
+                            <input type="date" class="form-control" id="availabilityDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Smoking Policy</label>
+                            <select class="form-select" id="smokingPolicy" required>
+                                <option value="">Select policy</option>
+                                <option value="Allowed">Allowed</option>
+                                <option value="Not Allowed">Not Allowed</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" id="price" placeholder="Price" min="1" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveWorkspace">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Bootstrap JS -->
      <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->

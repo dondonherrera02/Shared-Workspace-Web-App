@@ -81,7 +81,7 @@ class CommonHelperService {
             $('#street').val(property.street);
             $('#state').val(property.state).trigger('change'); // triggers change event if state selection loads cities
             setTimeout(function() { $('#city').val(property.city);}, 500);
-            $('#postalCode').val(property.postalCode.replace(/-/g, ''));
+            $('#postalCode').val(property.postalCode.replace(/-/g, '')); // remove hypens during edits
             $('#neighborhood').val(property.neighborhood);
             $('#squareFeet').val(property.squareFeet);
             $('#parkingGarage').val(property.parkingGarage);
@@ -338,7 +338,7 @@ class CommonHelperService {
                     <div class="property-header d-flex justify-content-between align-items-center">
                         <h5 class="property-name mb-0"> ${workspaceType} </h5>
                         <div class="property-actions">
-                            <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Workspace" data-bs-target="#addWorkspaceModal"></i>
+                            <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
                             <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
                         </div>
                     </div>
