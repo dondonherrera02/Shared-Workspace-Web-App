@@ -17,16 +17,23 @@ class EnumService {
 
     // router
     ownerRoute = 'owner-dashboard.html';
-    workerRoute = 'owner-dashboard.html';
+    workerRoute = 'co-worker-dashboard.html';
     defaultRoute = 'notfound.html';
 
     // identifier pre-key
     propertyPreIdKey = 'property-';
+    workspacePreIdKey = 'workspace-';
 
     // object names
     currentUser = 'currentUser';
     users = 'users';
     properties = 'properties';
+    workspaces = 'workspaces';
+
+    // Workspace Types
+    meetingRoom = 'Meeting Room';
+    privateOffice = 'Private Office';
+    desk = 'Desk';
 }
 
 // export the service (if using modules) or instantiate directly

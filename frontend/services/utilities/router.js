@@ -11,6 +11,10 @@ class RouterUtilService {
         window.location.assign('/index.html');
     }
 
+    redirectToOwnerWorkspacePage(propertyId){
+        window.location.assign(`/pages/owner-ws-dashboard.html?propertyId=${propertyId}`);
+    }
+
     // REDIRECT page
     redirectPage(userData) {
         const baseUrl = '/pages/';

@@ -25,7 +25,7 @@ class PropertyRepositoryService {
         
         // check if existing property by city and postal code
         const existingProperty = propertyList.find(property => 
-            property.city.toLowerCase() === propertyData.city.toLowerCase() &&
+            property.pName.toLowerCase() === propertyData.pName.toLowerCase() &&
             property.postalCode.toLowerCase() === propertyData.postalCode.toLowerCase()
         );
 
@@ -57,11 +57,6 @@ class PropertyRepositoryService {
          // find by id
          const property = propertyList.find(property => property.id === propertyId);
 
-         // validate
-         if (!property){
-            throw new Error('Property not found');
-         }
-
          return property;
     }
 
@@ -79,11 +74,11 @@ class PropertyRepositoryService {
         const propertyList = databaseHelperService.getList(enumService.properties);
 
         // Find the property and its index
-        const currentPropertyIndex = propertyList.findIndex(property => property.Id === propertyId);
+        const currentPropertyIndex = propertyList.findIndex(property => property.id === propertyId);
 
         // If property is not found, throw error
         if (currentPropertyIndex === -1) {
-            throw new Error("Property not found. Unable to update this property.");
+            throw new Error("Property not found. Unable to update property.");
         }
 
         const currentProperty = propertyList[currentPropertyIndex];

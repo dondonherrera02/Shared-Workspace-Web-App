@@ -76,7 +76,7 @@ class CommonHelperService {
 
         if (property) {
             // Update property set-up
-            $propertyForm.data("property-id", property.id); // set custom metadata in HTML eg. data-property-id
+            $propertyForm.data("property-id", property.id);  // store property ID as data attribute
             $('pName').val() = property.pName;
             $('street').val() = property.street;
             $('city').val() = property.city;
@@ -96,7 +96,7 @@ class CommonHelperService {
     // PROPERTY registration validation
     validatePropertyData(propertyData) {
 
-        // Check for empty fields
+        // check for empty fields
         for (let key in propertyData) {
             if (!propertyData[key]) {
                 throw new Error(`${this.formatTitle(key)} is required.`);
@@ -104,13 +104,13 @@ class CommonHelperService {
         }
 
         // postal code for Canada - Validation
-        if (propertyData.postalCode.length !== 6){
+        if (propertyData.postalCode.length !== 6) {
             throw new Error('Postal code must be 6 characters long.');
-        }else{
-            propertyData.postalCode = propertyData.postalCode.slice(0,3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
+        } else {
+            propertyData.postalCode = propertyData.postalCode.slice(0, 3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
         }
 
-        // Validate square feet (must be numbers)
+        // validate square feet (must be numbers)
         let sqFeetPattern = /^[0-9]+$/;
         if (!propertyData.squareFeet.match(sqFeetPattern)) {
             throw new Error('Square Feet must be a positive number.');
@@ -135,6 +135,8 @@ class CommonHelperService {
 
         propertyList.forEach((property) => {
 
+            const workspaces = workspaceRepository.getWorkspaceListByPropertyId(property.id);
+
             const pName = `${commonHelperService.formatTitle(property.pName)}`;
             const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)},  ${property.postalCode}`;
             const address = `${commonHelperService.formatTitle(property.street)}`;
@@ -149,20 +151,20 @@ class CommonHelperService {
                         <div class="property-header d-flex justify-content-between align-items-center">
                            <h5 class="property-name mb-0"> ${pName} </h5>
                             <div class="property-actions">
-                                <i class="fas fa-add" data-bs-toggle="tooltip" title="Add Workspace"></i>
+                                <i class="fas fa-add" data-bs-toggle="modal" data-bs-target="#addWorkspaceModal" onclick="addWorkspace('${property.id}')" ></i>
                                 <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal"></i>
                                 <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
                             </div>
                         </div>
                         
                         <div class="property-state mb-4">${cityState}</div>
-                        <div class="property-details">
+                        <div class="property-details" onclick="getPropertyWorkspaces('${property.id}')">
                             <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
                             <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
                             <p class="mb-1"><strong>Public Transportation:</strong> ${transportation} </p>
-                            <p class="mb-1"><strong>No. Workspace:</strong> 0 </p>
+                            <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length} </p>
                         </div>
                     </div>
                 </div>
@@ -174,6 +176,7 @@ class CommonHelperService {
 
     // Function to populate the dropdowns
     // Ref: https://github.com/aosimeon/canadian-cities-provinces/blob/main/canadian_provinces.json
+    // https://menyhartmedia.com/2022/08/01/create-country-state-city-zip-code-drop-down-list-using-javascript/
     getCityState() {
         // load state and cities
         $.getJSON("/assets/metadata/canadian_provinces.json", function (data) {
@@ -210,9 +213,148 @@ class CommonHelperService {
                 }
             });
         })
-        .fail(function () {
-            throw new Error('Could not locations data.');
+            .fail(function () {
+                throw new Error('Could not locations data.');
+            });
+    }
+
+    // *********WORKSPACE FORM***********
+    setUpWorkspaceForm(propertyId, workspace = null) {
+
+        $('#propertyId').val(propertyId); // set the current property id
+
+        let $workspaceForm = $('#workspaceForm');
+
+        if (workspace) {
+            // Update workspace set-up
+            $workspaceForm.data("workspace-id", workspace.id); // store workspace ID as data attribute
+            $('type').val() = workspace.type;
+            $('capacity').val() = workspace.capacity;
+            $('leaseTerm').val() = workspace.leaseTerm;
+            $('availabilityDate').val() = workspace.availabilityDate;
+            $('smokingPolicy').val() = workspace.smokingPolicy;
+            $('price').val() = workspace.price;
+        } else {
+            $(workspaceForm).trigger("reset"); // reset the form
+            $(workspaceForm).removeData("workspace-id"); // remove stored workspace id value from cache
+        }
+    }
+
+    validateWorkspaceData(workspaceData) {
+
+        // Check for empty fields
+        for (let key in workspaceData) {
+            if (!workspaceData[key]) {
+                throw new Error(`${this.formatTitle(key)} is required.`);
+            }
+        }
+
+        let numberPattern = /^[0-9]+$/;
+
+        // Seating capacity - positive number
+        if (!workspaceData.capacity.match(numberPattern)) {
+            throw new Error('Seating capacity must be a positive number.');
+        }
+
+        // Ensure workspaceData.capacity is an integer before comparison
+        let capacity = parseInt(workspaceData.capacity);
+
+        // Set the seating capacity with workspace type
+        if (capacity > 100 && workspaceData.type === enumService.meetingRoom) {
+            throw new Error(`Seating capacity cannot exceed 100 for ${workspaceData.type}`);
+        } else if (capacity > 50 && workspaceData.type === enumService.privateOffice) {
+            throw new Error(`Seating capacity cannot exceed 50 for ${workspaceData.type}`);
+        } else if (capacity > 2 && workspaceData.type === enumService.desk) {
+            throw new Error(`Seating capacity cannot exceed 2 for ${workspaceData.type}`);
+        }
+
+        // Price - positive number and set the length
+        if (!workspaceData.price.match(numberPattern)) {
+            throw new Error('Price must be a positive number.');
+        }
+
+        if (workspaceData.price.length > 7) {
+            throw new Error('Please input a valid price.');
+        }
+
+        // Availability date - future dates only
+        if (new Date(workspaceData.availabilityDate) < new Date()) {
+            throw new Error('Availability date must be a future date.');
+        }
+    }
+
+    // display and create workspace cards
+    displayWorkspaceCards(propertyId = null) {
+        const $workspaceList = $('#workspaceList');
+        $workspaceList.empty();
+
+        let workspaces = [];
+        let workspaceAddress = '';
+
+        if (propertyId) {
+            // get workspaces by current user and property id
+            workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+            const workspaceProperty = propertyRepository.getPropertyById(propertyId);
+
+            if (workspaceProperty) {
+                $('#workspaceHeader').text(`Workspaces for ${commonHelperService.formatTitle(workspaceProperty.pName)}`);
+                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
+            }
+        } else {
+            // get workspaces by current user
+            workspaces = workspaceRepository.getWorkspaceListByCurrentUser();
+
+            if (workspaces.length === 0) {
+                $workspaceList.append('<p>No workspaces listed yet.</p>');
+                return;
+            }
+
+            // sort workspaces by propertyId in ascending order
+            workspaces.sort((a, b) => {
+                const numA = parseInt(a.propertyId.replace('property-', ''), 10);
+                const numB = parseInt(b.propertyId.replace('property-', ''), 10);
+                return numA - numB;
+            });
+        }
+
+        // append workspace cards
+        workspaces.forEach((workspace) => {
+            const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
+
+            if (workspaceProperty) {
+                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
+            }
+
+            const eachWorkspace = this.createWorkspaceCard(workspace, workspaceAddress);
+            $workspaceList.append(eachWorkspace);
         });
+    }
+
+    createWorkspaceCard(workspace, workspaceAddress) {
+        const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
+
+        return $(`
+            <div class="col-md-6 col-lg-4">
+                <div class="property-card">
+                    <div class="property-header d-flex justify-content-between align-items-center">
+                        <h5 class="property-name mb-0"> ${workspaceType} </h5>
+                        <div class="property-actions">
+                            <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Workspace" data-bs-target="#addWorkspaceModal"></i>
+                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
+                        </div>
+                    </div>
+    
+                    <div class="property-state mb-4">${workspaceAddress}</div>
+                    <div class="property-details">
+                        <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
+                        <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
+                        <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+                </div>
+            </div>
+        `);
     }
 }
 
