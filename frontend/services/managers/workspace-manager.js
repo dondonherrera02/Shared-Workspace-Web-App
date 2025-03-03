@@ -80,7 +80,7 @@ async function workspaceFormSubmitHandler() {
 async function editWorkspace(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
-        commonHelperService.setUpWorkspaceForm(workspaceData);
+        commonHelperService.setUpWorkspaceForm(workspaceData.propertyId, workspaceData);
     } catch (error) {
         alertifyService.error(error.message);
     }

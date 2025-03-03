@@ -82,10 +82,11 @@ async function propertyFormSubmitHandler() {
 
 // edit property - onclick event
 async function editProperty(propertyId) {
-    try {
-        const propertyData = await propertyRepository.getPropertyById(propertyId);
+    // get current property
+    const propertyData = await propertyRepository.getPropertyById(propertyId);
+
+    if (propertyData) {
+        // prepare the property form
         commonHelperService.setUpPropertyForm(propertyData);
-    } catch (error) {
-        alertifyService.error(error.message);
     }
 }
