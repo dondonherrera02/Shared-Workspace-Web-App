@@ -77,16 +77,15 @@ class CommonHelperService {
         if (property) {
             // Update property set-up
             $propertyForm.data("property-id", property.id);  // store property ID as data attribute
-            $('pName').val() = property.pName;
-            $('street').val() = property.street;
-            $('city').val() = property.city;
-            $('state').val() = property.state;
-            $('postalCode').val() = property.postalCode;
-            $('neighborhood').val() = property.neighborhood;
-            $('squareFeet').val() = property.squareFeet;
-            $('parkingGarage').val() = property.parkingGarage;
-            $('transportation').val() = property.transportation;
-
+            $('#pName').val(property.pName);
+            $('#street').val(property.street);
+            $('#state').val(property.state).trigger('change'); // triggers change event if state selection loads cities
+            setTimeout(function() { $('#city').val(property.city);}, 500);
+            $('#postalCode').val(property.postalCode.replace(/-/g, ''));
+            $('#neighborhood').val(property.neighborhood);
+            $('#squareFeet').val(property.squareFeet);
+            $('#parkingGarage').val(property.parkingGarage);
+            $('#transportation').val(property.transportation);
         } else {
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
@@ -152,7 +151,7 @@ class CommonHelperService {
                            <h5 class="property-name mb-0"> ${pName} </h5>
                             <div class="property-actions">
                                 <i class="fas fa-add" data-bs-toggle="modal" data-bs-target="#addWorkspaceModal" onclick="addWorkspace('${property.id}')" ></i>
-                                <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal"></i>
+                                <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')"></i>
                                 <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
                             </div>
                         </div>
@@ -228,12 +227,12 @@ class CommonHelperService {
         if (workspace) {
             // Update workspace set-up
             $workspaceForm.data("workspace-id", workspace.id); // store workspace ID as data attribute
-            $('type').val() = workspace.type;
-            $('capacity').val() = workspace.capacity;
-            $('leaseTerm').val() = workspace.leaseTerm;
-            $('availabilityDate').val() = workspace.availabilityDate;
-            $('smokingPolicy').val() = workspace.smokingPolicy;
-            $('price').val() = workspace.price;
+            $('#type').val(workspace.type);
+            $('#capacity').val(workspace.capacity);
+            $('#leaseTerm').val(workspace.leaseTerm);
+            $('#availabilityDate').val(workspace.availabilityDate);
+            $('#smokingPolicy').val(workspace.smokingPolicy);
+            $('#price').val(workspace.price);
         } else {
             $(workspaceForm).trigger("reset"); // reset the form
             $(workspaceForm).removeData("workspace-id"); // remove stored workspace id value from cache
