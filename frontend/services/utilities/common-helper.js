@@ -227,6 +227,7 @@ class CommonHelperService {
         if (workspace) {
             // Update workspace set-up
             $workspaceForm.data("workspace-id", workspace.id); // store workspace ID as data attribute
+            $('#roomNum').val(workspace.roomNum);
             $('#type').val(workspace.type);
             $('#capacity').val(workspace.capacity);
             $('#leaseTerm').val(workspace.leaseTerm);
@@ -249,6 +250,11 @@ class CommonHelperService {
         }
 
         let numberPattern = /^[0-9]+$/;
+
+        // Room number - positive number
+        if (!workspaceData.roomNum.match(numberPattern)) {
+            throw new Error('Room number must be a positive number.');
+        }
 
         // Seating capacity - positive number
         if (!workspaceData.capacity.match(numberPattern)) {
@@ -321,7 +327,11 @@ class CommonHelperService {
             const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
 
             if (workspaceProperty) {
-                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
+                workspaceAddress = `
+                ${commonHelperService.formatTitle(workspaceProperty.pName)},
+                ${commonHelperService.formatTitle(workspaceProperty.street)},
+                ${commonHelperService.formatTitle(workspaceProperty.city)},
+                ${workspaceProperty.state}`;
             }
 
             const eachWorkspace = this.createWorkspaceCard(workspace, workspaceAddress);
@@ -336,15 +346,16 @@ class CommonHelperService {
             <div class="col-md-6 col-lg-4">
                 <div class="property-card">
                     <div class="property-header d-flex justify-content-between align-items-center">
-                        <h5 class="property-name mb-0"> ${workspaceType} </h5>
+                        <h5 class="property-name mb-0"> Room Number ${workspace.roomNum} </h5>
                         <div class="property-actions">
                             <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
                             <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
                         </div>
                     </div>
     
-                    <div class="property-state mb-4">${workspaceAddress}</div>
+                    <div class="property-state mb-4">${workspaceType}</div>
                     <div class="property-details">
+                        <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
                         <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
                         <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
