@@ -8,8 +8,16 @@
 $(document).ready(function () {
 
     workspaceFormSubmitHandler();
+    loadWorkspaceCards();
+});
 
-    // initial load workspace cards
+// set-up workspace form - preparation for save or edit.
+function addWorkspace(propertyId) {
+    commonHelperService.setUpWorkspaceForm(propertyId, null);
+}
+
+function loadWorkspaceCards(){
+     // initial load workspace cards
     // Ref: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const urlParams = new URLSearchParams(window.location.search); // get the url params
     const propertyId = urlParams.get('propertyId');
@@ -20,11 +28,6 @@ $(document).ready(function () {
     } else {
         commonHelperService.displayWorkspaceCards();
     }
-});
-
-// set-up workspace form - preparation for save or edit.
-function addWorkspace(propertyId) {
-    commonHelperService.setUpWorkspaceForm(propertyId, null);
 }
 
 // property form submit event handler
@@ -85,4 +88,27 @@ async function editWorkspace(workspaceId) {
     } catch (error) {
         alertifyService.error(error.message);
     }
+}
+
+
+// delete property - onclick event
+async function deleteWorkspace(workspaceId) {
+    alertifyService.confirm("Are you sure you want to delete this workspace?", function() {
+        
+        try {
+
+            // delete the workspace
+            const workspace = workspaceRepository.deleteWorkspace(workspaceId);
+
+            setTimeout(() => {
+                routerService.redirectToOwnerWorkspacePage(workspace.propertyId);
+            }, 1000);
+
+             // display message
+            alertify.success("Workspace deleted successfully!");
+
+        } catch (error) {
+            alertify.error(error.message);
+        }
+    });
 }

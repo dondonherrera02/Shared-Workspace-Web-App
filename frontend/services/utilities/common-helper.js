@@ -366,7 +366,7 @@ class CommonHelperService {
                         <h5 class="property-name mb-0"> Room Number ${workspace.roomNum} </h5>
                         <div class="property-actions">
                             <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
-                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
+                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace" onclick="deleteWorkspace('${workspace.id}')"></i>
                         </div>
                     </div>
     

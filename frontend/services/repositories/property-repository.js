@@ -121,7 +121,7 @@ class PropertyRepositoryService {
         // get property to delete
         const propertyToDelete = this.getPropertyById(propertyId);
 
-        // check if this 
+        // check if property exists
         if(!propertyToDelete) throw new Error('Property not found.');
 
         // get the current user

@@ -160,6 +160,26 @@ class WorkspaceRepositoryService {
         return workspacesByCurrentUser;
     }
 
+    // delete workspace
+    deleteWorkspace(workspaceId) {
+
+        // get workspace to delete
+        const workspaceToDelete = this.getWorkspaceById(workspaceId);
+
+        // get the current user
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+        // check if the user is allowed to delete
+        if (workspaceToDelete.ownerId !== currentUser.id) throw new Error('Unauthorized to delete this workspace.');
+
+        // remove workspace and save it back
+        let currentWorkspaces = workspaceRepository.getWorkspaceList();
+        currentWorkspaces = currentWorkspaces.filter(w => w.id !== workspaceId);
+        databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
+
+        return workspaceToDelete;
+    }
+
 }
 
 // export the service (if using modules) or instantiate directly
