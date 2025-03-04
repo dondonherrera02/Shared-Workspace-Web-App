@@ -13,6 +13,7 @@ $(document).ready(function() {
     commonHelperService.displayPropertyCards();
 
     try {
+        // populate city and state in selection
         commonHelperService.getCityState();
     } catch (error) {
         alertifyService.error(error.message);
@@ -89,4 +90,11 @@ async function editProperty(propertyId) {
         // prepare the property form
         commonHelperService.setUpPropertyForm(propertyData);
     }
+}
+
+// delete property - onclick event
+async function deleteProperty(propertyId) {
+    alertifyService.confirm("Are you sure you want to delete this property? This will also delete all associated workspaces.", function() {
+        alertify.success("Property deleted successfully!");
+    });
 }
