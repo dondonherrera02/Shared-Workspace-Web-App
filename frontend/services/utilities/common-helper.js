@@ -80,7 +80,7 @@ class CommonHelperService {
             $('#pName').val(property.pName);
             $('#street').val(property.street);
             $('#state').val(property.state).trigger('change'); // triggers change event if state selection loads cities
-            setTimeout(function() { $('#city').val(property.city);}, 500);
+            setTimeout(function () { $('#city').val(property.city); }, 500);
             $('#postalCode').val(property.postalCode.replace(/-/g, '')); // remove hypens during edits
             $('#neighborhood').val(property.neighborhood);
             $('#squareFeet').val(property.squareFeet);
@@ -145,25 +145,29 @@ class CommonHelperService {
 
             let eachProperty = $(
                 `
-                <div class="col-md-6 col-lg-4">
+                 <div class="col-md-6 col-lg-4">
                     <div class="property-card">
                         <div class="property-header d-flex justify-content-between align-items-center">
-                           <h5 class="property-name mb-0"> ${pName} </h5>
+                            <h5 class="property-name mb-0">${pName}</h5>
                             <div class="property-actions">
-                                <i class="fas fa-add" data-bs-toggle="modal" data-bs-target="#addWorkspaceModal" onclick="addWorkspace('${property.id}')" ></i>
-                                <i class="fas fa-edit" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')"></i>
                                 <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
                             </div>
                         </div>
-                        
+        
                         <div class="property-state mb-4">${cityState}</div>
-                        <div class="property-details" onclick="getPropertyWorkspaces('${property.id}')">
+        
+                        <div class="property-details mb-3" >
                             <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
                             <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
-                            <p class="mb-1"><strong>Public Transportation:</strong> ${transportation} </p>
-                            <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length} </p>
+                            <p class="mb-1"><strong>Public Transportation:</strong> ${transportation}</p>
+                            <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length}</p>
+                        </div>
+
+                        <div class="property-actions d-flex justify-content-between align-items-center gap-2">
+                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Property</button>
+                            <button class="btn-edit w-100" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
                         </div>
                     </div>
                 </div>
@@ -302,7 +306,21 @@ class CommonHelperService {
             const workspaceProperty = propertyRepository.getPropertyById(propertyId);
 
             if (workspaceProperty) {
-                $('#workspaceHeader').text(`Workspaces for ${commonHelperService.formatTitle(workspaceProperty.pName)}`);
+                $('#workspaceHeader').text(`Workspaces for ${commonHelperService.formatTitle(workspaceProperty.pName)}`)
+                    .on('click', function () {
+                        window.location.href = enumService.ownerRoute;
+                    });
+
+                var button = $('<button>')
+                    .addClass('btn btn-primary')
+                    .attr('data-bs-toggle', 'modal')
+                    .attr('data-bs-target', '#addWorkspaceModal')
+                    .attr('onclick', `addWorkspace('${propertyId}')`)
+                    .html('<i class="fas fa-plus me-2"></i>Add Workspace');
+
+                // Append the button inside the "workspaceHeader"
+                $('#workspaceHeader').closest('.d-flex').append(button);
+
                 workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
             }
         } else {
@@ -328,7 +346,6 @@ class CommonHelperService {
 
             if (workspaceProperty) {
                 workspaceAddress = `
-                ${commonHelperService.formatTitle(workspaceProperty.pName)},
                 ${commonHelperService.formatTitle(workspaceProperty.street)},
                 ${commonHelperService.formatTitle(workspaceProperty.city)},
                 ${workspaceProperty.state}`;
