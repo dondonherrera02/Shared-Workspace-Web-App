@@ -33,6 +33,7 @@ class WorkspaceRepositoryService {
          // check if existing workspace by property id, type and lease term
          const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === workspaceData.propertyId &&
+            workspace.roomNum === workspaceData.roomNum &&
             workspace.availabilityDate === workspaceData.availabilityDate &&
             workspace.type.toLowerCase() === workspaceData.type.toLowerCase() &&
             workspace.leaseTerm.toLowerCase() === workspaceData.leaseTerm.toLowerCase() &&
@@ -106,6 +107,7 @@ class WorkspaceRepositoryService {
          // check if existing workspace by property id, type and lease term
          const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === modifiedWorkspace.propertyId &&
+            workspace.roomNum === modifiedWorkspace.roomNum &&
             workspace.availabilityDate === modifiedWorkspace.availabilityDate &&
             workspace.type.toLowerCase() === modifiedWorkspace.type.toLowerCase() &&
             workspace.leaseTerm.toLowerCase() === modifiedWorkspace.leaseTerm.toLowerCase() &&

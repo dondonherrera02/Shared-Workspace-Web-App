@@ -38,6 +38,7 @@ async function workspaceFormSubmitHandler() {
             // set up the workspace data to save
             const workspaceData = {
                 propertyId: $('#propertyId').val(), // this foreign key set up during preparation step, should always have value
+                roomNum: $('#roomNum').val(),
                 type: $('#type').val(),
                 capacity: $('#capacity').val(),
                 leaseTerm: $('#leaseTerm').val(),
