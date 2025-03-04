@@ -68,12 +68,12 @@ async function propertyFormSubmitHandler() {
             $('#addPropertyModal').offcanvas('hide');
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
-
-             // display success message
-             alertifyService.success("Property saved successfully!");
             
              // load property cards
              commonHelperService.displayPropertyCards();
+
+             // display success message
+             alertifyService.success("Property saved successfully!");
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -94,7 +94,21 @@ async function editProperty(propertyId) {
 
 // delete property - onclick event
 async function deleteProperty(propertyId) {
-    alertifyService.confirm("Are you sure you want to delete this property? This will also delete all associated workspaces.", function() {
-        alertify.success("Property deleted successfully!");
+    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", function() {
+        
+        try {
+
+            // delete property and assoc workspaces
+            propertyRepository.deleteProperty(propertyId);
+
+             // load property cards
+             commonHelperService.displayPropertyCards();
+
+             // display message
+            alertify.success("Property deleted successfully!");
+
+        } catch (error) {
+            alertify.error(error.message);
+        }
     });
 }
