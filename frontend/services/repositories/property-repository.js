@@ -48,6 +48,9 @@ class PropertyRepositoryService {
         return propertyData;
     }
 
+    // get property list
+    getPropertyList = () => databaseHelperService.getList(enumService.properties);
+
     // get property by id
     getPropertyById(propertyId){
 
@@ -110,6 +113,32 @@ class PropertyRepositoryService {
         const propertiesByCurrentUser = propertyList.filter(property => property.ownerId === currentUser.id);
 
         return propertiesByCurrentUser;
+    }
+
+    // delete property and all assoc workspaces
+    deleteProperty(propertyId) {
+
+        // get property to delete
+        const propertyToDelete = this.getPropertyById(propertyId);
+
+        // check if property exists
+        if(!propertyToDelete) throw new Error('Property not found.');
+
+        // get the current user
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+        // check if the user is allowed to delete
+        if(propertyToDelete.ownerId !== currentUser.id) throw new Error('Unauthorized to delete this property.');
+
+        // remove associated workspaces and save it back to local storage
+        let currentWorkspaces = workspaceRepository.getWorkspaceList();
+        currentWorkspaces = currentWorkspaces.filter(w => w.propertyId !== propertyId);
+        databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
+
+        // remove property and save it back
+        let currentProperties = this.getPropertyList();
+        currentProperties = currentProperties.filter(p => p.id !== propertyId);
+        databaseHelperService.saveToLocalStorage(enumService.properties, currentProperties);
     }
 
 }

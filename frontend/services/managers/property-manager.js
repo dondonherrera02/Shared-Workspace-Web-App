@@ -13,6 +13,7 @@ $(document).ready(function() {
     commonHelperService.displayPropertyCards();
 
     try {
+        // populate city and state in selection
         commonHelperService.getCityState();
     } catch (error) {
         alertifyService.error(error.message);
@@ -67,12 +68,12 @@ async function propertyFormSubmitHandler() {
             $('#addPropertyModal').offcanvas('hide');
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
-
-             // display success message
-             alertifyService.success("Property saved successfully!");
             
              // load property cards
              commonHelperService.displayPropertyCards();
+
+             // display success message
+             alertifyService.success("Property saved successfully!");
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -89,4 +90,25 @@ async function editProperty(propertyId) {
         // prepare the property form
         commonHelperService.setUpPropertyForm(propertyData);
     }
+}
+
+// delete property - onclick event
+async function deleteProperty(propertyId) {
+    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", function() {
+        
+        try {
+
+            // delete property and assoc workspaces
+            propertyRepository.deleteProperty(propertyId);
+
+             // load property cards
+             commonHelperService.displayPropertyCards();
+
+             // display message
+            alertify.success("Property deleted successfully!");
+
+        } catch (error) {
+            alertify.error(error.message);
+        }
+    });
 }

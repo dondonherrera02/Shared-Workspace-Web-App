@@ -150,7 +150,7 @@ class CommonHelperService {
                         <div class="property-header d-flex justify-content-between align-items-center">
                             <h5 class="property-name mb-0">${pName}</h5>
                             <div class="property-actions">
-                                <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property"></i>
+                                <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property" onclick="deleteProperty('${property.id}')"></i>
                             </div>
                         </div>
         
@@ -318,7 +318,7 @@ class CommonHelperService {
                     .attr('onclick', `addWorkspace('${propertyId}')`)
                     .html('<i class="fas fa-plus me-2"></i>Add Workspace');
 
-                // Append the button inside the "workspaceHeader"
+                // append the button inside the "workspaceHeader"
                 $('#workspaceHeader').closest('.d-flex').append(button);
 
                 workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
@@ -366,7 +366,7 @@ class CommonHelperService {
                         <h5 class="property-name mb-0"> Room Number ${workspace.roomNum} </h5>
                         <div class="property-actions">
                             <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
-                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace"></i>
+                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace" onclick="deleteWorkspace('${workspace.id}')"></i>
                         </div>
                     </div>
     

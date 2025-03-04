@@ -30,8 +30,8 @@ class WorkspaceRepositoryService {
         // get the current workspace list by property id
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
-         // check if existing workspace by property id, type and lease term
-         const existingWorkspace = workspaceList.find(workspace =>
+        // check if existing workspace by property id, type and lease term
+        const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === workspaceData.propertyId &&
             workspace.roomNum === workspaceData.roomNum &&
             workspace.availabilityDate === workspaceData.availabilityDate &&
@@ -44,20 +44,23 @@ class WorkspaceRepositoryService {
             throw new Error('Workspace already exists.');
         }
 
-         // set workspace identifier
-         workspaceData.id = `${enumService.workspacePreIdKey}${Date.now().toString()}`;
+        // set workspace identifier
+        workspaceData.id = `${enumService.workspacePreIdKey}${Date.now().toString()}`;
 
-         // set property owner identifier
-         workspaceData.ownerId = currentUser.id;
+        // set property owner identifier
+        workspaceData.ownerId = currentUser.id;
 
-         // add into workspaces list
-         workspaceList.push(workspaceData);
+        // add into workspaces list
+        workspaceList.push(workspaceData);
 
-         // save to local storage
-         databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
+        // save to local storage
+        databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
 
         return workspaceData;
     }
+
+    // get all workspaces
+    getWorkspaceList = () => databaseHelperService.getList(enumService.workspaces);
 
     // get workspace by id
     getWorkspaceById(workspaceId) {
@@ -76,9 +79,9 @@ class WorkspaceRepositoryService {
         return workspace;
     }
 
-    // get Workspace List by propertyId
+    // get Workspace List by propertyId and current user id
     getWorkspaceListByPropertyId(propertyId) {
-        
+
         // get the current
         const currentUser = databaseHelperService.getOne(enumService.currentUser);
 
@@ -104,8 +107,8 @@ class WorkspaceRepositoryService {
         // Get workspace list
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
-         // check if existing workspace by property id, type and lease term
-         const existingWorkspace = workspaceList.find(workspace =>
+        // check if existing workspace by property id, type and lease term
+        const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === modifiedWorkspace.propertyId &&
             workspace.roomNum === modifiedWorkspace.roomNum &&
             workspace.availabilityDate === modifiedWorkspace.availabilityDate &&
@@ -155,6 +158,26 @@ class WorkspaceRepositoryService {
         const workspacesByCurrentUser = workspaceList.filter(workspace => workspace.ownerId === currentUser.id);
 
         return workspacesByCurrentUser;
+    }
+
+    // delete workspace
+    deleteWorkspace(workspaceId) {
+
+        // get workspace to delete
+        const workspaceToDelete = this.getWorkspaceById(workspaceId);
+
+        // get the current user
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+        // check if the user is allowed to delete
+        if (workspaceToDelete.ownerId !== currentUser.id) throw new Error('Unauthorized to delete this workspace.');
+
+        // remove workspace and save it back
+        let currentWorkspaces = workspaceRepository.getWorkspaceList();
+        currentWorkspaces = currentWorkspaces.filter(w => w.id !== workspaceId);
+        databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
+
+        return workspaceToDelete;
     }
 
 }
