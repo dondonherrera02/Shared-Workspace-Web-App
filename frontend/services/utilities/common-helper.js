@@ -156,7 +156,7 @@ class CommonHelperService {
         
                         <div class="property-state mb-4">${cityState}</div>
         
-                        <div class="property-details mb-3" >
+                        <div class="property-details mb-4" >
                             <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
@@ -166,7 +166,7 @@ class CommonHelperService {
                         </div>
 
                         <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Property</button>
+                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Workspaces</button>
                             <button class="btn-edit w-100" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
                         </div>
                     </div>
@@ -244,6 +244,26 @@ class CommonHelperService {
         }
     }
 
+    setUpWorkspaceView(property = null, workspace = null) {
+        
+        if (property) {
+            $('#propertyNameView').text(property.pName); 
+            $('#propertyAddressView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `); 
+        }
+    
+        if (workspace) {
+            $('#typeView').text(`${workspace.type}`);
+            $('#availabilityDateView').text(workspace.availabilityDate);
+            $('#leaseTermView').text(workspace.leaseTerm);
+            $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
+            $('#seatingView').text(workspace.capacity);
+            $('#smokingView').text(workspace.smokingPolicy);
+            $('#parkingView').text(workspace.parkingGarage);
+            $('#transportationView').text(workspace.transportation);
+        }
+    }
+    
+
     validateWorkspaceData(workspaceData) {
 
         // Check for empty fields
@@ -298,7 +318,6 @@ class CommonHelperService {
         $workspaceList.empty();
 
         let workspaces = [];
-        let workspaceAddress = '';
 
         // get user data role and id
         const currentUser = databaseHelperService.getOne(enumService.currentUser);
@@ -329,6 +348,7 @@ class CommonHelperService {
             // get all workspaces when the role is worker
             if (currentUser.role === enumService.coWorker) {
                 workspaces = workspaceRepository.getWorkspaceList();
+                workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
             } else {
                 // get workspaces by user id when the role is owner
                 workspaces = workspaceRepository.getWorkspacesByUserId(currentUser.id);
@@ -371,6 +391,9 @@ class CommonHelperService {
 
         const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
 
+        const isExpired = new Date(workspace.availabilityDate) < new Date();
+        const availabilityClass = isExpired ? 'expired' : '';
+
         return $(`
             <div class="col-md-6 col-lg-4">
                 <div class="property-card">
@@ -387,7 +410,7 @@ class CommonHelperService {
                         <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
                         <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
-                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1" ${availabilityClass}><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
                         <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>
@@ -422,7 +445,7 @@ class CommonHelperService {
                     </div>
 
                      <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                        <button class="btn-view w-100">View</button>
+                        <button class="btn-view w-100" data-bs-toggle="modal" title="Workspace" data-bs-target="#viewWorkspaceModal" onclick="viewWorkspace('${workspace.id}')">View</button>
                         <button class="btn-edit w-100">Contact</button>
                     </div>
                 </div>

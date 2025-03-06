@@ -209,9 +209,15 @@ select.form-select {
     border-color: #0056b3;
 }
 
+/* Strike through availability date when expired */
+.expired {
+    text-decoration: line-through;
+    color: gray;
+  }
 
 /* Co-Worker Dashboard */
 
 #searchWorkspace {
     background-color: var(--secondary-color);
 }
+

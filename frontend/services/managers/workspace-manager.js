@@ -90,7 +90,6 @@ async function editWorkspace(workspaceId) {
     }
 }
 
-
 // delete property - onclick event
 async function deleteWorkspace(workspaceId) {
     alertifyService.confirm("Are you sure you want to delete this workspace?", function() {
@@ -111,4 +110,15 @@ async function deleteWorkspace(workspaceId) {
             alertify.error(error.message);
         }
     });
+}
+
+// view workspace - onclick event
+async function viewWorkspace(workspaceId) {
+    try {
+        const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
+        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
+        commonHelperService.setUpWorkspaceView(propertyData, workspaceData);
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 }
