@@ -213,5 +213,5 @@ select.form-select {
 /* Co-Worker Dashboard */
 
 #searchWorkspace {
-    background-color: #293F94;
+    background-color: var(--secondary-color);
 }
