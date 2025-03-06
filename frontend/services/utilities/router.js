@@ -22,7 +22,7 @@ class RouterUtilService {
         // define the routes
         const routes = {
             'workspace-owner': enumService.ownerRoute,
-            'co-owner': enumService.workerRoute,
+            'co-worker': enumService.workerRoute,
             'default': enumService.defaultRoute // fallback route for unrecognized roles
         }
 

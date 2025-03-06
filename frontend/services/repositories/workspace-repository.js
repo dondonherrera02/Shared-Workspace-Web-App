@@ -131,17 +131,15 @@ class WorkspaceRepositoryService {
     }
 
     // get workspace list by current user id
-    getWorkspaceListByCurrentUser() {
-        // get the current
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+    getWorkspacesByUserId(userId) {
 
         // get workspace list
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
         // filter by current user id, returns an array of all workspaces by current user id
-        const workspacesByCurrentUser = workspaceList.filter(workspace => workspace.ownerId === currentUser.id);
+        const userWorkspaces = workspaceList.filter(workspace => workspace.ownerId === userId);
 
-        return workspacesByCurrentUser;
+        return userWorkspaces;
     }
 
     // delete workspace

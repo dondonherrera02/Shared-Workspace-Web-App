@@ -300,6 +300,9 @@ class CommonHelperService {
         let workspaces = [];
         let workspaceAddress = '';
 
+        // get user data role and id
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
         if (propertyId) {
             // get workspaces by current user and property id
             workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
@@ -324,8 +327,14 @@ class CommonHelperService {
                 workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
             }
         } else {
-            // get workspaces by current user
-            workspaces = workspaceRepository.getWorkspaceListByCurrentUser();
+
+            // get all workspaces when the role is worker
+            if(currentUser.role === enumService.coWorker){
+                workspaces = workspaceRepository.getWorkspaceList();
+            }else{
+                 // get workspaces by user id when the role is owner
+                workspaces = workspaceRepository.getWorkspacesByUserId(currentUser.id);
+            }
 
             if (workspaces.length === 0) {
                 $workspaceList.append('<p>No workspaces listed yet.</p>');
@@ -351,12 +360,47 @@ class CommonHelperService {
                 ${workspaceProperty.state}`;
             }
 
-            const eachWorkspace = this.createWorkspaceCard(workspace, workspaceAddress);
+            let eachWorkspace = '';
+
+            if(currentUser.role === enumService.coWorker){
+                eachWorkspace = this.createWorkerWorkspaceCard(workspace, workspaceAddress);
+            }else{
+                eachWorkspace = this.createPropertyOwnerWorkspaceCard(workspace, workspaceAddress);
+            }
+            
             $workspaceList.append(eachWorkspace);
         });
     }
 
-    createWorkspaceCard(workspace, workspaceAddress) {
+    createPropertyOwnerWorkspaceCard(workspace, workspaceAddress) {
+        const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
+
+        return $(`
+            <div class="col-md-6 col-lg-4">
+                <div class="property-card">
+                    <div class="property-header d-flex justify-content-between align-items-center">
+                        <h5 class="property-name mb-0"> Room Number ${workspace.roomNum} </h5>
+                        <div class="property-actions">
+                            <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
+                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace" onclick="deleteWorkspace('${workspace.id}')"></i>
+                        </div>
+                    </div>
+    
+                    <div class="property-state mb-4">${workspaceType}</div>
+                    <div class="property-details">
+                        <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
+                        <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
+                        <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
+                        <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+                </div>
+            </div>
+        `);
+    }
+
+    createWorkerWorkspaceCard(workspace, workspaceAddress) {
         const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
 
         return $(`
