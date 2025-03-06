@@ -262,7 +262,20 @@ class CommonHelperService {
             $('#transportationView').text(workspace.transportation);
         }
     }
+
+    setUpContactView(property = null, userData = null, workspace = null) {
+        
+        if (property) {
+            $('#propertyContactView').text(property.pName); 
+            $('#propertyAddressContactView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `); 
+        }
     
+        if (userData) {
+            $('#ownerView').text(userData.fullname);
+            $('#emailView').text(userData.email);
+            $('#phoneView').text(userData.phone);
+        }
+    }
 
     validateWorkspaceData(workspaceData) {
 
@@ -445,8 +458,8 @@ class CommonHelperService {
                     </div>
 
                      <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                        <button class="btn-view w-100" data-bs-toggle="modal" title="Workspace" data-bs-target="#viewWorkspaceModal" onclick="viewWorkspace('${workspace.id}')">View</button>
-                        <button class="btn-edit w-100">Contact</button>
+                        <button class="btn-view w-100" data-bs-toggle="modal" title="Workspace Details" data-bs-target="#viewWorkspaceModal" onclick="viewWorkspace('${workspace.id}')">View</button>
+                        <button class="btn-edit w-100" data-bs-toggle="modal" title="Contact Details" data-bs-target="#viewContactModal" onclick="viewContact('${workspace.id}')">Contact</button>
                     </div>
                 </div>
             </div>

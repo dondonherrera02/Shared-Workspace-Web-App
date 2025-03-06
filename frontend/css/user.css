@@ -184,7 +184,7 @@ select.form-select {
 
 /* View Button */
 .btn-view {
-    background-color: var(--primary-color);
+    background-color: var(--light-color);
     color: var(--white-color);
     border: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -206,7 +206,6 @@ select.form-select {
 .btn-edit:hover {
     background-color: #37393c; 
     color: var(--white-color);
-    border-color: #0056b3;
 }
 
 /* Strike through availability date when expired */

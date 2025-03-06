@@ -122,3 +122,15 @@ async function viewWorkspace(workspaceId) {
         alertifyService.error(error.message);
     }
 }
+
+// view contact - onclick event
+async function viewContact(workspaceId) {
+    try {
+        const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
+        const userData = await userRepository.getUserInfo(workspaceData.ownerId);
+        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
+        commonHelperService.setUpContactView(propertyData, userData, workspaceData);
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
+}
