@@ -300,6 +300,9 @@ class CommonHelperService {
         let workspaces = [];
         let workspaceAddress = '';
 
+        // get user data role and id
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
         if (propertyId) {
             // get workspaces by current user and property id
             workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
@@ -320,12 +323,16 @@ class CommonHelperService {
 
                 // append the button inside the "workspaceHeader"
                 $('#workspaceHeader').closest('.d-flex').append(button);
-
-                workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.pName)}, ${commonHelperService.formatTitle(workspaceProperty.city)}, ${workspaceProperty.state}`;
             }
         } else {
-            // get workspaces by current user
-            workspaces = workspaceRepository.getWorkspaceListByCurrentUser();
+
+            // get all workspaces when the role is worker
+            if (currentUser.role === enumService.coWorker) {
+                workspaces = workspaceRepository.getWorkspaceList();
+            } else {
+                // get workspaces by user id when the role is owner
+                workspaces = workspaceRepository.getWorkspacesByUserId(currentUser.id);
+            }
 
             if (workspaces.length === 0) {
                 $workspaceList.append('<p>No workspaces listed yet.</p>');
@@ -344,19 +351,24 @@ class CommonHelperService {
         workspaces.forEach((workspace) => {
             const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
 
-            if (workspaceProperty) {
-                workspaceAddress = `
-                ${commonHelperService.formatTitle(workspaceProperty.street)},
-                ${commonHelperService.formatTitle(workspaceProperty.city)},
-                ${workspaceProperty.state}`;
+            let eachWorkspace = '';
+
+            if (currentUser.role === enumService.coWorker) {
+                eachWorkspace = this.createWorkerWorkspaceCard(workspace, workspaceProperty);
+            } else {
+                eachWorkspace = this.createPropertyOwnerWorkspaceCard(workspace, workspaceProperty);
             }
 
-            const eachWorkspace = this.createWorkspaceCard(workspace, workspaceAddress);
             $workspaceList.append(eachWorkspace);
         });
     }
 
-    createWorkspaceCard(workspace, workspaceAddress) {
+    createPropertyOwnerWorkspaceCard(workspace, workspaceProperty) {
+
+        const workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.street)},
+                            ${commonHelperService.formatTitle(workspaceProperty.city)},
+                            ${workspaceProperty.state}`;
+
         const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
 
         return $(`
@@ -378,6 +390,40 @@ class CommonHelperService {
                         <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
                         <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+                </div>
+            </div>
+        `);
+    }
+
+    createWorkerWorkspaceCard(workspace, workspaceProperty) {
+
+        const workspaceAddress = `${commonHelperService.formatTitle(workspaceProperty.street)},
+                            ${commonHelperService.formatTitle(workspaceProperty.city)},
+                            ${workspaceProperty.state}`;
+
+        const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
+
+        return $(`
+            <div class="col-md-6 col-lg-4">
+                <div class="property-card">
+                    <div class="property-header d-flex justify-content-between align-items-center">
+                        <h5 class="property-name mb-0"> ${workspaceProperty.pName} </h5>
+                    </div>
+    
+                    <div class="property-state mb-4">${workspaceAddress}</div>
+
+                    <div class="property-details mb-3">
+                        <p class="mb-1"><strong>Room Number:</strong> ${workspace.roomNum}</p>
+                        <p class="mb-1"><strong>Type:</strong> ${workspaceType}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
+                        <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+
+                     <div class="property-actions d-flex justify-content-between align-items-center gap-2">
+                        <button class="btn-view w-100">View</button>
+                        <button class="btn-edit w-100">Contact</button>
                     </div>
                 </div>
             </div>
