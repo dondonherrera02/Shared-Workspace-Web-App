@@ -16,33 +16,22 @@ class WorkspaceRepositoryService {
         const currentUser = databaseHelperService.getOne(enumService.currentUser);
 
         // validate if the current role is owner
-        if (!currentUser || currentUser.role !== enumService.workspaceOwner) {
-            throw new Error('Only property owners are allowed to add workspaces');
-        }
+        if (!currentUser || currentUser.role !== enumService.workspaceOwner) throw new Error('Only property owners are allowed to add workspaces');
 
         // validate property id existence
         const propertyData = propertyRepository.getPropertyById(workspaceData.propertyId);
 
-        if (!propertyData || propertyData.ownerId !== currentUser.id) {
-            throw new Error('Unauthorized property owner');
-        }
-
+        if (!propertyData || propertyData.ownerId !== currentUser.id) throw new Error('Unauthorized property owner');
+   
         // get the current workspace list by property id
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
         // check if existing workspace by property id, type and lease term
         const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === workspaceData.propertyId &&
-            workspace.roomNum === workspaceData.roomNum &&
-            workspace.availabilityDate === workspaceData.availabilityDate &&
-            workspace.type.toLowerCase() === workspaceData.type.toLowerCase() &&
-            workspace.leaseTerm.toLowerCase() === workspaceData.leaseTerm.toLowerCase() &&
-            workspace.price === workspaceData.price
-        );
+            workspace.roomNum === workspaceData.roomNum);
 
-        if (existingWorkspace) {
-            throw new Error('Workspace already exists.');
-        }
+        if (existingWorkspace) throw new Error('Workspace already exists.');
 
         // set workspace identifier
         workspaceData.id = `${enumService.workspacePreIdKey}${Date.now().toString()}`;
@@ -110,12 +99,7 @@ class WorkspaceRepositoryService {
         // check if existing workspace by property id, type and lease term
         const existingWorkspace = workspaceList.find(workspace =>
             workspace.propertyId === modifiedWorkspace.propertyId &&
-            workspace.roomNum === modifiedWorkspace.roomNum &&
-            workspace.availabilityDate === modifiedWorkspace.availabilityDate &&
-            workspace.type.toLowerCase() === modifiedWorkspace.type.toLowerCase() &&
-            workspace.leaseTerm.toLowerCase() === modifiedWorkspace.leaseTerm.toLowerCase() &&
-            workspace.price === modifiedWorkspace.price
-        );
+            workspace.roomNum === modifiedWorkspace.roomNum);
 
         if (existingWorkspace) {
             throw new Error('Workspace already exists.');
