@@ -381,7 +381,7 @@ class CommonHelperService {
             }
 
             if (workspaces.length === 0) {
-                $workspaceList.append('<p>No workspaces listed yet.</p>');
+                $workspaceList.append('<p>No available workspaces have been listed yet.</p>');
                 return;
             }
 

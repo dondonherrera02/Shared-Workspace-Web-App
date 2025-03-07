@@ -9,6 +9,13 @@ $(document).ready(function () {
 
     workspaceFormSubmitHandler();
     loadWorkspaceCards();
+
+    try {
+        // populate city and state in selection
+        commonHelperService.getCityState();
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 });
 
 // set-up workspace form - preparation for save or edit.
