@@ -68,6 +68,15 @@ class CommonHelperService {
             .join(' '); // Join the words back together without spaces
     }
 
+    // FORMAT date string
+    formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
     // *********PROPERTY FORM***********
 
     // SET-UP property form
@@ -156,7 +165,7 @@ class CommonHelperService {
         
                         <div class="property-state mb-4">${cityState}</div>
         
-                        <div class="property-details mb-3" >
+                        <div class="property-details mb-4" >
                             <p class="mb-1"><strong>Street:</strong> ${address}</p>
                             <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
                             <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
@@ -166,7 +175,7 @@ class CommonHelperService {
                         </div>
 
                         <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Property</button>
+                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Workspaces</button>
                             <button class="btn-edit w-100" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
                         </div>
                     </div>
@@ -244,6 +253,39 @@ class CommonHelperService {
         }
     }
 
+    setUpWorkspaceView(property = null, workspace = null) {
+
+        if (property) {
+            $('#propertyNameView').text(property.pName);
+            $('#propertyAddressView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `);
+        }
+
+        if (workspace) {
+            $('#typeView').text(`${workspace.type}`);
+            $('#availabilityDateView').text(this.formatDate(workspace.availabilityDate));
+            $('#leaseTermView').text(workspace.leaseTerm);
+            $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
+            $('#seatingView').text(workspace.capacity);
+            $('#smokingView').text(workspace.smokingPolicy);
+            $('#parkingView').text(workspace.parkingGarage);
+            $('#transportationView').text(workspace.transportation);
+        }
+    }
+
+    setUpContactView(property = null, userData = null, workspace = null) {
+
+        if (property) {
+            $('#propertyContactView').text(property.pName);
+            $('#propertyAddressContactView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `);
+        }
+
+        if (userData) {
+            $('#ownerView').text(userData.fullname);
+            $('#emailView').text(userData.email);
+            $('#phoneView').text(userData.phone);
+        }
+    }
+
     validateWorkspaceData(workspaceData) {
 
         // Check for empty fields
@@ -286,9 +328,13 @@ class CommonHelperService {
             throw new Error('Please input a valid price.');
         }
 
-        // Availability date - future dates only
-        if (new Date(workspaceData.availabilityDate) < new Date()) {
-            throw new Error('Availability date must be a future date.');
+        // REF: https://www.freecodecamp.org/news/how-to-validate-a-date-in-javascript/
+        const today = new Date().toISOString();
+        const availabilityDate = new Date(workspaceData.availabilityDate + "T00:00:00Z").toISOString();
+
+        // Compare using UTC values
+        if (availabilityDate <= today) {
+           throw new Error("Availability date must be in the future.");
         }
     }
 
@@ -298,7 +344,6 @@ class CommonHelperService {
         $workspaceList.empty();
 
         let workspaces = [];
-        let workspaceAddress = '';
 
         // get user data role and id
         const currentUser = databaseHelperService.getOne(enumService.currentUser);
@@ -329,13 +374,14 @@ class CommonHelperService {
             // get all workspaces when the role is worker
             if (currentUser.role === enumService.coWorker) {
                 workspaces = workspaceRepository.getWorkspaceList();
+                workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
             } else {
                 // get workspaces by user id when the role is owner
                 workspaces = workspaceRepository.getWorkspacesByUserId(currentUser.id);
             }
 
             if (workspaces.length === 0) {
-                $workspaceList.append('<p>No workspaces listed yet.</p>');
+                $workspaceList.append('<p>No available workspaces have been listed yet.</p>');
                 return;
             }
 
@@ -371,6 +417,9 @@ class CommonHelperService {
 
         const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
 
+        const isExpired = new Date(workspace.availabilityDate) < new Date();
+        const availabilityClass = isExpired ? 'expired' : '';
+
         return $(`
             <div class="col-md-6 col-lg-4">
                 <div class="property-card">
@@ -387,7 +436,7 @@ class CommonHelperService {
                         <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
                         <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
-                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1 ${availabilityClass}" ><strong>Availability Date:</strong> ${this.formatDate(workspace.availabilityDate)} (${this.formatTitle(availabilityClass)})</p>
                         <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>
@@ -416,14 +465,14 @@ class CommonHelperService {
                     <div class="property-details mb-3">
                         <p class="mb-1"><strong>Room Number:</strong> ${workspace.roomNum}</p>
                         <p class="mb-1"><strong>Type:</strong> ${workspaceType}</p>
-                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong>  ${this.formatDate(workspace.availabilityDate)}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>
 
                      <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                        <button class="btn-view w-100">View</button>
-                        <button class="btn-edit w-100">Contact</button>
+                        <button class="btn-view w-100" data-bs-toggle="modal" title="Workspace Details" data-bs-target="#viewWorkspaceModal" onclick="viewWorkspace('${workspace.id}')">View</button>
+                        <button class="btn-edit w-100" data-bs-toggle="modal" title="Contact Details" data-bs-target="#viewContactModal" onclick="viewContact('${workspace.id}')">Contact</button>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,13 @@ $(document).ready(function () {
 
     workspaceFormSubmitHandler();
     loadWorkspaceCards();
+
+    try {
+        // populate city and state in selection
+        commonHelperService.getCityState();
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 });
 
 // set-up workspace form - preparation for save or edit.
@@ -90,7 +97,6 @@ async function editWorkspace(workspaceId) {
     }
 }
 
-
 // delete property - onclick event
 async function deleteWorkspace(workspaceId) {
     alertifyService.confirm("Are you sure you want to delete this workspace?", function() {
@@ -111,4 +117,27 @@ async function deleteWorkspace(workspaceId) {
             alertify.error(error.message);
         }
     });
+}
+
+// view workspace - onclick event
+async function viewWorkspace(workspaceId) {
+    try {
+        const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
+        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
+        commonHelperService.setUpWorkspaceView(propertyData, workspaceData);
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
+}
+
+// view contact - onclick event
+async function viewContact(workspaceId) {
+    try {
+        const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
+        const userData = await userRepository.getUserInfo(workspaceData.ownerId);
+        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
+        commonHelperService.setUpContactView(propertyData, userData, workspaceData);
+    } catch (error) {
+        alertifyService.error(error.message);
+    }
 }

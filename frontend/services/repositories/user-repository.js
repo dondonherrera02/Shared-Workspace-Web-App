@@ -35,6 +35,23 @@ class UserRepositoryService {
         
         return userData;
     }
+
+     // get user info by workspace id
+     getUserInfo(userId) {
+
+        // get workspace list
+        const users = databaseHelperService.getList(enumService.users);
+
+        // find by id
+        const user = users.find(user => user.id === userId);
+
+        // validate
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        return user;
+    }
 }
 
 // export the service (if using modules) or instantiate directly

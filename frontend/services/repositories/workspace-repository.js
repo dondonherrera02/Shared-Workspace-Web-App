@@ -96,13 +96,8 @@ class WorkspaceRepositoryService {
         // Get workspace list
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
-        // check if existing workspace by property id, type and lease term
-        const existingWorkspace = workspaceList.find(workspace =>
-            workspace.propertyId === modifiedWorkspace.propertyId &&
-            workspace.roomNum === modifiedWorkspace.roomNum);
-
-        if (existingWorkspace) {
-            throw new Error('Workspace already exists.');
+        if (!workspaceList) {
+            throw new Error('Workspace list not found.');
         }
 
         // Find the workspace and its index
