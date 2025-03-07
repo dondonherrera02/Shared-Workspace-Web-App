@@ -68,6 +68,15 @@ class CommonHelperService {
             .join(' '); // Join the words back together without spaces
     }
 
+    // FORMAT date string
+    formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
     // *********PROPERTY FORM***********
 
     // SET-UP property form
@@ -245,15 +254,15 @@ class CommonHelperService {
     }
 
     setUpWorkspaceView(property = null, workspace = null) {
-        
+
         if (property) {
-            $('#propertyNameView').text(property.pName); 
-            $('#propertyAddressView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `); 
+            $('#propertyNameView').text(property.pName);
+            $('#propertyAddressView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `);
         }
-    
+
         if (workspace) {
             $('#typeView').text(`${workspace.type}`);
-            $('#availabilityDateView').text(workspace.availabilityDate);
+            $('#availabilityDateView').text(this.formatDate(workspace.availabilityDate));
             $('#leaseTermView').text(workspace.leaseTerm);
             $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
             $('#seatingView').text(workspace.capacity);
@@ -264,12 +273,12 @@ class CommonHelperService {
     }
 
     setUpContactView(property = null, userData = null, workspace = null) {
-        
+
         if (property) {
-            $('#propertyContactView').text(property.pName); 
-            $('#propertyAddressContactView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `); 
+            $('#propertyContactView').text(property.pName);
+            $('#propertyAddressContactView').text(`Room No. ${workspace.roomNum}, ${property.street}, ${property.city}, ${property.state}, ${property.postalCode} `);
         }
-    
+
         if (userData) {
             $('#ownerView').text(userData.fullname);
             $('#emailView').text(userData.email);
@@ -319,9 +328,13 @@ class CommonHelperService {
             throw new Error('Please input a valid price.');
         }
 
-        // Availability date - future dates only
-        if (new Date(workspaceData.availabilityDate) < new Date()) {
-            throw new Error('Availability date must be a future date.');
+        // REF: https://www.freecodecamp.org/news/how-to-validate-a-date-in-javascript/
+        const today = new Date().toISOString();
+        const availabilityDate = new Date(workspaceData.availabilityDate + "T00:00:00Z").toISOString();
+
+        // Compare using UTC values
+        if (availabilityDate <= today) {
+           throw new Error("Availability date must be in the future.");
         }
     }
 
@@ -423,7 +436,7 @@ class CommonHelperService {
                         <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
                         <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
-                        <p class="mb-1" ${availabilityClass}><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1 ${availabilityClass}" ><strong>Availability Date:</strong> ${this.formatDate(workspace.availabilityDate)} (${this.formatTitle(availabilityClass)})</p>
                         <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>
@@ -452,7 +465,7 @@ class CommonHelperService {
                     <div class="property-details mb-3">
                         <p class="mb-1"><strong>Room Number:</strong> ${workspace.roomNum}</p>
                         <p class="mb-1"><strong>Type:</strong> ${workspaceType}</p>
-                        <p class="mb-1"><strong>Availability Date:</strong> ${workspace.availabilityDate}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong>  ${this.formatDate(workspace.availabilityDate)}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>

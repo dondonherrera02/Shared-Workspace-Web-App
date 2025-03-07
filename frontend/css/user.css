@@ -210,8 +210,7 @@ select.form-select {
 
 /* Strike through availability date when expired */
 .expired {
-    text-decoration: line-through;
-    color: gray;
+    color: rgb(189, 137, 137);
   }
 
 /* Co-Worker Dashboard */
