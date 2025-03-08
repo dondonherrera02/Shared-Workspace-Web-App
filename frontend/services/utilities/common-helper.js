@@ -69,8 +69,9 @@ class CommonHelperService {
     }
 
     // FORMAT date string
+    // https://www.freecodecamp.org/news/how-to-format-a-date-with-javascript-date-formatting-in-js/
     formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-CA', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'

@@ -22,7 +22,7 @@ class WorkspaceRepositoryService {
         const propertyData = propertyRepository.getPropertyById(workspaceData.propertyId);
 
         if (!propertyData || propertyData.ownerId !== currentUser.id) throw new Error('Unauthorized property owner');
-   
+
         // get the current workspace list by property id
         const workspaceList = databaseHelperService.getList(enumService.workspaces);
 
@@ -155,6 +155,51 @@ class WorkspaceRepositoryService {
         databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
 
         return workspaceToDelete;
+    }
+
+    // search for workspaces that match the search workspace request
+    /* sample request: key value pair  
+        key, value: <city: 'Calgary'>
+        key, value: <state: 'Alberta'> 
+    */
+    searchWorkspaces(request) {
+        // get the list of all workspaces
+        let workspaces = this.getWorkspaceList();
+
+        // filter through each workspace and include the filtered result
+        // https://www.freecodecamp.org/news/filter-arrays-in-javascript/
+        const workspaceList = workspaces.filter(ws => {
+
+            // find the property linked to the workspace
+            const property = propertyRepository.getPropertyList().find(p => p.id === ws.propertyId);
+
+            // skip if no property is found
+            if (!property) return false;
+
+            // check if all search conditions match
+            // Object.entries - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+            // every() - test every elements meet the condition - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+            const isMatch = Object.entries(request).every(([key, value]) => {
+                // list of property-related keys
+                const isPropertyKey = ['city', 'state', 'postalCode', 'neighborhood', 'parkingGarage', 'squareFeet', 'transportation'].includes(key);
+
+                // get the value from the property or workspace
+                const result = isPropertyKey ? property[key] : ws[key]; 
+
+                if (key === 'price' || typeof value === 'number') {
+                    // ensure exact numeric match
+                    return parseInt(result) === parseInt(value);
+                } else {
+                    // handle string based searches
+                    return result?.toString().toLowerCase() === value.toString().toLowerCase();
+                }
+            });
+
+             // ensure the workspace is available from today onward
+            return isMatch && new Date(ws.availabilityDate) >= new Date();
+        });
+       
+        return workspaceList;
     }
 
 }

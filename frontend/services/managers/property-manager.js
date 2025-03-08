@@ -64,7 +64,7 @@ async function propertyFormSubmitHandler() {
                 await propertyRepository.saveProperty(propertyData);
             }
 
-            // Dismiss the offcanvas
+            // dismiss the offcanvas
             $('#addPropertyModal').offcanvas('hide');
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
