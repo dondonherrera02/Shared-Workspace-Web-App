@@ -9,6 +9,7 @@ $(document).ready(function () {
 
     workspaceFormSubmitHandler();
     loadWorkspaceCards();
+    workspaceSearchHandler();
 
     try {
         // populate city and state in selection
@@ -68,7 +69,7 @@ async function workspaceFormSubmitHandler() {
                 await workspaceRepository.saveWorkspace(workspaceData);
             }
 
-            // Dismiss the modal
+            // dismiss the modal
             $('#addWorkspaceModal').modal('hide');
             $(workspaceForm).trigger("reset"); // reset the form
             $(workspaceForm).removeData("workspace-id"); // remove stored workspace id value from cache
@@ -140,4 +141,62 @@ async function viewContact(workspaceId) {
     } catch (error) {
         alertifyService.error(error.message);
     }
+}
+
+// search workspace handler
+async function workspaceSearchHandler(){
+    $('#searchWorkspaceNow').on('click', async function(event) {
+        event.preventDefault();
+
+        const searchWorkspaceRequest = {
+            city: $('#city').val(),
+            state: $('#state').val(),
+            postalCode: $('#postalCodeSearch').val(),
+            neighborhood: $('#neighborhoodSearch').val(),
+            parkingGarage: $('#parkingSearch').val(),
+            squareFeet: $('#squareFeetSearch').val(),
+            transportation: $('#transportationSearch').val(),
+            availabilityDate: $('#availabilityDateSearch').val(),
+            capacity: $('#capacitySearch').val(),
+            leaseTerm: $('#leaseTermSearch').val(),
+            price: $('#minPriceSearch').val(),
+            smokingPolicy: $('#smokingPolicySearch').val()
+        };
+
+        // remove empty values
+        Object.keys(searchWorkspaceRequest).forEach(key => {
+            // check if the value of the key in searchWorkspaceRequest is falsy (e.g., undefined, null, 0, "") 
+            // and not explicitly false, then delete the key from the object
+            if (!searchWorkspaceRequest[key] && searchWorkspaceRequest[key] !== false) {
+                delete searchWorkspaceRequest[key];
+            }
+        });
+
+        const $workspaceList = $('#workspaceList'); // get the workspace list
+        $workspaceList.empty(); // reset the list
+        $('#searchWorkspaceModal').modal('hide'); // hide the modal
+        $(searchWorkspaceForm).trigger("reset"); // reset the form
+
+        // search workspace by request
+        const results = await workspaceRepository.searchWorkspaces(searchWorkspaceRequest);
+
+        // display message when no ws found
+        if (results.length === 0) {
+            $workspaceList.append('<p>No workspaces found matching your search request.</p>');
+            return;
+        }
+
+        // append workspace cards
+        results.forEach((workspace) => {
+            // get property linked to ws
+            const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
+
+            // call the helper to create worker workspace card
+            let eachWorkspace = commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
+
+            // append to dynamic list
+            $workspaceList.append(eachWorkspace);
+        });
+      
+    });
 }
