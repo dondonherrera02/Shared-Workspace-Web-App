@@ -371,8 +371,8 @@ class CommonHelperService {
             }
         } else {
 
-            // get all workspaces when the role is worker
             if (currentUser.role === enumService.coWorker) {
+                // get all workspaces when the role is worker
                 workspaces = workspaceRepository.getWorkspaceList();
                 workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
             } else {
@@ -418,7 +418,7 @@ class CommonHelperService {
         const workspaceType = `${commonHelperService.formatTitle(workspace.type)}`;
 
         const isExpired = new Date(workspace.availabilityDate) < new Date();
-        const availabilityClass = isExpired ? 'expired' : '';
+        const availabilityClass = isExpired ? 'expired' : 'available';
 
         return $(`
             <div class="col-md-6 col-lg-4">

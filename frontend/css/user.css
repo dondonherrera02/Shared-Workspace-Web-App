@@ -208,10 +208,10 @@ select.form-select {
     color: var(--white-color);
 }
 
-/* Strike through availability date when expired */
 .expired {
     color: rgb(189, 137, 137);
   }
+
 
 /* Co-Worker Dashboard */
 
