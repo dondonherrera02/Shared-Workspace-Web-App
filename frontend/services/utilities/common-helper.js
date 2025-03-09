@@ -74,7 +74,8 @@ class CommonHelperService {
         return new Date(dateString).toLocaleDateString('en-CA', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            timeZone: 'Asia/Manila'
         });
     }
 
