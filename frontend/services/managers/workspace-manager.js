@@ -31,7 +31,7 @@ function loadWorkspaceCards(){
     }
 }
 
-// property form submit event handler
+// workspace form submit event handler
 async function workspaceFormSubmitHandler() {
     $('#saveWorkspace').on('click', async function (event) {
         event.preventDefault();

@@ -495,6 +495,7 @@ class CommonHelperService {
                             </div>
                             <div class="modal-body">
                                 <form id="profileForm">
+                                    <input type="hidden" id="role" name="role">
                                     <div class="mb-3">
                                         <label class="form-label">Full name:</label>
                                         <input type="text" class="form-control" placeholder="Full Name" id="fullname" required>
@@ -515,7 +516,7 @@ class CommonHelperService {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary" id="saveProfile">Save</button>
+                                <button type="submit" class="btn btn-primary" id="saveProfile" onclick="saveProfile()">Save</button>
                             </div>
                         </div>
                     </div>

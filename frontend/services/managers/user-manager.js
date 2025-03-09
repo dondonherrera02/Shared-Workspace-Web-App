@@ -7,6 +7,7 @@
 
 $(document).ready(function() {
     getProfile();
+    commonHelperService.getEditProfileModal();
 });
 
 // Functions
@@ -20,7 +21,51 @@ function getProfile(){
 }
 
 async function editProfile(){
-    
-    // call edit profile modal
-    commonHelperService.getEditProfileModal();
+    // get current user
+    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+    // get profile form
+    let $profileForm = $('#profileForm');
+
+    // set-up edit profile form
+    $profileForm.data("id", currentUser.id); // store current id as data attribute
+    $('#role').val(currentUser.role);
+    $('#fullname').val(currentUser.fullname);
+    $('#phone').val(currentUser.phone);
+    $('#email').val(currentUser.email);
+    $('#password').val(currentUser.password);
+}
+
+async function saveProfile() {
+    let $profileForm = $('#profileForm');
+
+    const profileData = {
+        role: $('#role').val(),
+        fullname: $('#fullname').val(),
+        phone: $('#phone').val(),
+        email: $('#email').val(),
+        password: $('#password').val()
+    };
+
+    // Validate profile input data
+    commonHelperService.validateUserData(profileData);
+
+    if (!$profileForm.data("id")) {
+        alertifyService.error("Unable to update profile!");
+        return;
+    }
+
+    // Update profile
+    await userRepository.updateUser($profileForm.data("id"), profileData);
+
+     // Update the UI dynamically
+     $('#profile-usertitle-name').text(profileData.fullname);
+
+    // Dismiss the modal
+    $('#editProfileModal').modal('hide');
+    $profileForm.trigger("reset"); // Reset form
+    $profileForm.removeData("id"); // Remove stored ID
+
+    // Show success message
+    alertifyService.success("Profile saved successfully!");
 }
