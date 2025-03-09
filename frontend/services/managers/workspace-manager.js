@@ -10,13 +10,6 @@ $(document).ready(function () {
     workspaceFormSubmitHandler();
     loadWorkspaceCards();
     workspaceSearchHandler();
-
-    try {
-        // populate city and state in selection
-        commonHelperService.getCityState();
-    } catch (error) {
-        alertifyService.error(error.message);
-    }
 });
 
 // set-up workspace form - preparation for save or edit.
@@ -149,8 +142,8 @@ async function workspaceSearchHandler(){
         event.preventDefault();
 
         const searchWorkspaceRequest = {
-            city: $('#city').val(),
-            state: $('#state').val(),
+            city: $('#citySearch').val(),
+            state: $('#stateSearch').val(),
             postalCode: $('#postalCodeSearch').val(),
             neighborhood: $('#neighborhoodSearch').val(),
             parkingGarage: $('#parkingSearch').val(),
