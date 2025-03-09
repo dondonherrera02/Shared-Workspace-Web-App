@@ -18,3 +18,9 @@ function getProfile(){
     $('#profile-usertitle-name').text(formattedName);
     $('#profile-usertitle-position').text(formattedRole);
 }
+
+async function editProfile(){
+    
+    // call edit profile modal
+    commonHelperService.getEditProfileModal();
+}
