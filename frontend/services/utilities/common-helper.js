@@ -74,7 +74,8 @@ class CommonHelperService {
         return new Date(dateString).toLocaleDateString('en-CA', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            timeZone: 'Asia/Manila'
         });
     }
 
@@ -479,6 +480,54 @@ class CommonHelperService {
             </div>
         `);
     }
+
+    getEditProfileModal() {
+        // check if the modal already exists to prevent duplicate modals
+        if ($('#editProfileModal').length === 0) {
+            const editProfileModalHTML = `
+                <!-- Edit Profile Info Modal -->
+                <div class="modal fade" id="editProfileModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Co-Space Profile</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="profileForm">
+                                    <input type="hidden" id="role" name="role">
+                                    <div class="mb-3">
+                                        <label class="form-label">Full name:</label>
+                                        <input type="text" class="form-control" placeholder="Full Name" id="fullname" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone number:</label>
+                                        <input type="phone" class="form-control" placeholder="Phone number" id="phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email:</label>
+                                        <input type="email" class="form-control" placeholder="Email" id="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password:</label>
+                                        <input type="password" class="form-control" placeholder="Password" id="password" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="saveProfile" onclick="saveProfile()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // append the modal HTML to the body
+            $('body').append(editProfileModalHTML);
+        }
+    }
+
 }
 
 // export the service (if using modules) or instantiate directly

@@ -72,7 +72,8 @@ body {
 
 /* Landing Page */
 .landing-page {
-    padding: 6rem 0 4rem;
+    background: url('/assets/img/bg-cover.jpg') center/cover;
+    padding: 8rem 0 4rem;
     color: white;
 }
 
@@ -149,4 +150,18 @@ body {
 .form-check-input:checked {
     background-color: #28a745;
     border-color: #28a745;
+}
+
+.custom-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+.fas {
+    color: var(--light-color);
+}
+
+.cta {
+    background-color: var(--light-color);
+    color: white;
 }

@@ -37,7 +37,7 @@ class UserRepositoryService {
     }
 
      // get user info by workspace id
-     getUserInfo(userId) {
+    getUserInfo(userId) {
 
         // get workspace list
         const users = databaseHelperService.getList(enumService.users);
@@ -52,6 +52,47 @@ class UserRepositoryService {
 
         return user;
     }
+
+     // update user to local storage
+     updateUser(id, modifiedProfile) {
+        // get the current user
+        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+        // get users
+        const users = databaseHelperService.getList(enumService.users);
+
+        if (!users) {
+            throw new Error('Unable to upload profile.');
+        }
+
+        // find the user and its index
+        const currentUserIndex = users.findIndex(u => u.id === id);
+
+        // if user not found, throw error
+        if (currentUserIndex === -1) {
+            throw new Error("User not found. Unable to update workspace.");
+        }
+
+        const userToUpdate = users[currentUserIndex];
+
+        // check if the user is authorized to update
+        if (userToUpdate.id !== currentUser.id) {
+            throw new Error("Unauthorized user. Unable to update this profile.");
+        }
+
+        // update with latest update
+        users[currentUserIndex] = { ...userToUpdate, ...modifiedProfile };
+
+        // Save updated user list to local storage
+        databaseHelperService.saveToLocalStorage(enumService.users, users);
+
+        // update the current user
+        databaseHelperService.saveToLocalStorage(enumService.currentUser, users[currentUserIndex]);
+
+        // Return the updated user
+        return userToUpdate;
+    }
+
 }
 
 // export the service (if using modules) or instantiate directly

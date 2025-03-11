@@ -9,6 +9,7 @@ $(document).ready(function() {
     signUp();
     login();
     logout();
+    checkUserAuthentication();
 });
 
 // Functions
@@ -81,5 +82,32 @@ function logout(){
             authRepository.logout();
             routerService.redirectIndex();
         });
+    }
+}
+
+function checkUserAuthentication(){
+    // list all public pages
+    const publicPages = ['/', '/index.html']
+
+    // get the current path
+    // https://www.w3schools.com/jsref/prop_loc_pathname.asp
+    const currentPath = window.location.pathname;
+
+    // get the current user
+    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+
+    // validate if current path includes in the public pages, if not return to index.html
+    if(!publicPages.includes(currentPath) && !currentUser) {
+        window.location.href = '/index.html'
+    }
+
+    // redirect if user tries to direct access via url unauthorized pages
+    // if worker tries to change the url to owner url, fallback to worker-dashboard
+    if (currentPath.includes('owner-dashboard') && currentUser.role !== enumService.workspaceOwner){
+        window.location.href = 'co-worker-dashboard.html';
+    }
+    // if owner tries to change the url to worker url, fallback to owner-dashboard
+    else if (currentPath.includes('co-worker-dashboard') && currentUser.role !== enumService.coWorker){
+        window.location.href = 'owner-dashboard.html';
     }
 }
