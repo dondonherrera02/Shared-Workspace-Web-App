@@ -109,6 +109,7 @@ class CommonHelperService {
         // check for empty fields
         for (let key in propertyData) {
             if (!propertyData[key]) {
+                key = key === 'pName' ? 'Property name' : key;
                 throw new Error(`${this.formatTitle(key)} is required.`);
             }
         }
@@ -355,12 +356,16 @@ class CommonHelperService {
             workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
             const workspaceProperty = propertyRepository.getPropertyById(propertyId);
 
+            // if workspace property found
             if (workspaceProperty) {
+
+                // change the header text
                 $('#workspaceHeader').text(`Workspaces for ${commonHelperService.formatTitle(workspaceProperty.pName)}`)
                     .on('click', function () {
                         window.location.href = enumService.ownerRoute;
                     });
-
+                
+                // create add workspace button
                 var button = $('<button>')
                     .addClass('btn btn-primary')
                     .attr('data-bs-toggle', 'modal')
