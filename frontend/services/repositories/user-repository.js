@@ -62,7 +62,7 @@ class UserRepositoryService {
         const users = databaseHelperService.getList(enumService.users);
 
         if (!users) {
-            throw new Error('Unable to upload profile.');
+            throw new Error('Unable to update profile.');
         }
 
         // find the user and its index
