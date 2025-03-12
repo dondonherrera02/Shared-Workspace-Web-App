@@ -14,14 +14,14 @@ const db = new sqlite3.Database(`./${DATABASE_NAME}`);
 // Run the SQL query to create the 'users' table
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,                   -- Auto-generated unique identifier for the user
-    FullName TEXT NOT NULL,                                 -- The user's full name
-    Phone TEXT NOT NULL,                                    -- The user's phone number
-    Email TEXT NOT NULL,                                    -- The user's email address
-    Password TEXT NOT NULL,                                 -- The user's password (hashed before saving)
-    Role TEXT NOT NULL,                                     -- The user's role (e.g., "co-worker", "workspace-owner")
-    CreatedDate TEXT NOT NULL,                              -- Date and time when the user was created
-    UpdatedDate TEXT NOT NULL                               -- Date and time when the user was last updated
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,     -- Auto-generated unique identifier for the user
+    FullName TEXT NOT NULL,                   -- The user's full name
+    Phone TEXT NOT NULL,                      -- The user's phone number
+    Email TEXT NOT NULL,                      -- The user's email address
+    Password TEXT NOT NULL,                   -- The user's password (hashed before saving)
+    Role TEXT NOT NULL,                       -- The user's role (e.g., "co-worker", "workspace-owner")
+    CreatedDate TEXT NOT NULL,                -- Date and time when the user was created
+    UpdatedDate TEXT NOT NULL                 -- Date and time when the user was last updated
   )
 `, (err) => {
     if (err) {

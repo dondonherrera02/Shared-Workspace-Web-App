@@ -1,0 +1,53 @@
+Setting Up a Node.js Project with SQLite and Sequelize
+
+1. Initialize a Node.js Project
+
+npm init -y
+
+This command creates a package.json file with default settings, initializing a new Node.js project.
+
+2. Install Express and CORS
+
+npm i express cors
+
+Express: A web framework for handling HTTP requests and building APIs.
+
+CORS: Middleware to allow cross-origin requests, useful for frontend-backend communication.
+
+3. Install Nodemon
+
+npm install nodemon
+
+Nodemon: Automatically restarts the server when file changes are detected, making development easier.
+
+4. Start Server with Environment Variables
+
+node --env-file=.env app.js
+
+Runs the app.js file while loading environment variables from .env.
+
+5. Install SQLite and Bcrypt for Security
+
+npm install sqlite3 bcryptjs
+
+SQLite3: A lightweight, file-based database engine.
+
+Bcrypt.js: Library for securely hashing passwords.
+
+6. Install Sequelize ORM
+
+npm install sequelize
+
+Sequelize: An Object-Relational Mapper (ORM) for working with databases in JavaScript.
+
+7. Install Additional Bcrypt Package (Optional)
+
+npm install bcrypt
+
+Bcrypt (alternative to bcrypt.js): Can be used for password hashing.
+
+8. Run the Database Initialization Script
+
+node database.js
+
+This script creates tables and initializes the database based on Sequelize models.
