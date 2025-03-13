@@ -36,18 +36,10 @@ class DatabaseHelperService {
             });
 
             if (!response.ok) {
-                console.warn(`HTTP error getting ${objectName}! Status: ${response.status}`);
-                return [];
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
             const data = await response.json();
-
-            // check if this is an array and return empty array if not
-            if (!Array.isArray(data)) {
-                console.warn(`Expected array for ${objectName}, but got:`, typeof data);
-                return [];
-            }
-
             return data;
         } catch (error) {
             console.error("Error fetching data:", error);

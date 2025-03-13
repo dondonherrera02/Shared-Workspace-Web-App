@@ -5,6 +5,8 @@
 * @author: Dondon Herrera
 */
 
+import { enumService } from '../utilities/enum.js';
+
 class RouterUtilService {
 
     redirectIndex(){
