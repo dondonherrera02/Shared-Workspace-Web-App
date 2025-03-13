@@ -1,9 +1,10 @@
 /**
 * @name: Co-Space Web App - Auth Manager - Business Logic Layer
 * @Course Code: SODV1201
-* @class: Software Development Diploma program.
+* @class: Software Development Diploma Program
 * @author: Dondon Herrera
 */
+
 import { alertifyService } from '../externalservices/alertify.js';
 import { databaseHelperService } from '../utilities/database-helper.js';
 import { enumService } from '../utilities/enum.js';
@@ -20,13 +21,12 @@ $(document).ready(function() {
 });
 
 // Functions
-function signUp(){
-    $("#signupForm").on('submit', function(event) {
-        event.preventDefault(); // prevents form from submitting
+function signUp() {
+    $("#signupForm").on('submit', async function(event) {
+        event.preventDefault(); // Prevents form from submitting
 
         try {
-            
-            // store the inputs in an array
+            // Store user input data
             const userData = {
                 fullname: $('#fullname').val().trim(),
                 phone: $('#phone').val().trim(),
@@ -34,17 +34,17 @@ function signUp(){
                 password: $('#password').val().trim(),
                 role: $('#role').val().trim()
             };
-            
-            // validate user input data
+
+            // Validate user input data
             commonHelperService.validateUserData(userData);
 
-            // save user
-            userRepository.saveUser(userData);
+            // Save user
+            await userRepository.saveUser(userData);
 
-            // login after sign up
-            authRepository.login(userData.email, userData.password);
+            // Login after sign up
+            await authRepository.login(userData.email, userData.password);
 
-            // redirect to page-role
+            // Redirect to role-specific page
             routerService.redirectPage(userData);
 
         } catch (error) {
@@ -53,24 +53,23 @@ function signUp(){
     });
 }
 
-function login(){
-    $("#loginForm").on('submit', function(event) {
-        event.preventDefault(); // prevents form from submitting
+function login() {
+    $("#loginForm").on('submit', async function(event) {
+        event.preventDefault(); // Prevents form from submitting
 
         try {
-            
             const email = $('#login-email').val().trim();
-            const password = $('#login-password').val();
+            const password = $('#login-password').val().trim();
 
             // Validate inputs
             if (!email || !password) {
-                throw new Error('Please fill in all required fields');
+                throw new Error('Please fill in all required fields.');
             }
 
-            // login
-            const currentUser = authRepository.login(email, password);
+            // Login
+            const currentUser = await authRepository.login(email, password);
 
-            // redirect to page-role
+            // Redirect to role-specific page
             routerService.redirectPage(currentUser);
 
         } catch (error) {
@@ -79,20 +78,20 @@ function login(){
     });
 }
 
-function logout(){
-    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+async function logout(){
+    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
     if(currentUser) {
-        $("#btnLogout").on('click', function(event) {
+        $("#btnLogout").on('click', async function(event) {
             event.preventDefault();
 
-            authRepository.logout();
-            routerService.redirectIndex();
+            await authRepository.logout();
+            await routerService.redirectIndex();
         });
     }
 }
 
-function checkUserAuthentication(){
+async function checkUserAuthentication(){
     // list all public pages
     const publicPages = ['/', '/index.html']
 
@@ -101,7 +100,7 @@ function checkUserAuthentication(){
     const currentPath = window.location.pathname;
 
     // get the current user
-    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
     // validate if current path includes in the public pages, if not return to index.html
     if(!publicPages.includes(currentPath) && !currentUser) {

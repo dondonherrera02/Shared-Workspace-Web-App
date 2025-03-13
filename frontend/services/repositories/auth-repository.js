@@ -10,10 +10,10 @@ import { enumService } from '../utilities/enum.js';
 
 class AuthRepositoryService {
 
-    login(email, password){
+    async login(email, password){
         
         // get all registered users
-        const userList = databaseHelperService.getList(enumService.users); // JSON Parsed Array
+        const userList = await databaseHelperService.getList(enumService.users); // JSON Parsed Array
         
         // get the credentials, find vs. map, find means get the first element based on the condition, map means get list elements..
         // Reference: https://stackoverflow.com/questions/66992214/find-vs-map-in-javascript
@@ -22,21 +22,21 @@ class AuthRepositoryService {
         // validate if the user is registered
         if(requestor){
             // get and set current user
-            let currentUser = databaseHelperService.getOne(enumService.currentUser);
+            let currentUser = await databaseHelperService.getOne(enumService.currentUser);
             currentUser = requestor;
             
             // update the current user
-            databaseHelperService.saveToLocalStorage(enumService.currentUser, currentUser);
+            await databaseHelperService.saveToLocalStorage(enumService.currentUser, currentUser);
             return currentUser;
         }
 
         throw new Error('Invalid credentials');
     }
 
-    logout() {
-        let currentUser = databaseHelperService.getOne(enumService.currentUser);
+    async logout() {
+        let currentUser = await databaseHelperService.getOne(enumService.currentUser);
         currentUser = null;
-        databaseHelperService.deleteOne(enumService.currentUser);
+        await databaseHelperService.deleteOne(enumService.currentUser);
     }
 }
 
