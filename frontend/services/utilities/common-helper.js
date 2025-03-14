@@ -134,15 +134,13 @@ class CommonHelperService {
     }
 
     // display property cards
-    async displayPropertyCards() {
-
-        // get property list - html element
+    async displayPropertyCards(role = null) {
         let $propertyList = $('#propertyList');
-
         $propertyList.empty();
 
-        // get properties by current user
-        const propertyList = await propertyRepository.getPropertyListByCurrentUser();
+        let propertyList = role === enumService.workspaceOwner
+            ? await propertyRepository.getPropertyListByCurrentUser()
+            : await propertyRepository.getPropertyList();
 
         if (propertyList.length === 0) {
             $propertyList.append('<p>No properties listed yet. Click "Add Property" to get started.</p>');
@@ -150,49 +148,54 @@ class CommonHelperService {
         }
 
         propertyList.forEach(async (property) => {
-
-            const workspaces = await workspaceRepository.getWorkspaceListByPropertyId(property.id);
+            const workspaces = await workspaceRepository.getWorkspaceListByUserPropertyId(property.id);
 
             const pName = `${commonHelperService.formatTitle(property.pName)}`;
-            const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)},  ${property.postalCode}`;
+            const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)}, ${property.postalCode}`;
             const address = `${commonHelperService.formatTitle(property.street)}`;
             const neighborhood = `${commonHelperService.formatTitle(property.neighborhood)}`;
             const parkingGarage = `${commonHelperService.formatTitle(property.parkingGarage)}`;
             const transportation = `${commonHelperService.formatTitle(property.transportation)}`;
 
-            let eachProperty = $(
-                `
-                 <div class="col-md-6 col-lg-4">
-                    <div class="property-card">
-                        <div class="property-header d-flex justify-content-between align-items-center">
-                            <h5 class="property-name mb-0">${pName}</h5>
-                            <div class="property-actions">
-                                <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Property" onclick="deleteProperty('${property.id}')"></i>
-                            </div>
-                        </div>
-        
-                        <div class="property-state mb-4">${cityState}</div>
-        
-                        <div class="property-details mb-4" >
-                            <p class="mb-1"><strong>Street:</strong> ${address}</p>
-                            <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
-                            <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
-                            <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
-                            <p class="mb-1"><strong>Public Transportation:</strong> ${transportation}</p>
-                            <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length}</p>
-                        </div>
-
-                        <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                            <button class="btn-view w-100" id="#ownerViewWorkspaces" onclick="getPropertyWorkspaces('${property.id}')">View Workspaces</button>
-                            <button class="btn-edit w-100" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
+            let eachProperty = $(`
+            <div class="col-md-6 col-lg-4">
+                <div class="property-card">
+                    <div class="property-header d-flex justify-content-between align-items-center">
+                        <h5 class="property-name mb-0">${pName}</h5>
+                        <div class="property-actions">
+                            <i class="fas fa-trash-alt deleteProperty" data-bs-toggle="tooltip" title="Delete Property" onclick="deleteProperty('${property.id}')"></i>
                         </div>
                     </div>
-                </div>
-            `);
 
+                    <div class="property-state mb-4">${cityState}</div>
+
+                    <div class="property-details mb-4">
+                        <p class="mb-1"><strong>Street:</strong> ${address}</p>
+                        <p class="mb-1"><strong>Neighborhood:</strong> ${neighborhood}</p>
+                        <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
+                        <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
+                        <p class="mb-1"><strong>Public Transportation:</strong> ${transportation}</p>
+                        <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length}</p>
+                    </div>
+
+                    <div class="property-actions d-flex justify-content-between align-items-center gap-2">
+                       <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}', '${role}')">View Workspaces</button>
+                        <button class="btn-edit w-100 editProperty" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
+                    </div>
+                </div>
+            </div>
+        `);
+
+            // Append property to list
             $propertyList.append(eachProperty);
+
+            // Hide buttons for co-workers immediately after appending
+            if (role === enumService.coWorker) {
+                eachProperty.find(".editProperty, .deleteProperty").hide();
+            }
         });
     }
+
 
     // Function to populate the dropdowns
     // Ref: https://github.com/aosimeon/canadian-cities-provinces/blob/main/canadian_provinces.json
@@ -342,7 +345,7 @@ class CommonHelperService {
 
         // Compare using UTC values
         if (availabilityDate <= today) {
-           throw new Error("Availability date must be in the future.");
+            throw new Error("Availability date must be in the future.");
         }
     }
 
@@ -357,8 +360,19 @@ class CommonHelperService {
         const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         if (propertyId) {
-            // get workspaces by current user and property id
-            workspaces = await workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+
+            if (currentUser.role === enumService.coWorker) {
+
+                const urlParams = new URLSearchParams(window.location.search); // get the url params
+                const propertyId = urlParams.get('propertyId');
+
+                // get all workspaces when the role is worker
+                workspaces = await workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+                workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
+            } else {
+                // get workspaces by current user and property id
+                workspaces = await workspaceRepository.getWorkspaceListByUserPropertyId(propertyId);
+            }
 
             // We need to check if the request property id exists; if yes, return all workspaces otherwise return all the workspaces or with filter
             const workspaceProperty = await propertyRepository.getPropertyById(propertyId);
@@ -371,7 +385,7 @@ class CommonHelperService {
                     .on('click', function () {
                         window.location.href = enumService.ownerRoute;
                     });
-                
+
                 // create add workspace button
                 var button = $('<button>')
                     .addClass('btn btn-primary')
@@ -535,7 +549,7 @@ class CommonHelperService {
                     </div>
                 </div>
             `;
-            
+
             // append the modal HTML to the body
             $('body').append(editProfileModalHTML);
         }

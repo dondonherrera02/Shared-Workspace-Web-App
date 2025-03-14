@@ -153,6 +153,10 @@ async function workspaceSearchHandler(){
     $('#searchWorkspaceNow').on('click', async function(event) {
         event.preventDefault();
 
+        // empty the property list during search
+        let $propertyList = $('#propertyList');
+        $propertyList.empty();
+
         const searchWorkspaceRequest = {
             city: $('#citySearch').val(),
             state: $('#stateSearch').val(),

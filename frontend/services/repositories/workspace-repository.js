@@ -75,7 +75,7 @@ class WorkspaceRepositoryService {
     }
 
     // get Workspace List by propertyId and current user id
-    async getWorkspaceListByPropertyId(propertyId) {
+    async getWorkspaceListByUserPropertyId(propertyId) {
 
         // get the current
         const currentUser = await databaseHelperService.getOne(enumService.currentUser);
@@ -85,6 +85,18 @@ class WorkspaceRepositoryService {
 
         // Find workspaces by propertyId
         const workspaces = workspaceList.filter(workspace => workspace.propertyId === propertyId && workspace.ownerId === currentUser.id);
+
+        return workspaces;
+    }
+
+    // get workspace list by property id only
+    async getWorkspaceListByPropertyId(propertyId) {
+
+        // Get workspace list
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
+
+        // Find workspaces by propertyId
+        const workspaces = workspaceList.filter(workspace => workspace.propertyId === propertyId);
 
         return workspaces;
     }

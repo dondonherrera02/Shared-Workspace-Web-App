@@ -9,14 +9,17 @@ import { alertifyService } from '../externalservices/alertify.js';
 import { routerService } from '../utilities/router.js';
 import { commonHelperService } from '../utilities/common-helper.js';
 import { propertyRepository } from '../repositories/property-repository.js';
+import { userRepository } from '../repositories/user-repository.js';
+import { enumService } from '../utilities/enum.js';
 
 
 $(document).ready(async function () {
     addProperty();
     await propertyFormSubmitHandler();
 
-    // initial load property cards
-    await commonHelperService.displayPropertyCards();
+    // initial load property card
+    const currentUser = await userRepository.getCurrentUser();
+    await commonHelperService.displayPropertyCards(currentUser.role);
 
     try {
         // populate city and state in selection
@@ -83,9 +86,14 @@ async function propertyFormSubmitHandler() {
 
 // get all workspaces and redirected to new page
 // this function is globally accessible through window object
-window.getPropertyWorkspaces = async function (propertyId) {
-    await commonHelperService.displayWorkspaceCards(propertyId);
-    routerService.redirectToOwnerWorkspacePage(propertyId);
+window.getPropertyWorkspaces = async function (propertyId, role) {
+    if (role === enumService.workspaceOwner) {
+        await commonHelperService.displayWorkspaceCards(propertyId);
+        routerService.redirectToWorkspacePage(propertyId, true);
+    }else{
+        await commonHelperService.displayWorkspaceCards(propertyId);
+        routerService.redirectToWorkspacePage(propertyId, false);
+    }
 }
 
 // edit property - onclick event
