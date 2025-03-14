@@ -6,22 +6,35 @@
 */
 
 class EnumService {
+
+    // customize positon
+    coSpaceOwner = 'Co-Space Owner';
+    coSpaceWorker = 'Co-Space Worker';
+
     // common helper
-    workspaceOwnerRole = 'workspace-owner';
-    coWorkerRole = 'co-worker';
+    workspaceOwner = 'workspace-owner';
+    coWorker = 'co-worker';
 
     // router
     ownerRoute = 'owner-dashboard.html';
-    workerRoute = 'owner-dashboard.html';
+    workerRoute = 'co-worker-dashboard.html';
     defaultRoute = 'notfound.html';
 
-    // user identifier pre-key
-    userIdKey = 'co-space-';
+    // identifier pre-key
+    propertyPreIdKey = 'property-';
+    workspacePreIdKey = 'workspace-';
 
     // object names
-    currentUserObjectName = 'currentUser';
-    usersObjectName = 'users';
+    currentUser = 'currentUser';
+    users = 'users';
+    properties = 'properties';
+    workspaces = 'workspaces';
+
+    // Workspace Types
+    meetingRoom = 'Meeting Room';
+    privateOffice = 'Private Office';
+    desk = 'Desk';
 }
 
-// export the service (if using modules) or instantiate directly
-const enumService = new EnumService();
+// export the service
+export const enumService = new EnumService();

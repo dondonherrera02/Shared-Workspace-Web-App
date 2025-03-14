@@ -5,10 +5,16 @@
 * @author: Dondon Herrera
 */
 
+import { enumService } from '../utilities/enum.js';
+
 class RouterUtilService {
 
     redirectIndex(){
         window.location.assign('/index.html');
+    }
+
+    redirectToOwnerWorkspacePage(propertyId){
+        window.location.assign(`/pages/owner-ws-dashboard.html?propertyId=${propertyId}`);
     }
 
     // REDIRECT page
@@ -18,7 +24,7 @@ class RouterUtilService {
         // define the routes
         const routes = {
             'workspace-owner': enumService.ownerRoute,
-            'co-owner': enumService.workerRoute,
+            'co-worker': enumService.workerRoute,
             'default': enumService.defaultRoute // fallback route for unrecognized roles
         }
 
@@ -30,5 +36,5 @@ class RouterUtilService {
     }
 }
 
-// export the service (if using modules) or instantiate directly
-const routerService = new RouterUtilService();
+// export the service
+export const routerService = new RouterUtilService();

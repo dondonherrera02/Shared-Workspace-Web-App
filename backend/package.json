@@ -1,0 +1,27 @@
+{
+  "name": "coworking-space",
+  "version": "1.0.0",
+  "description": "Coworking allows individuals or teams to share a workspace. If you're self-employed or work from home, you may want to rent a desk or meeting room equipped with office essentials. As coworking grows, our goal is to build an app that connects users with shared spaces—similar to how Uber links riders to drivers and Airbnb connects tenants to landlords.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dondonherrera02/Shared-Workspace-Web-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dondonherrera02/Shared-Workspace-Web-App/issues"
+  },
+  "homepage": "https://github.com/dondonherrera02/Shared-Workspace-Web-App#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
+  }
+}

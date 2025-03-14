@@ -37,6 +37,6 @@ class AlertifyService {
     }
   }
   
-  // export the service (if using modules) or instantiate directly
-  const alertifyService = new AlertifyService();
+  // export the service
+export const alertifyService = new AlertifyService();
   

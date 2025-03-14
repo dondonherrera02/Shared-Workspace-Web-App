@@ -5,36 +5,40 @@
 * @author: Dondon Herrera
 */
 
+import { databaseHelperService } from '../utilities/database-helper.js';
+import { enumService } from '../utilities/enum.js';
+
 class AuthRepositoryService {
 
-    login(email, password){
+    async login(email, password){
         
         // get all registered users
-        const userList = databaseHelperService.getList(enumService.usersObjectName); // JSON Parsed Array
+        const userList = await databaseHelperService.getList(enumService.users); // JSON Parsed Array
         
-        // get the credentials
+        // get the credentials, find vs. map, find means get the first element based on the condition, map means get list elements..
+        // Reference: https://stackoverflow.com/questions/66992214/find-vs-map-in-javascript
         const requestor = userList.find(user => user.email === email && user.password === password);
 
         // validate if the user is registered
         if(requestor){
             // get and set current user
-            let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+            let currentUser = await databaseHelperService.getOne(enumService.currentUser);
             currentUser = requestor;
             
             // update the current user
-            databaseHelperService.saveToLocalStorage(enumService.currentUserObjectName, currentUser);
+            await databaseHelperService.saveToLocalStorage(enumService.currentUser, currentUser);
             return currentUser;
         }
 
         throw new Error('Invalid credentials');
     }
 
-    logout() {
-        let currentUser = databaseHelperService.getOne(enumService.currentUserObjectName);
+    async logout() {
+        let currentUser = await databaseHelperService.getOne(enumService.currentUser);
         currentUser = null;
-        databaseHelperService.deleteOne(enumService.currentUserObjectName);
+        await databaseHelperService.deleteOne(enumService.currentUser);
     }
 }
 
-// export the service (if using modules) or instantiate directly
-const authRepository = new AuthRepositoryService();
+// export the service
+export const authRepository = new AuthRepositoryService();

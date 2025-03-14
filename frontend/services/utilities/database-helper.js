@@ -5,42 +5,92 @@
 * @author: Dondon Herrera
 */
 
+const BASE_URL = "http://localhost:";
+const PORT = 8080;
+// const URL = `${BASE_URL}${PORT}`; For Local Testing
+
+const URL = `https://shared-workspace-web-app.onrender.com`; // API Base URL - Production Environment using Render Site
+
 class DatabaseHelperService {
 
-     // POST to local storage
-     saveToLocalStorage(objectName, data) {
-        localStorage.setItem(objectName, JSON.stringify(data));
+    // POST to local storage
+    async saveToLocalStorage(objectName, data) {
+        try {
+            const response = await fetch(`${URL}/data/${objectName}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     }
 
     // GET list from local storage
-    getList(objectName){
+    async getList(objectName) {
         try {
-            // ensure it defaults to an array []
-            const dataList = JSON.parse(localStorage.getItem(objectName)) || [];
-            return dataList;
+            const response = await fetch(`${URL}/data/${objectName}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
         } catch (error) {
-            console.error(`Error: GET List of ${objectName} - JSON parse: `, error);
-            return[];
+            console.error("Error fetching data:", error);
+            return [];
         }
     }
 
     // GET one data from local storage
-    getOne(objectName){
+    async getOne(objectName) {
         try {
-            // ensure it defaults to null
-            const data = JSON.parse(localStorage.getItem(objectName)) || null;
-            return data;
+            const response = await fetch(`${URL}/data/user/${objectName}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
         } catch (error) {
-            console.error(`Error: GET ${objectName} - JSON parse: `, error);
-            return null;
+            console.error("Error fetching data:", error);
         }
     }
 
     // DELETE item - local storage
-    deleteOne(objectName){
-        localStorage.removeItem(objectName);
+    async deleteOne(objectName) {
+        try {
+            const response = await fetch(`${URL}/data/${objectName}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     }
 }
 
-// export the service (if using modules) or instantiate directly
-const databaseHelperService = new DatabaseHelperService();
+// export the service
+export const databaseHelperService = new DatabaseHelperService();
