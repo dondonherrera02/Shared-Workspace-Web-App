@@ -21,7 +21,7 @@ class AuthRepositoryService {
 
         // validate if the user is registered
         if(requestor){
-            // get and set current user
+            // get and set, replace the current user
             let currentUser = await databaseHelperService.getOne(enumService.currentUser);
             currentUser = requestor;
             

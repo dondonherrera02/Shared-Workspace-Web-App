@@ -16,7 +16,7 @@ import { authRepository } from '../repositories/auth-repository.js';
 $(document).ready(async function() {
     signUp();
     login();
-    await logout();
+    logout();
     await checkUserAuthentication();
 });
 
