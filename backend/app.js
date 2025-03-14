@@ -13,16 +13,27 @@ const app = express(); // create express app
 
 // define allowed origins (deployed & local development)
 const allowedOrigins = [
-    "https://co-space-together.vercel.app",
+    "https://co-space-together.vercel.app", 
+    "https://co-space.onrender.com",
     "http://localhost:8080",
     "http://127.0.0.1:5501"
 ];
 
 const corsOptions = {
-    origin: allowedOrigins, // allow multiple origins
+    origin: function (origin, callback) {
+        // allow requests with no origin
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true); // allow the request
+        } else {
+            callback(new Error('Not allowed by CORS')); // block the request
+        }
+    },
     methods: "POST, PUT, GET, DELETE", // allowed HTTP methods
     optionsSuccessStatus: 204, // quick response for preflight requests
-    preflightContinue: false
+    preflightContinue: false,
+    credentials: true // allow cookies and credentials
 };
 
 app.use(cors(corsOptions)); // apply CORS middleware once
