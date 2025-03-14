@@ -12,24 +12,28 @@ const app = express(); // create express app
 
 const allowedOrigins = [
     "https://co-space-together.vercel.app", 
-    "http://127.0.0.1:5501", 
-    "https://co-space-bvc-app.vercel.app"
+    "http://127.0.0.1:5501"
 ];
 
 // added cors options
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log("Origin:", origin);  // Log the origin to troubleshoot
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
+      console.error(`Blocked by CORS: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  optionsSuccessStatus: 204,
+  optionsSuccessStatus: 204,  // (204 No Content)
 };
 
-// Add CORS
+// Handle preflight (OPTIONS) requests globally
+app.options("*", cors(corsOptions));
+
+// Add CORS middleware
 app.use(cors(corsOptions));
 
 // Body parsing middleware
