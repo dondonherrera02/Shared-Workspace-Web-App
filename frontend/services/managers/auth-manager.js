@@ -17,7 +17,7 @@ $(document).ready(async function() {
     signUp();
     login();
     logout();
-    await checkUserAuthentication();
+    // await checkUserAuthentication();
 });
 
 // Functions
