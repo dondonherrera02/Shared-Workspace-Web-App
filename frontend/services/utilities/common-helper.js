@@ -139,6 +139,8 @@ class CommonHelperService {
         // get property list - html element
         let $propertyList = $('#propertyList');
 
+        $propertyList.empty();
+
         // get properties by current user
         const propertyList = await propertyRepository.getPropertyListByCurrentUser();
 
@@ -146,8 +148,6 @@ class CommonHelperService {
             $propertyList.append('<p>No properties listed yet. Click "Add Property" to get started.</p>');
             return;
         }
-
-        $propertyList.empty();
 
         propertyList.forEach(async (property) => {
 
