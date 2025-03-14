@@ -13,8 +13,9 @@ const app = express(); // create express app
 
 // define allowed origins (deployed & local development)
 const allowedOrigins = [
-    "https://shared-workspace-web-app-file-system.vercel.app",
-    "http://localhost:8080"
+    "https://co-space-together.vercel.app",
+    "http://localhost:8080",
+    "http://127.0.0.1:5501"
 ];
 
 const corsOptions = {
