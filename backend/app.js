@@ -10,21 +10,12 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
-const allowedOrigins = ["*", "https://co-space-together.vercel.app", "http://127.0.0.1:5501"];
+const cors = require('cors');
 
-// add cors origin
+// Using cors without setting any options sets the header "Access-Control-Allow-Origin" to "*" (all)
 app.use(cors());
-const corsOptions = {
-  origin: allowedOrigins, // Specify the allowed origin
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Specify allowed HTTP methods
-  optionsSuccessStatus: 204, // Specify the status code for preflight success
-};
 
-// Apply CORS Middleware
-app.use(cors(corsOptions));
-
-// Body parsing middleware
-app.use(express.json());
+app.use(express.json()); // express middleware
 
 // API Endpoints
 
@@ -32,12 +23,11 @@ app.use(express.json());
 app.post("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
     const data = req.body;
-
+    
     try {
         fileSystem.saveToFile(objectName, data);
         res.json({ message: `Data saved for ${objectName}` });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Error saving data." });
     }
 });
@@ -45,48 +35,31 @@ app.post("/data/:objectName", (req, res) => {
 // GET list of data (Array)
 app.get("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
-
+    
     try {
         const data = fileSystem.getList(objectName);
         res.json(data);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Error reading data." });
     }
 });
 
-// GET a single object with a delay
+// GET a single object
 app.get("/data/user/:objectName", (req, res) => {
     const objectName = req.params.objectName;
 
-    setTimeout(() => {
-        try {
-            const data = fileSystem.getOne(objectName);
-            res.json(data);
-        } catch (error) {
-            console.error("Error retrieving data:", error);
-            res.status(500).json({ error: "Error retrieving data." });
-        }
-    }, 2000);
-});
-
-// DELETE a single object
-app.delete("/data/:objectName", (req, res) => {
-    const objectName = req.params.objectName;
-
     try {
-        const data = fileSystem.deleteOne(objectName);
+        const data = fileSystem.getOne(objectName);
         res.json(data);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error deleting data." });
+        res.status(500).json({ error: "Error retrieving data." });
     }
 });
 
-// Get the base URL and port
+// get the base url and port
 const BASE_URL = process.env.BASE_URL || "http://localhost:";
 const PORT = process.env.PORT || 8080;
 const URL = `${BASE_URL}${PORT}`;
 
-// Start server
-app.listen(PORT, () => console.log(`🚀 Server running on ${URL}`));
+// start server
+app.listen(PORT, () => console.log(`Server running on ${URL}`));
