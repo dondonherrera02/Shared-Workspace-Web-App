@@ -12,14 +12,17 @@ const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
 const corsOptions = {
-    origin: '*', // allowed origin
-    methods: "POST, PUT, GET, DELETE", // allowed HTTP methods
-    optionsSuccessStatus: 204 // quick response for preflight requests
+    origin: 'https://co-space-together.vercel.app',
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+    optionsSuccessStatus: 204,
+    preflightContinue: false
 };
 
-app.use(cors(corsOptions)); // apply CORS middleware once
-app.use(express.json()); // express middleware
-app.use(bodyParser.json()); // parse incoming POST request
+// Middleware
+app.options('*', cors(corsOptions)); // handle OPTIONS
+app.use(cors(corsOptions));          // apply CORS
+app.use(express.json());             // Body parsing comes after CORS
 
 // API Endpoints
 
