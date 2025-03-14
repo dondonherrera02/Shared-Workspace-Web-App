@@ -12,7 +12,7 @@ const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
 const corsOptions = {
-    origin: 'https://co-space-together.vercel.app',
+    origin: ['https://co-space-together.vercel.app', 'http://127.0.0.1:5501'], // List of allowed origins
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     optionsSuccessStatus: 204,
@@ -23,6 +23,7 @@ const corsOptions = {
 app.options('*', cors(corsOptions)); // handle OPTIONS
 app.use(cors(corsOptions));          // apply CORS
 app.use(express.json());             // Body parsing comes after CORS
+app.use(bodyParser.json()); // parse incoming POST request
 
 // API Endpoints
 
