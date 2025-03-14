@@ -16,6 +16,7 @@ const allowedOrigins = [
     "https://co-space-bvc-app.vercel.app"
 ];
 
+// added cors options
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
@@ -28,6 +29,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
+// Add CORS
 app.use(cors(corsOptions));
 
 // Body parsing middleware
