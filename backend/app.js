@@ -10,16 +10,25 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
-const allowedOrigins = ["https://co-space-together.vercel.app", "http://127.0.0.1:5501"];
+const allowedOrigins = [
+    "https://co-space-together.vercel.app", 
+    "http://127.0.0.1:5501", 
+    "https://co-space-bvc-app.vercel.app"
+];
 
-// add cors origin
 const corsOptions = {
-  origin: allowedOrigins,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // specify allowed HTTP methods
-  optionsSuccessStatus: 204, // specify status code for preflight success
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions)); 
+app.use(cors(corsOptions));
 
 // Body parsing middleware
 app.use(express.json());
