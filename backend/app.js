@@ -22,13 +22,12 @@ const corsOptions = {
     origin: allowedOrigins, // allow multiple origins
     methods: "POST, PUT, GET, DELETE", // allowed HTTP methods
     optionsSuccessStatus: 204, // quick response for preflight requests
+    preflightContinue: false
 };
 
 app.use(cors(corsOptions)); // apply CORS middleware once
 app.use(express.json()); // express middleware
-app.use(cors(corsOptions)); // add cors origin
 app.use(bodyParser.json()); // parse incoming POST request
-
 
 // API Endpoints
 
