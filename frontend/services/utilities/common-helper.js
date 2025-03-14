@@ -346,7 +346,7 @@ class CommonHelperService {
         }
     }
 
-    // display and create workspace cards
+    // display and create workspace cards = trigger by users using view workspaces or view workspace in a property
     async displayWorkspaceCards(propertyId = null) {
         const $workspaceList = $('#workspaceList');
         $workspaceList.empty();
@@ -359,6 +359,8 @@ class CommonHelperService {
         if (propertyId) {
             // get workspaces by current user and property id
             workspaces = await workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+
+            // We need to check if the request property id exists; if yes, return all workspaces otherwise return all the workspaces or with filter
             const workspaceProperty = await propertyRepository.getPropertyById(propertyId);
 
             // if workspace property found
@@ -383,6 +385,7 @@ class CommonHelperService {
             }
         } else {
 
+            // This block executes when a user select "Tab" in Side Bar - To display all workspaces or workspaces by property
             if (currentUser.role === enumService.coWorker) {
                 // get all workspaces when the role is worker
                 workspaces = await workspaceRepository.getWorkspaceList();
@@ -392,17 +395,17 @@ class CommonHelperService {
                 workspaces = await workspaceRepository.getWorkspacesByUserId(currentUser.id);
             }
 
-            if (workspaces.length === 0) {
-                $workspaceList.append('<p>No available workspaces have been listed yet.</p>');
-                return;
-            }
-
             // sort workspaces by propertyId in ascending order
             workspaces.sort((a, b) => {
                 const numA = parseInt(a.propertyId.replace('property-', ''), 10);
                 const numB = parseInt(b.propertyId.replace('property-', ''), 10);
                 return numA - numB;
             });
+        }
+
+        if (workspaces.length === 0) {
+            $workspaceList.append('<p>No available workspaces have been listed yet.</p>');
+            return;
         }
 
         // append workspace cards

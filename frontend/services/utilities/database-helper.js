@@ -7,7 +7,9 @@
 
 const BASE_URL = "http://localhost:";
 const PORT = 8080;
-const URL = `${BASE_URL}${PORT}`;
+// const URL = `${BASE_URL}${PORT}`; For Local Testing
+
+const URL = `https://shared-workspace-web-app.onrender.com`; // API Base URL - Production Environment using Render Site
 
 class DatabaseHelperService {
 

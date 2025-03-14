@@ -11,7 +11,7 @@ import { commonHelperService } from '../utilities/common-helper.js';
 import { propertyRepository } from '../repositories/property-repository.js';
 
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     addProperty();
     await propertyFormSubmitHandler();
 
@@ -27,20 +27,14 @@ $(document).ready(async function() {
 });
 
 // set-up property form - preparation for save or edit.
-function addProperty(){
-   $('#addPropertyBtn').on('click', () => commonHelperService.setUpPropertyForm());
+function addProperty() {
+    $('#addPropertyBtn').on('click', () => commonHelperService.setUpPropertyForm());
 }
-
-// get all workspaces and redirected to new page
-async function getPropertyWorkspaces(propertyId){
-    await commonHelperService.displayWorkspaceCards(propertyId);
-    routerService.redirectToOwnerWorkspacePage(propertyId);
- }
 
 // property form submit event handler
 async function propertyFormSubmitHandler() {
-    
-    $('#saveProperty').on('click', async function(event) {
+
+    $('#saveProperty').on('click', async function (event) {
         event.preventDefault();
 
         let $propertyForm = $('#propertyForm');
@@ -48,7 +42,7 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
-                pName:  $('#pName').val(),
+                pName: $('#pName').val(),
                 street: $('#street').val(),
                 city: $('#city').val(),
                 state: $('#state').val(),
@@ -74,12 +68,12 @@ async function propertyFormSubmitHandler() {
             $('#addPropertyModal').offcanvas('hide');
             $(propertyForm).trigger("reset"); // reset the form
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
-            
-             // load property cards
-             await commonHelperService.displayPropertyCards();
 
-             // display success message
-             alertifyService.success("Property saved successfully!");
+            // load property cards
+            await commonHelperService.displayPropertyCards();
+
+            // display success message
+            alertifyService.success("Property saved successfully!");
 
         } catch (error) {
             alertifyService.error(error.message);
@@ -87,8 +81,16 @@ async function propertyFormSubmitHandler() {
     });
 }
 
+// get all workspaces and redirected to new page
+// this function is globally accessible through window object
+window.getPropertyWorkspaces = async function (propertyId) {
+    await commonHelperService.displayWorkspaceCards(propertyId);
+    routerService.redirectToOwnerWorkspacePage(propertyId);
+}
+
 // edit property - onclick event
-async function editProperty(propertyId) {
+// this function is globally accessible through window object
+window.editProperty = async function (propertyId) {
     // get current property
     const propertyData = await propertyRepository.getPropertyById(propertyId);
 
@@ -99,18 +101,19 @@ async function editProperty(propertyId) {
 }
 
 // delete property - onclick event
-async function deleteProperty(propertyId) {
-    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", async function() {
-        
+// this function is globally accessible through window object
+window.deleteProperty = async function (propertyId) {
+    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", async function () {
+
         try {
 
             // delete property and assoc workspaces
             await propertyRepository.deleteProperty(propertyId);
 
-             // load property cards
-             await commonHelperService.displayPropertyCards();
+            // load property cards
+            await commonHelperService.displayPropertyCards();
 
-             // display message
+            // display message
             alertify.success("Property deleted successfully!");
 
         } catch (error) {

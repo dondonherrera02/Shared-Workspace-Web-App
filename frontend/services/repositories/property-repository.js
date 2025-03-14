@@ -54,7 +54,7 @@ class PropertyRepositoryService {
 
     // get property list
     async getPropertyList() {
-        await databaseHelperService.getList(enumService.properties);
+        return await databaseHelperService.getList(enumService.properties);
     }
 
     // get property by id

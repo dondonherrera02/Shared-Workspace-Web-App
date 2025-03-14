@@ -26,7 +26,9 @@ async function getProfile(){
     $('#profile-usertitle-position').text(formattedRole);
 }
 
-async function editProfile(){
+// edit profile - onclick event
+// this function is globally accessible through window object
+window.editProfile = async function(){
     // get current user
     const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
@@ -42,7 +44,9 @@ async function editProfile(){
     $('#password').val(currentUser.password);
 }
 
-async function saveProfile() {
+// save profile - onclick event
+// this function is globally accessible through window object
+window.saveProfile = async function() {
     let $profileForm = $('#profileForm');
 
     const profileData = {

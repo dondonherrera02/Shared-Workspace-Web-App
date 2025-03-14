@@ -186,19 +186,6 @@
     <script type="module" src="/services/utilities/database-helper.js"></script>
     <script type="module" src="/services/utilities/router.js"></script>
     <script type="module" src="/services/utilities/enum.js"></script>
-
-
-    <script type="module">
-        // Import the function from the module
-        import { commonHelperService } from '../services/utilities/common-helper.js';
-        import { routerService } from '../services/utilities/router.js';
-    
-        // get all workspaces and redirect to new page
-        async function getPropertyWorkspaces(propertyId) {
-            await commonHelperService.displayWorkspaceCards(propertyId);
-            routerService.redirectToOwnerWorkspacePage(propertyId);
-        }
-    </script>
 </body>
 
 </html>

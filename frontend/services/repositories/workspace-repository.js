@@ -53,8 +53,8 @@ class WorkspaceRepositoryService {
     }
 
     // get all workspaces
-    async getWorkspaceList() { 
-        await databaseHelperService.getList(enumService.workspaces); 
+    async getWorkspaceList() {
+        return await databaseHelperService.getList(enumService.workspaces);
     }
 
     // get workspace by id
@@ -161,6 +161,11 @@ class WorkspaceRepositoryService {
 
         // remove workspace and save it back
         let currentWorkspaces = await this.getWorkspaceList();
+
+        if (!currentWorkspaces) {
+            throw new Error('Unable to delete this workspace. Current workspaces not found.');
+        }
+
         currentWorkspaces = currentWorkspaces.filter(w => w.id !== workspaceId);
         await databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
 
@@ -176,42 +181,40 @@ class WorkspaceRepositoryService {
         // get the list of all workspaces
         let workspaces = await this.getWorkspaceList();
 
-        // filter through each workspace and include the filtered result
-        // https://www.freecodecamp.org/news/filter-arrays-in-javascript/
-        const workspaceList =  workspaces.filter(async ws => {
+        // get the list of properties
+        let properties = await propertyRepository.getPropertyList();
 
-            // find the property linked to the workspace
-            const property =  await propertyRepository.getPropertyList().find(p => p.id === ws.propertyId);
+        // use Promise.all() to handle async operations inside filter
+        const workspaceList = await Promise.all(
+            workspaces.map(async (ws) => {
+                // find the property linked to the workspace
+                const property = properties.find(p => p.id === ws.propertyId);
 
-            // skip if no property is found
-            if (!property) return false;
+                // skip if no property is found
+                if (!property) return null;
 
-            // check if all search conditions match
-            // Object.entries - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
-            // every() - test every elements meet the condition - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
-            const isMatch = Object.entries(request).every(([key, value]) => {
-                // list of property-related keys
-                const isPropertyKey = ['city', 'state', 'postalCode', 'neighborhood', 'parkingGarage', 'squareFeet', 'transportation'].includes(key);
+                // check if all search conditions match
+                const isMatch = Object.entries(request).every(([key, value]) => {
+                    const isPropertyKey = ['city', 'state', 'postalCode', 'neighborhood', 'parkingGarage', 'squareFeet', 'transportation'].includes(key);
 
-                // get the value from the property or workspace
-                const result = isPropertyKey ? property[key] : ws[key]; 
+                    // get the value from the property or workspace
+                    const result = isPropertyKey ? property[key] : ws[key];
 
-                if (key === 'price' || typeof value === 'number') {
-                    // ensure exact numeric match
-                    return parseInt(result) === parseInt(value);
-                } else {
-                    // handle string based searches
-                    return result?.toString().toLowerCase() === value.toString().toLowerCase();
-                }
-            });
+                    if (key === 'price' || typeof value === 'number') {
+                        return parseInt(result) === parseInt(value);
+                    } else {
+                        return result?.toString().toLowerCase() === value.toString().toLowerCase();
+                    }
+                });
 
-             // ensure the workspace is available from today onward
-            return isMatch && new Date(ws.availabilityDate) >= new Date();
-        });
-       
-        return workspaceList;
+                // ensure the workspace is available from today onward
+                return isMatch && new Date(ws.availabilityDate) >= new Date() ? ws : null;
+            })
+        );
+
+        // filter out null values
+        return workspaceList.filter(ws => ws !== null);
     }
-
 }
 
 // export the service

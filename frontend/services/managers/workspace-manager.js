@@ -20,7 +20,8 @@ $(document).ready(async function () {
 });
 
 // set-up workspace form - preparation for save or edit.
-function addWorkspace(propertyId) {
+// this function globally accessible through window object
+window.addWorkspace = function(propertyId) {
     commonHelperService.setUpWorkspaceForm(propertyId, null);
 }
 
@@ -89,7 +90,8 @@ async function workspaceFormSubmitHandler() {
 }
 
 // edit workspace - onclick event
-async function editWorkspace(workspaceId) {
+// this function globally accessible through window object
+window.editWorkspace = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
         commonHelperService.setUpWorkspaceForm(workspaceData.propertyId, workspaceData);
@@ -99,7 +101,8 @@ async function editWorkspace(workspaceId) {
 }
 
 // delete property - onclick event
-async function deleteWorkspace(workspaceId) {
+// this function globally accessible through window object
+window.deleteWorkspace = async function(workspaceId) {
     alertifyService.confirm("Are you sure you want to delete this workspace?", async function() {
         
         try {
@@ -121,7 +124,8 @@ async function deleteWorkspace(workspaceId) {
 }
 
 // view workspace - onclick event
-async function viewWorkspace(workspaceId) {
+// this function is globally accessible through window object
+window.viewWorkspace = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
         const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
@@ -132,7 +136,8 @@ async function viewWorkspace(workspaceId) {
 }
 
 // view contact - onclick event
-async function viewContact(workspaceId) {
+// this function is globally accessible through window object
+window.viewContact = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
         const userData = await userRepository.getUserInfo(workspaceData.ownerId);
@@ -187,16 +192,15 @@ async function workspaceSearchHandler(){
         }
 
         // append workspace cards
-        results.forEach(async (workspace) => {
+        for (const workspace of results) {
             // get property linked to ws
             const workspaceProperty = await propertyRepository.getPropertyById(workspace.propertyId);
-
+        
             // call the helper to create worker workspace card
             let eachWorkspace = await commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
-
+        
             // append to dynamic list
             $workspaceList.append(eachWorkspace);
-        });
-      
+        }
     });
 }
