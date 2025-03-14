@@ -1,0 +1,38 @@
+[
+  {
+    "propertyId": "property-1741916805652",
+    "roomNum": "111",
+    "type": "Meeting Room",
+    "capacity": "4",
+    "leaseTerm": "Day",
+    "availabilityDate": "2025-03-29",
+    "smokingPolicy": "Allowed",
+    "price": "11",
+    "id": "workspace-1741921840655",
+    "ownerId": "workspace-owner-1741916757608"
+  },
+  {
+    "propertyId": "property-1741916805652",
+    "roomNum": "222",
+    "type": "Meeting Room",
+    "capacity": "22",
+    "leaseTerm": "Week",
+    "availabilityDate": "2025-03-21",
+    "smokingPolicy": "Allowed",
+    "price": "2",
+    "id": "workspace-1741921859882",
+    "ownerId": "workspace-owner-1741916757608"
+  },
+  {
+    "propertyId": "property-1741921880662",
+    "roomNum": "888",
+    "type": "Meeting Room",
+    "capacity": "20",
+    "leaseTerm": "Day",
+    "availabilityDate": "2025-03-29",
+    "smokingPolicy": "Not Allowed",
+    "price": "10",
+    "id": "workspace-1741922832063",
+    "ownerId": "workspace-owner-1741916757608"
+  }
+]

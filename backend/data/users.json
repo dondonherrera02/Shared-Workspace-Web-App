@@ -8,11 +8,19 @@
     "id": "workspace-owner-1741884489492"
   },
   {
-    "fullname": "Co-Space Owner",
+    "fullname": "Co-Space Owner X",
     "phone": "1234567890",
     "email": "owner@mail.com",
     "password": "Test@123456",
     "role": "workspace-owner",
     "id": "workspace-owner-1741916757608"
+  },
+  {
+    "fullname": "Co-Worker",
+    "phone": "1234567890",
+    "email": "co-worker@mail.com",
+    "password": "Test@123456",
+    "role": "co-worker",
+    "id": "co-worker-1741923402311"
   }
 ]

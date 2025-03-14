@@ -1,0 +1,28 @@
+[
+  {
+    "pName": "Building AA",
+    "street": "123 Main Street",
+    "city": "Calgary",
+    "state": "Alberta",
+    "postalCode": "ABC-123",
+    "neighborhood": "Downtown",
+    "squareFeet": "122",
+    "parkingGarage": "available",
+    "transportation": "available",
+    "id": "property-1741916805652",
+    "ownerId": "workspace-owner-1741916757608"
+  },
+  {
+    "pName": "Building Bb",
+    "street": "123 Main Street",
+    "city": "Brandon",
+    "state": "Manitoba",
+    "postalCode": "T76-334",
+    "neighborhood": "Downtown",
+    "squareFeet": "33",
+    "parkingGarage": "available",
+    "transportation": "not available",
+    "id": "property-1741921880662",
+    "ownerId": "workspace-owner-1741916757608"
+  }
+]

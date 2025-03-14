@@ -75,7 +75,7 @@ app.delete("/data/:objectName", (req, res) => {
 
 // get the base url and port
 const BASE_URL = process.env.BASE_URL || "http://localhost:";
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080;
 const URL = `${BASE_URL}${PORT}`;
 
 // start server
