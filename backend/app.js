@@ -6,24 +6,34 @@
 */
 
 const express = require('express'); // express js web server
-const bodyParser = require('body-parser'); // read incoming POST request
 const fileSystem = require("./fileSystem/fileSystem"); // import the file system service
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
+const allowedOrigins = ["https://co-space-together.vercel.app", "http://127.0.0.1:5501"];
+
 const corsOptions = {
-    origin: ['https://co-space-together.vercel.app', 'http://127.0.0.1:5501'], // List of allowed origins
+    origin: function (origin, callback) {
+        console.log("Incoming request from:", origin); // Debugging log
+
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); // Allow request
+        } else {
+            callback(new Error("Not allowed by CORS")); // Block request
+        }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-    optionsSuccessStatus: 204,
-    preflightContinue: false
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204
 };
 
-// Middleware
-app.options('*', cors(corsOptions)); // handle OPTIONS
-app.use(cors(corsOptions));          // apply CORS
-app.use(express.json());             // Body parsing comes after CORS
-app.use(bodyParser.json()); // parse incoming POST request
+// Apply CORS Middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
+
+app.use(express.json()); // Body parsing
 
 // API Endpoints
 
@@ -31,11 +41,12 @@ app.use(bodyParser.json()); // parse incoming POST request
 app.post("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
     const data = req.body;
-    
+
     try {
         fileSystem.saveToFile(objectName, data);
         res.json({ message: `Data saved for ${objectName}` });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error saving data." });
     }
 });
@@ -43,11 +54,12 @@ app.post("/data/:objectName", (req, res) => {
 // GET list of data (Array)
 app.get("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
-    
+
     try {
         const data = fileSystem.getList(objectName);
         res.json(data);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error reading data." });
     }
 });
@@ -60,6 +72,7 @@ app.get("/data/user/:objectName", (req, res) => {
         const data = fileSystem.getOne(objectName);
         res.json(data);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error retrieving data." });
     }
 });
@@ -72,14 +85,15 @@ app.delete("/data/:objectName", (req, res) => {
         const data = fileSystem.deleteOne(objectName);
         res.json(data);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error deleting data." });
     }
 });
 
-// get the base url and port
+// Get the base URL and port
 const BASE_URL = process.env.BASE_URL || "http://localhost:";
 const PORT = process.env.PORT || 8080;
 const URL = `${BASE_URL}${PORT}`;
 
-// start server
+// Start server
 app.listen(PORT, () => console.log(`Server running on ${URL}`));
