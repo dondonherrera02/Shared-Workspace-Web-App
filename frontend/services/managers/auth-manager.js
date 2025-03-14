@@ -78,17 +78,13 @@ function login() {
     });
 }
 
-async function logout(){
-    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
+function logout() {
+    $("#btnLogout").off('click').on('click', async function(event) {
+        event.preventDefault();
 
-    if(currentUser) {
-        $("#btnLogout").on('click', async function(event) {
-            event.preventDefault();
-
-            await authRepository.logout();
-            await routerService.redirectIndex();
-        });
-    }
+        await authRepository.logout();
+        routerService.redirectIndex();
+    });
 }
 
 async function checkUserAuthentication(){

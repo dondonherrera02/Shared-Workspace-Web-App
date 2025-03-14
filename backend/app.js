@@ -64,6 +64,18 @@ app.get("/data/user/:objectName", (req, res) => {
     }
 });
 
+// DELETE a single object
+app.delete("/data/:objectName", (req, res) => {
+    const objectName = req.params.objectName;
+
+    try {
+        const data = fileSystem.deleteOne(objectName);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Error deleting data." });
+    }
+});
+
 // get the base url and port
 const BASE_URL = process.env.BASE_URL || "http://localhost:";
 const PORT = process.env.PORT || 8080;
