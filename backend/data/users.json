@@ -1,10 +1,18 @@
 [
   {
-    "fullname": "Dondon",
+    "fullname": "Dondon Herrera",
     "phone": "1234567890",
-    "email": "d@mail.com",
-    "password": "Test@123456789",
+    "email": "dondonherrera02@gmail.com",
+    "password": "Test@123456",
     "role": "workspace-owner",
-    "id": "workspace-owner-1741878820488"
+    "id": "workspace-owner-1741884489492"
+  },
+  {
+    "fullname": "Co-Space Owner",
+    "phone": "1234567890",
+    "email": "owner@mail.com",
+    "password": "Test@123456",
+    "role": "workspace-owner",
+    "id": "workspace-owner-1741916757608"
   }
 ]

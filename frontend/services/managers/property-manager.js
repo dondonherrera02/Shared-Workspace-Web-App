@@ -10,12 +10,13 @@ import { routerService } from '../utilities/router.js';
 import { commonHelperService } from '../utilities/common-helper.js';
 import { propertyRepository } from '../repositories/property-repository.js';
 
-$(document).ready(function() {
+
+$(document).ready(async function() {
     addProperty();
-    propertyFormSubmitHandler();
+    await propertyFormSubmitHandler();
 
     // initial load property cards
-    commonHelperService.displayPropertyCards();
+    await commonHelperService.displayPropertyCards();
 
     try {
         // populate city and state in selection
@@ -31,8 +32,8 @@ function addProperty(){
 }
 
 // get all workspaces and redirected to new page
-function getPropertyWorkspaces(propertyId){
-    commonHelperService.displayWorkspaceCards(propertyId);
+async function getPropertyWorkspaces(propertyId){
+    await commonHelperService.displayWorkspaceCards(propertyId);
     routerService.redirectToOwnerWorkspacePage(propertyId);
  }
 
@@ -75,7 +76,7 @@ async function propertyFormSubmitHandler() {
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
             
              // load property cards
-             commonHelperService.displayPropertyCards();
+             await commonHelperService.displayPropertyCards();
 
              // display success message
              alertifyService.success("Property saved successfully!");
@@ -99,15 +100,15 @@ async function editProperty(propertyId) {
 
 // delete property - onclick event
 async function deleteProperty(propertyId) {
-    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", function() {
+    alertifyService.confirm("Are you sure you want to delete this property? Please note that this will also remove all the workspaces connected to it.", async function() {
         
         try {
 
             // delete property and assoc workspaces
-            propertyRepository.deleteProperty(propertyId);
+            await propertyRepository.deleteProperty(propertyId);
 
              // load property cards
-             commonHelperService.displayPropertyCards();
+             await commonHelperService.displayPropertyCards();
 
              // display message
             alertify.success("Property deleted successfully!");

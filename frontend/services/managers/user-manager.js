@@ -11,14 +11,14 @@ import { enumService } from '../utilities/enum.js';
 import { commonHelperService } from '../utilities/common-helper.js';
 import { userRepository } from '../repositories/user-repository.js';
 
-$(document).ready(function() {
-    getProfile();
+$(document).ready(async function() {
+    await getProfile();
     commonHelperService.getEditProfileModal();
 });
 
 // Functions
-function getProfile(){
-    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+async function getProfile(){
+    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
     const formattedName = commonHelperService.formatTitle(currentUser.fullname);
     const formattedRole = currentUser.role === enumService.coWorker ? enumService.coSpaceWorker: enumService.coSpaceOwner;
 
@@ -28,7 +28,7 @@ function getProfile(){
 
 async function editProfile(){
     // get current user
-    const currentUser = databaseHelperService.getOne(enumService.currentUser);
+    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
     // get profile form
     let $profileForm = $('#profileForm');

@@ -15,20 +15,20 @@ import { propertyRepository } from '../repositories/property-repository.js';
 class WorkspaceRepositoryService {
 
     // save to local storage
-    saveWorkspace(workspaceData) {
+    async saveWorkspace(workspaceData) {
         // get the current role
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // validate if the current role is owner
         if (!currentUser || currentUser.role !== enumService.workspaceOwner) throw new Error('Only property owners are allowed to add workspaces');
 
         // validate property id existence
-        const propertyData = propertyRepository.getPropertyById(workspaceData.propertyId);
+        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
 
         if (!propertyData || propertyData.ownerId !== currentUser.id) throw new Error('Unauthorized property owner');
 
         // get the current workspace list by property id
-        const workspaceList = databaseHelperService.getList(enumService.workspaces);
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
 
         // check if existing workspace by property id, type and lease term
         const existingWorkspace = workspaceList.find(workspace =>
@@ -47,19 +47,21 @@ class WorkspaceRepositoryService {
         workspaceList.push(workspaceData);
 
         // save to local storage
-        databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
+        await databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
 
         return workspaceData;
     }
 
     // get all workspaces
-    getWorkspaceList = () => databaseHelperService.getList(enumService.workspaces);
+    async getWorkspaceList() { 
+        await databaseHelperService.getList(enumService.workspaces); 
+    }
 
     // get workspace by id
-    getWorkspaceById(workspaceId) {
+    async getWorkspaceById(workspaceId) {
 
         // get workspace list
-        const workspaceList = databaseHelperService.getList(enumService.workspaces);
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
 
         // find by id
         const workspace = workspaceList.find(workspace => workspace.id === workspaceId);
@@ -73,13 +75,13 @@ class WorkspaceRepositoryService {
     }
 
     // get Workspace List by propertyId and current user id
-    getWorkspaceListByPropertyId(propertyId) {
+    async getWorkspaceListByPropertyId(propertyId) {
 
         // get the current
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // Get workspace list
-        const workspaceList = databaseHelperService.getList(enumService.workspaces);
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
 
         // Find workspaces by propertyId
         const workspaces = workspaceList.filter(workspace => workspace.propertyId === propertyId && workspace.ownerId === currentUser.id);
@@ -88,9 +90,9 @@ class WorkspaceRepositoryService {
     }
 
     // update workspace to local storage
-    updateWorkspace(workspaceId, modifiedWorkspace) {
+    async updateWorkspace(workspaceId, modifiedWorkspace) {
         // Get the current user
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // Validate if the current role is owner
         if (!currentUser || currentUser.role !== enumService.workspaceOwner) {
@@ -98,7 +100,7 @@ class WorkspaceRepositoryService {
         }
 
         // Get workspace list
-        const workspaceList = databaseHelperService.getList(enumService.workspaces);
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
 
         if (!workspaceList) {
             throw new Error('Workspace list not found.');
@@ -123,17 +125,17 @@ class WorkspaceRepositoryService {
         workspaceList[currentWorkspaceIndex] = { ...currentWorkspace, ...modifiedWorkspace };
 
         // Save updated workspace list to local storage
-        databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
+        await databaseHelperService.saveToLocalStorage(enumService.workspaces, workspaceList);
 
         // Return the updated workspace
         return workspaceList[currentWorkspaceIndex];
     }
 
     // get workspace list by current user id
-    getWorkspacesByUserId(userId) {
+    async getWorkspacesByUserId(userId) {
 
         // get workspace list
-        const workspaceList = databaseHelperService.getList(enumService.workspaces);
+        const workspaceList = await databaseHelperService.getList(enumService.workspaces);
 
         // filter by current user id, returns an array of all workspaces by current user id
         const userWorkspaces = workspaceList.filter(workspace => workspace.ownerId === userId);
@@ -142,21 +144,25 @@ class WorkspaceRepositoryService {
     }
 
     // delete workspace
-    deleteWorkspace(workspaceId) {
+    async deleteWorkspace(workspaceId) {
 
         // get workspace to delete
-        const workspaceToDelete = this.getWorkspaceById(workspaceId);
+        const workspaceToDelete = await this.getWorkspaceById(workspaceId);
+
+        if (!workspaceToDelete) {
+            throw new Error('Workspace not found.');
+        }
 
         // get the current user
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // check if the user is allowed to delete
         if (workspaceToDelete.ownerId !== currentUser.id) throw new Error('Unauthorized to delete this workspace.');
 
         // remove workspace and save it back
-        let currentWorkspaces = workspaceRepository.getWorkspaceList();
+        let currentWorkspaces = await this.getWorkspaceList();
         currentWorkspaces = currentWorkspaces.filter(w => w.id !== workspaceId);
-        databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
+        await databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
 
         return workspaceToDelete;
     }
@@ -166,16 +172,16 @@ class WorkspaceRepositoryService {
         key, value: <city: 'Calgary'>
         key, value: <state: 'Alberta'> 
     */
-    searchWorkspaces(request) {
+    async searchWorkspaces(request) {
         // get the list of all workspaces
-        let workspaces = this.getWorkspaceList();
+        let workspaces = await this.getWorkspaceList();
 
         // filter through each workspace and include the filtered result
         // https://www.freecodecamp.org/news/filter-arrays-in-javascript/
-        const workspaceList = workspaces.filter(ws => {
+        const workspaceList =  workspaces.filter(async ws => {
 
             // find the property linked to the workspace
-            const property = propertyRepository.getPropertyList().find(p => p.id === ws.propertyId);
+            const property =  await propertyRepository.getPropertyList().find(p => p.id === ws.propertyId);
 
             // skip if no property is found
             if (!property) return false;

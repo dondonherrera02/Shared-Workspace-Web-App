@@ -134,13 +134,13 @@ class CommonHelperService {
     }
 
     // display property cards
-    displayPropertyCards() {
+    async displayPropertyCards() {
 
         // get property list - html element
         let $propertyList = $('#propertyList');
 
         // get properties by current user
-        const propertyList = propertyRepository.getPropertyListByCurrentUser();
+        const propertyList = await propertyRepository.getPropertyListByCurrentUser();
 
         if (propertyList.length === 0) {
             $propertyList.append('<p>No properties listed yet. Click "Add Property" to get started.</p>');
@@ -149,9 +149,9 @@ class CommonHelperService {
 
         $propertyList.empty();
 
-        propertyList.forEach((property) => {
+        propertyList.forEach(async (property) => {
 
-            const workspaces = workspaceRepository.getWorkspaceListByPropertyId(property.id);
+            const workspaces = await workspaceRepository.getWorkspaceListByPropertyId(property.id);
 
             const pName = `${commonHelperService.formatTitle(property.pName)}`;
             const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)},  ${property.postalCode}`;
@@ -183,7 +183,7 @@ class CommonHelperService {
                         </div>
 
                         <div class="property-actions d-flex justify-content-between align-items-center gap-2">
-                            <button class="btn-view w-100" onclick="getPropertyWorkspaces('${property.id}')">View Workspaces</button>
+                            <button class="btn-view w-100" id="#ownerViewWorkspaces" onclick="getPropertyWorkspaces('${property.id}')">View Workspaces</button>
                             <button class="btn-edit w-100" data-bs-toggle="offcanvas" title="Edit Property" data-bs-target="#addPropertyModal" onclick="editProperty('${property.id}')">Edit Property</button>
                         </div>
                     </div>
@@ -347,19 +347,19 @@ class CommonHelperService {
     }
 
     // display and create workspace cards
-    displayWorkspaceCards(propertyId = null) {
+    async displayWorkspaceCards(propertyId = null) {
         const $workspaceList = $('#workspaceList');
         $workspaceList.empty();
 
         let workspaces = [];
 
         // get user data role and id
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         if (propertyId) {
             // get workspaces by current user and property id
-            workspaces = workspaceRepository.getWorkspaceListByPropertyId(propertyId);
-            const workspaceProperty = propertyRepository.getPropertyById(propertyId);
+            workspaces = await workspaceRepository.getWorkspaceListByPropertyId(propertyId);
+            const workspaceProperty = await propertyRepository.getPropertyById(propertyId);
 
             // if workspace property found
             if (workspaceProperty) {
@@ -385,11 +385,11 @@ class CommonHelperService {
 
             if (currentUser.role === enumService.coWorker) {
                 // get all workspaces when the role is worker
-                workspaces = workspaceRepository.getWorkspaceList();
+                workspaces = await workspaceRepository.getWorkspaceList();
                 workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
             } else {
                 // get workspaces by user id when the role is owner
-                workspaces = workspaceRepository.getWorkspacesByUserId(currentUser.id);
+                workspaces = await workspaceRepository.getWorkspacesByUserId(currentUser.id);
             }
 
             if (workspaces.length === 0) {
@@ -406,8 +406,8 @@ class CommonHelperService {
         }
 
         // append workspace cards
-        workspaces.forEach((workspace) => {
-            const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
+        workspaces.forEach(async (workspace) => {
+            const workspaceProperty = await propertyRepository.getPropertyById(workspace.propertyId);
 
             let eachWorkspace = '';
 

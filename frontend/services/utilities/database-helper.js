@@ -5,12 +5,16 @@
 * @author: Dondon Herrera
 */
 
+const BASE_URL = "http://localhost:";
+const PORT = 8080;
+const URL = `${BASE_URL}${PORT}`;
+
 class DatabaseHelperService {
 
     // POST to local storage
     async saveToLocalStorage(objectName, data) {
         try {
-            const response = await fetch(`http://localhost:8081/data/${objectName}`, {
+            const response = await fetch(`${URL}/data/${objectName}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -30,7 +34,7 @@ class DatabaseHelperService {
     // GET list from local storage
     async getList(objectName) {
         try {
-            const response = await fetch(`http://localhost:8081/data/${objectName}`, {
+            const response = await fetch(`${URL}/data/${objectName}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
             });
@@ -50,7 +54,7 @@ class DatabaseHelperService {
     // GET one data from local storage
     async getOne(objectName) {
         try {
-            const response = await fetch(`http://localhost:8081/data/user/${objectName}`, {
+            const response = await fetch(`${URL}/data/user/${objectName}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
             });
@@ -69,7 +73,7 @@ class DatabaseHelperService {
     // DELETE item - local storage
     async deleteOne(objectName) {
         try {
-            const response = await fetch(`http://localhost:8081/data/${objectName}`, {
+            const response = await fetch(`${URL}/data/${objectName}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" }
             });

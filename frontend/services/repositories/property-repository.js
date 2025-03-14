@@ -15,9 +15,9 @@ import { workspaceRepository } from '../repositories/workspace-repository.js';
 class PropertyRepositoryService {
 
     // save to local storage
-    saveProperty(propertyData){
+    async saveProperty(propertyData){
         // get the current role
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // validate if the current role is owner
         if (!currentUser || currentUser.role !== enumService.workspaceOwner){
@@ -25,7 +25,7 @@ class PropertyRepositoryService {
         }
 
         // get the current property list
-        const propertyList = databaseHelperService.getList(enumService.properties);
+        const propertyList = await databaseHelperService.getList(enumService.properties);
         
         // check if existing property by city and postal code
         const existingProperty = propertyList.find(property => 
@@ -47,19 +47,21 @@ class PropertyRepositoryService {
         propertyList.push(propertyData);
 
         // save to local storage
-        databaseHelperService.saveToLocalStorage(enumService.properties, propertyList);
+        await databaseHelperService.saveToLocalStorage(enumService.properties, propertyList);
 
         return propertyData;
     }
 
     // get property list
-    getPropertyList = () => databaseHelperService.getList(enumService.properties);
+    async getPropertyList() {
+        await databaseHelperService.getList(enumService.properties);
+    }
 
     // get property by id
-    getPropertyById(propertyId){
+    async getPropertyById(propertyId){
 
          // get property list
-         const propertyList = databaseHelperService.getList(enumService.properties);
+         const propertyList = await databaseHelperService.getList(enumService.properties);
         
          // find by id
          const property = propertyList.find(property => property.id === propertyId);
@@ -68,9 +70,9 @@ class PropertyRepositoryService {
     }
 
     // update property to local storage
-    updateProperty(propertyId, modifiedProperty) {
+    async updateProperty(propertyId, modifiedProperty) {
         // Get the current user
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // Validate if the current role is owner
         if (!currentUser || currentUser.role !== enumService.workspaceOwner) {
@@ -78,7 +80,7 @@ class PropertyRepositoryService {
         }
 
         // Get property list
-        const propertyList = databaseHelperService.getList(enumService.properties);
+        const propertyList = await databaseHelperService.getList(enumService.properties);
 
         // Find the property and its index
         const currentPropertyIndex = propertyList.findIndex(property => property.id === propertyId);
@@ -99,19 +101,19 @@ class PropertyRepositoryService {
         propertyList[currentPropertyIndex] = { ...currentProperty, ...modifiedProperty };
 
         // Save updated property list to local storage
-        databaseHelperService.saveToLocalStorage(enumService.properties, propertyList);
+        await databaseHelperService.saveToLocalStorage(enumService.properties, propertyList);
 
         // Return the updated property
         return propertyList[currentPropertyIndex];
     }
 
     // get property list by current user id
-    getPropertyListByCurrentUser() {
+    async getPropertyListByCurrentUser() {
          // get the current
-         const currentUser = databaseHelperService.getOne(enumService.currentUser);
+         const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
          // get property list
-        const propertyList = databaseHelperService.getList(enumService.properties);
+        const propertyList = await databaseHelperService.getList(enumService.properties);
 
         // filter by current user id, returns an array of all properties by current user id
         const propertiesByCurrentUser = propertyList.filter(property => property.ownerId === currentUser.id);
@@ -120,29 +122,29 @@ class PropertyRepositoryService {
     }
 
     // delete property and all assoc workspaces
-    deleteProperty(propertyId) {
+    async deleteProperty(propertyId) {
 
         // get property to delete
-        const propertyToDelete = this.getPropertyById(propertyId);
+        const propertyToDelete = await this.getPropertyById(propertyId);
 
         // check if property exists
         if(!propertyToDelete) throw new Error('Property not found.');
 
         // get the current user
-        const currentUser = databaseHelperService.getOne(enumService.currentUser);
+        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         // check if the user is allowed to delete
         if(propertyToDelete.ownerId !== currentUser.id) throw new Error('Unauthorized to delete this property.');
 
         // remove associated workspaces and save it back to local storage
-        let currentWorkspaces = workspaceRepository.getWorkspaceList();
+        let currentWorkspaces = await workspaceRepository.getWorkspaceList();
         currentWorkspaces = currentWorkspaces.filter(w => w.propertyId !== propertyId);
-        databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
+        await databaseHelperService.saveToLocalStorage(enumService.workspaces, currentWorkspaces);
 
         // remove property and save it back
-        let currentProperties = this.getPropertyList();
+        let currentProperties = await this.getPropertyList();
         currentProperties = currentProperties.filter(p => p.id !== propertyId);
-        databaseHelperService.saveToLocalStorage(enumService.properties, currentProperties);
+        await databaseHelperService.saveToLocalStorage(enumService.properties, currentProperties);
     }
 
 }

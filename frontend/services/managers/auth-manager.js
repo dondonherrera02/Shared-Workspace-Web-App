@@ -13,11 +13,11 @@ import { commonHelperService } from '../utilities/common-helper.js';
 import { userRepository } from '../repositories/user-repository.js';
 import { authRepository } from '../repositories/auth-repository.js';
 
-$(document).ready(function() {
+$(document).ready(async function() {
     signUp();
     login();
-    logout();
-    checkUserAuthentication();
+    await logout();
+    await checkUserAuthentication();
 });
 
 // Functions

@@ -12,11 +12,11 @@ import { userRepository } from '../repositories/user-repository.js';
 import { propertyRepository } from '../repositories/property-repository.js';
 import { workspaceRepository } from '../repositories/workspace-repository.js';
 
-$(document).ready(function () {
+$(document).ready(async function () {
 
-    workspaceFormSubmitHandler();
-    loadWorkspaceCards();
-    workspaceSearchHandler();
+    await workspaceFormSubmitHandler();
+    await loadWorkspaceCards();
+    await workspaceSearchHandler();
 });
 
 // set-up workspace form - preparation for save or edit.
@@ -24,7 +24,7 @@ function addWorkspace(propertyId) {
     commonHelperService.setUpWorkspaceForm(propertyId, null);
 }
 
-function loadWorkspaceCards(){
+async function loadWorkspaceCards(){
      // initial load workspace cards
     // Ref: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const urlParams = new URLSearchParams(window.location.search); // get the url params
@@ -32,9 +32,9 @@ function loadWorkspaceCards(){
 
     // If propertyId exists, filter workspaces by it
     if (propertyId) {
-        commonHelperService.displayWorkspaceCards(propertyId);
+        await commonHelperService.displayWorkspaceCards(propertyId);
     } else {
-        commonHelperService.displayWorkspaceCards();
+        await commonHelperService.displayWorkspaceCards();
     }
 }
 
@@ -100,12 +100,12 @@ async function editWorkspace(workspaceId) {
 
 // delete property - onclick event
 async function deleteWorkspace(workspaceId) {
-    alertifyService.confirm("Are you sure you want to delete this workspace?", function() {
+    alertifyService.confirm("Are you sure you want to delete this workspace?", async function() {
         
         try {
 
             // delete the workspace
-            const workspace = workspaceRepository.deleteWorkspace(workspaceId);
+            const workspace = await workspaceRepository.deleteWorkspace(workspaceId);
 
             setTimeout(() => {
                 routerService.redirectToOwnerWorkspacePage(workspace.propertyId);
@@ -187,12 +187,12 @@ async function workspaceSearchHandler(){
         }
 
         // append workspace cards
-        results.forEach((workspace) => {
+        results.forEach(async (workspace) => {
             // get property linked to ws
-            const workspaceProperty = propertyRepository.getPropertyById(workspace.propertyId);
+            const workspaceProperty = await propertyRepository.getPropertyById(workspace.propertyId);
 
             // call the helper to create worker workspace card
-            let eachWorkspace = commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
+            let eachWorkspace = await commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
 
             // append to dynamic list
             $workspaceList.append(eachWorkspace);
