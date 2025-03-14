@@ -1,167 +1,173 @@
 :root {
-    --primary-color: #244d4d;
-    --secondary-color: #FF6601;
-    --dark-color: #193B3F;
-    --light-color: rgb(53, 124, 133);
-    --general-color: #58514D;
+  --primary-color: #244d4d;
+  --secondary-color: #ff6601;
+  --dark-color: #193b3f;
+  --light-color: rgb(53, 124, 133);
+  --general-color: #58514d;
 }
 
 body {
-    font-family: Poppins, 'Segoe UI', Verdana, Tahoma,  sans-serif;
-    line-height: 1.7;
+  font-family: Poppins, "Segoe UI", Verdana, Tahoma, sans-serif;
+  line-height: 1.7;
 }
 
 /* Generics */
 .primary-custom-color {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .secondary-custom-color {
-    color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 .dark-custom-color {
-    color: var(--dark-color);
+  color: var(--dark-color);
 }
 
 .dark-custom-bg-color {
-    background-color: var(--dark-color);
+  background-color: var(--dark-color);
 }
 
 .light-custom-color {
-    color: var(--light-color);
+  color: var(--light-color);
 }
 
 .general-custom-color {
-    color: var(--general-color);
+  color: var(--general-color);
 }
 
-.error-message{
-    color: red;
-    margin-bottom: 1rem;
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
 }
-
 
 /* Navbar styles */
-.navbar-brand{
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 1.5rem;
+.navbar-brand {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .nav-link {
-    color: var(--primary-color);
-    font-weight: 600;
-    font-size: 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .navbar-brand:hover,
 .nav-link:hover {
-    color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
-.btn-primary{
-    background-color: var(--primary-color);
-    border-radius: 0%;
-    border: none;
+.btn-primary {
+  background-color: var(--primary-color);
+  border-radius: 0%;
+  border: none;
 }
 
-.btn-primary:hover{
-    background-color: var(--secondary-color);
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+}
+
+#saveProperty:disabled {
+  background-color: #d6d6d6;
+  border-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
 }
 
 /* Landing Page */
 .landing-page {
-    background: url('/assets/img/bg-cover.jpg') center/cover;
-    padding: 8rem 0 4rem;
-    color: white;
+  background: url("/assets/img/bg-cover.jpg") center/cover;
+  padding: 8rem 0 4rem;
+  color: white;
 }
 
 .landingpage h1 {
-    font-size: 4.5rem;
-    font-weight: 700;
+  font-size: 4.5rem;
+  font-weight: 700;
 }
 
 .lead {
-    font-weight: 350;
+  font-weight: 350;
 }
 
 .custom-card-bg {
-    background-color: var(--primary-color);
-    color:white;
-    border-radius: 0%;                        
-    border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 0%;
+  border: none;
 }
 
 .auth-forms {
-    position: relative;
+  position: relative;
 }
 
 .auth-forms .btn-primary {
-    background-color: var(--secondary-color); 
-    border-radius: 0%;                        
-    border: none;
+  background-color: var(--secondary-color);
+  border-radius: 0%;
+  border: none;
 }
 
 .auth-forms .btn-primary:hover {
-    background-color: whitesmoke;
-    color:black;
+  background-color: whitesmoke;
+  color: black;
 }
 
 .form-control {
-    color:white;
-    border-radius: 0;
-    background-color: var(--dark-color);
-    border: var(--light-color);
+  color: white;
+  border-radius: 0;
+  background-color: var(--dark-color);
+  border: var(--light-color);
 }
 
-.form-control::placeholder{
-    color:white;
+.form-control::placeholder {
+  color: white;
 }
 
-.form-control:focus{
-    color: white;
-    background-color: transparent;
-    border-color: var(--light-color);
-    box-shadow:0 0 0 0.25rem rgba(236, 238, 239, 0.25);
+.form-control:focus {
+  color: white;
+  background-color: transparent;
+  border-color: var(--light-color);
+  box-shadow: 0 0 0 0.25rem rgba(236, 238, 239, 0.25);
 }
 
 #role {
-    color:white;
+  color: white;
 }
 
 #role option:disabled {
-    color: white; 
+  color: white;
 }
 
 #role:focus {
-    background-color: var(--dark-color);
+  background-color: var(--dark-color);
 }
 
 #toggleText {
-    color:white;
+  color: white;
 }
 
 .form-check-input {
-    background-color: white;
-    border-color: white;
+  background-color: white;
+  border-color: white;
 }
 
 .form-check-input:checked {
-    background-color: #28a745;
-    border-color: #28a745;
+  background-color: #28a745;
+  border-color: #28a745;
 }
 
 .custom-padding {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
 
 .fas {
-    color: var(--light-color);
+  color: var(--light-color);
 }
 
 .cta {
-    background-color: var(--light-color);
-    color: white;
+  background-color: var(--light-color);
+  color: white;
 }

@@ -55,11 +55,13 @@ class UserRepositoryService {
         return user;
     }
 
+    // get current user
+    async getCurrentUser(){
+        return await databaseHelperService.getOne(enumService.currentUser);
+    }
+
     // update user to local storage
     async updateUser(id, modifiedProfile) {
-        // get the current user
-        const currentUser = await databaseHelperService.getOne(enumService.currentUser);
-
         // get users
         const users = await databaseHelperService.getList(enumService.users);
 
@@ -76,6 +78,9 @@ class UserRepositoryService {
         }
 
         const userToUpdate = users[currentUserIndex];
+
+         // get the current user
+         const currentUser = await this.getCurrentUser();
 
         // check if the user is authorized to update
         if (userToUpdate.id !== currentUser.id) {

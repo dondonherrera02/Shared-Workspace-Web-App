@@ -11,12 +11,20 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
-const corsOptions = {
-    origin: '*', // allowed origin
-    methods: 'POST,PUT,POST,GET,DELETE', // allowed http methods
-    optionsSuccessStatus: 204, // for initial success
-  };
+// define allowed origins (deployed & local development)
+const allowedOrigins = [
+    "https://co-space-together.vercel.app",
+    "http://localhost:8080",
+    "http://127.0.0.1:5501"
+];
 
+const corsOptions = {
+    origin: allowedOrigins, // allow multiple origins
+    methods: "POST, PUT, GET, DELETE", // allowed HTTP methods
+    optionsSuccessStatus: 204, // quick response for preflight requests
+};
+
+app.use(cors(corsOptions)); // apply CORS middleware once
 app.use(express.json()); // express middleware
 app.use(cors(corsOptions)); // add cors origin
 app.use(bodyParser.json()); // parse incoming POST request

@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Include AlertifyJS CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
 
     <!-- local CSS -->
     <link rel="stylesheet" href="/css/user.css">
@@ -124,7 +124,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Square Feet:</label>
-                    <input type="number" class="form-control" name="squareFeet" placeholder="Square Feet" min="1"
+                    <input type="number" class="form-control" name="squareFeet" placeholder="Square Feet" min="1" max="999999999"
                         id="squareFeet" required>
                 </div>
 
@@ -149,7 +149,7 @@
         </div>
         <div class="offcanvas-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-            <button type="button" class="btn btn-primary" id="saveProperty">Save</button>
+            <button type="button" class="btn" id="saveProperty" disabled>Save</button>
         </div>
     </div>
 
@@ -160,7 +160,7 @@
         crossorigin="anonymous"></script>
 
     <!-- Alertify JS -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
     <script type="module" src="/services/externalservices/alertify.js"></script>
 
     <!-- JQuery -->
