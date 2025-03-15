@@ -11,24 +11,27 @@ const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
 const allowedOrigins = [
-    "https://co-space-together.vercel.app", 
-    "http://127.0.0.1:5501"
+    "https://co-space-together.vercel.app",
+    "https://co-space.onrender.com",
+    "http://127.0.0.1:5501",
 ];
-
-// added cors options
+ 
 const corsOptions = {
-  origin: (origin, callback) => {
-    console.log("Origin:", origin);  // Log the origin to troubleshoot
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      console.error(`Blocked by CORS: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  optionsSuccessStatus: 204,  // (204 No Content)
-};
+    origin: (origin, callback) => {
+      console.log("Origin:", origin || "Undefined");
+     
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`Blocked by CORS: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 204
+  };
 
 // Handle preflight (OPTIONS) requests globally
 app.options("*", cors(corsOptions));
