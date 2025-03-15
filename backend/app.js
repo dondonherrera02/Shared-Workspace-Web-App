@@ -10,52 +10,22 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
+// define allowed origins (deployed & local development)
 const allowedOrigins = [
     "https://co-space-together.vercel.app",
-    "https://co-space.onrender.com",
-    "http://127.0.0.1:5501",
+    "http://localhost:8080"
 ];
- 
+
 const corsOptions = {
-    origin: (origin, callback) => {
-      console.log("Origin:", origin || "Undefined");
-     
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error(`Blocked by CORS: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-    optionsSuccessStatus: 204
-  };
+    origin: allowedOrigins, // allow multiple origins
+    methods: "POST, PUT, GET, DELETE", // allowed HTTP methods
+    optionsSuccessStatus: 204, // quick response for preflight requests
+};
 
-// Handle preflight (OPTIONS) requests globally
-app.options("*", cors(corsOptions));
-
-// Add CORS middleware
-app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://co-space-together.vercel.app");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
-});
-
-app.options('*', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "https://co-space-together.vercel.app");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.sendStatus(200);
-});
+app.use(cors(corsOptions)); // apply CORS middleware once
 
 // Body parsing middleware
 app.use(express.json());
-
 
 // API Endpoints
 
@@ -104,11 +74,9 @@ app.delete("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
 
     try {
-        const data = fileSystem.deleteOne(objectName);
-        res.json(data);
+        fileSystem.deleteOne(objectName);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error deleting data." });
     }
 });
 
