@@ -13,7 +13,7 @@ const app = express(); // create express app
 // define allowed origins (deployed & local development)
 const allowedOrigins = [
     "https://co-space-together.vercel.app",
-    "http://localhost:8080"
+    "http://127.0.0.1:5501"
 ];
 
 const corsOptions = {
