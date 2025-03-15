@@ -39,8 +39,8 @@ const allowedOrigins = [
 // app.use(cors(corsOptions));
 
 app.use(cors({
-        origin: allowedOrigins
-    }
+    origin: "https://co-space-together.vercel.app"
+}
 ))
 
 // Add a specific handler for OPTIONS requests
@@ -93,9 +93,16 @@ app.get("/data/user/:objectName", (req, res) => {
         console.log(`GET request for /data/user/${objectName} from origin: ${req.headers.origin}`);
 
         // Explicitly set CORS headers for this route
-        res.header("Access-Control-Allow-Origin", allowedOrigins.includes(req.headers.origin) ? req.headers.origin : allowedOrigins[0]);
+        const origin = allowedOrigins.includes(req.headers.origin)
+            ? req.headers.origin
+            : req.headers.origin ?? allowedOrigins[0];
+
+        res.header("Access-Control-Allow-Origin", origin);
         res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // Log the request for debugging
+        console.log(`SET request for /data/user/${objectName} from origin: ${origin}`);
 
         const data = fileSystem.getOne(objectName);
         res.json(data);
