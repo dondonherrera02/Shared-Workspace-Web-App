@@ -62,6 +62,21 @@ app.post("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
     const data = req.body;
 
+        // Log the request for debugging
+        console.log(`POST request for /data/${objectName} from origin: ${req.headers.origin}`);
+
+        // Explicitly set CORS headers for this route
+        const origin = allowedOrigins.includes(req.headers.origin)
+            ? req.headers.origin
+            : req.headers.origin ?? allowedOrigins[0];
+   
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+   
+        // Log the request for debugging
+        console.log(`SET request for /data/${objectName} from origin: ${origin}`);
+
     try {
         fileSystem.saveToFile(objectName, data);
         res.json({ message: `Data saved for ${objectName}` });
@@ -74,6 +89,21 @@ app.post("/data/:objectName", (req, res) => {
 // GET list of data (Array)
 app.get("/data/:objectName", (req, res) => {
     const objectName = req.params.objectName;
+
+     // Log the request for debugging
+     console.log(`GET request for /data/${objectName} from origin: ${req.headers.origin}`);
+
+     // Explicitly set CORS headers for this route
+     const origin = allowedOrigins.includes(req.headers.origin)
+         ? req.headers.origin
+         : req.headers.origin ?? allowedOrigins[0];
+
+     res.header("Access-Control-Allow-Origin", origin);
+     res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+     // Log the request for debugging
+     console.log(`SET request for /data/${objectName} from origin: ${origin}`);
 
     try {
         const data = fileSystem.getList(objectName);
