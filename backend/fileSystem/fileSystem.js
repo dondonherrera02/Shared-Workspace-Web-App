@@ -54,7 +54,7 @@ function deleteOne(objectName) {
     const filePath = path.join(dataDirectory, `${objectName}.json`);
     
     try {
-        fs.unlinkSync(filePath); // delete the entire file
+        fs.writeFileSync(filePath, null, 'utf8');
     } catch (error) {
         console.error(`Error: DELETE ${objectName} - `, error);
     }

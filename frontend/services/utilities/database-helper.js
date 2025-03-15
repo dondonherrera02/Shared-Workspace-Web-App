@@ -72,12 +72,13 @@ class DatabaseHelperService {
         }
     }
 
-    // DELETE item - local storage
+    // POST - to update the current user to null
     async deleteOne(objectName) {
         try {
             const response = await fetch(`${URL}/data/${objectName}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" }
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({})
             });
 
             if (!response.ok) {
