@@ -10,37 +10,41 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
-// define allowed origins (deployed & local development)
-const allowedOrigins = [
-    "https://co-space-together.vercel.app",
-    "http://127.0.0.1:5501"
-];
+// // define allowed origins (deployed & local development)
+// const allowedOrigins = [
+//     "https://co-space-together.vercel.app",
+//     "http://127.0.0.1:5501"
+// ];
 
-// More robust CORS configuration
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps, curl, etc.)
-        if (!origin) return callback(null, true);
-        
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            console.log("Blocked origin:", origin);
-            callback(null, false);
-        }
-    },
-    methods: "POST, PUT, GET, DELETE, OPTIONS", // explicitly include OPTIONS
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true, // Allow cookies to be sent with requests
-    optionsSuccessStatus: 204, // quick response for preflight requests
-    maxAge: 86400 // Cache preflight response for 24 hours
-};
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         // Allow requests with no origin (like mobile apps, curl, etc.)
+//         if (!origin) return callback(null, true);
 
-// Apply CORS middleware to all routes
-app.use(cors(corsOptions));
+//         if (allowedOrigins.indexOf(origin) !== -1) {
+//             callback(null, true);
+//         } else {
+//             console.log("Blocked origin:", origin);
+//             callback(null, false);
+//         }
+//     },
+//     methods: "POST, PUT, GET, DELETE, OPTIONS", // explicitly include OPTIONS
+//     allowedHeaders: "Content-Type, Authorization",
+//     credentials: true, // Allow cookies to be sent with requests
+//     optionsSuccessStatus: 204, // quick response for preflight requests
+//     maxAge: 86400 // Cache preflight response for 24 hours
+// };
+
+// // Apply CORS middleware to all routes
+// app.use(cors(corsOptions));
+
+app.use(cors({
+        origin: "https://co-space-together.vercel.app"
+    }
+))
 
 // Add a specific handler for OPTIONS requests
-app.options('*', cors(corsOptions));
+app.options('*', cors());
 
 // Body parsing middleware
 app.use(express.json());
@@ -87,12 +91,12 @@ app.get("/data/user/:objectName", (req, res) => {
     try {
         // Log the request for debugging
         console.log(`GET request for /data/user/${objectName} from origin: ${req.headers.origin}`);
-        
+
         // Explicitly set CORS headers for this route
         res.header("Access-Control-Allow-Origin", allowedOrigins.includes(req.headers.origin) ? req.headers.origin : allowedOrigins[0]);
         res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        
+
         const data = fileSystem.getOne(objectName);
         res.json(data);
     } catch (error) {
