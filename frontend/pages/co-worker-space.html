@@ -41,28 +41,30 @@
         <div class="profile-usermenu mt-3">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active d-flex align-items-center"  href="co-worker-dashboard.html" id="properties">
+                    <a class="nav-link d-flex align-items-center"  href="co-worker-dashboard.html" id="properties">
                         <i class="fas fa-building me-3"></i>
-                        Workspaces
+                        Properties
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active d-flex align-items-center" href="co-worker-space.html" id="workspace">
+                        <i class="fas fa-desktop me-3"></i>
+                        Workspace
                     </a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <!-- Properties Content -->
-    <div class="properties-main-content">
+     <!-- Workspace Content -->
+     <div class="properties-main-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 style="color: #244d4d;">Workspaces</h3>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchWorkspaceModal"
-                id="searchWorkspace">
-                <i class="fas fa-search me-2"></i>Search Property
-            </button>
+            <h3 style="color: #244d4d;" id="workspaceHeader">Workspaces</h3>
         </div>
 
-        <!-- Workspaces Cards -->
+        <!-- Workspace Cards -->
         <div class="row g-4" id="workspaceList" class="properties-grid">
-            <!-- Workspaces cards will be added here dynamically -->
+            <!-- Workspace cards will be added here dynamically -->
         </div>
     </div>
 
@@ -266,9 +268,6 @@
 
     <!-- JQuery -->
     <script src="/services/externalservices/jquery-3.7.1.min.js"></script>
-
-    <!-- JS -->
-    <script src="/js/owner.js"></script>
 
     <!-- Managers -->
     <script type="module" src="/services/managers/user-manager.js"></script>

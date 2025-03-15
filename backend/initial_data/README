@@ -1,0 +1,12 @@
+Render – API hosting for web services.
+Vercel – Deployed the frontend.
+Please note that Render may restart due to file changes, so I ignored those files to prevent the server from restarting, which could cause CORS errors.
+
+
+
+Tips:
+
+npm init -y
+npm i express cors
+npm install nodemon
+node --env-file=.env app.js

@@ -87,11 +87,15 @@ async function propertyFormSubmitHandler() {
 // get all workspaces and redirected to new page
 // this function is globally accessible through window object
 window.getPropertyWorkspaces = async function (propertyId, role) {
+   
+    // get workspaces by property id
+    await commonHelperService.displayWorkspaceCards(propertyId);
+
     if (role === enumService.workspaceOwner) {
-        await commonHelperService.displayWorkspaceCards(propertyId);
+         // owner
         routerService.redirectToWorkspacePage(propertyId, true);
     }else{
-        await commonHelperService.displayWorkspaceCards(propertyId);
+        // worker
         routerService.redirectToWorkspacePage(propertyId, false);
     }
 }
