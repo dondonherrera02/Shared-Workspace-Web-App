@@ -10,11 +10,11 @@ const fileSystem = require("./fileSystem/fileSystem"); // import the file system
 const cors = require('cors'); // cors middleware
 const app = express(); // create express app
 
-// // define allowed origins (deployed & local development)
-// const allowedOrigins = [
-//     "https://co-space-together.vercel.app",
-//     "http://127.0.0.1:5501"
-// ];
+// define allowed origins (deployed & local development)
+const allowedOrigins = [
+    "https://co-space-together.vercel.app",
+    "http://127.0.0.1:5501"
+];
 
 // const corsOptions = {
 //     origin: function (origin, callback) {
@@ -39,7 +39,7 @@ const app = express(); // create express app
 // app.use(cors(corsOptions));
 
 app.use(cors({
-        origin: "https://co-space-together.vercel.app"
+        origin: allowedOrigins
     }
 ))
 
