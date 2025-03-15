@@ -1,151 +1,102 @@
 /**
-* @name: Co-Space Web App - start-up file
-* @Course Code: SODV1201
-* @class: Software Development Diploma program.
-* @author: Dondon Herrera
-*/
+ * @name: Co-Space Web App - Start-up File
+ * @Course Code: SODV1201
+ * @Class: Software Development Diploma Program
+ * @Author: Dondon Herrera
+ */
 
-const express = require('express'); // express js web server
-const fileSystem = require("./fileSystem/fileSystem"); // import the file system service
-const cors = require('cors'); // cors middleware
-const app = express(); // create express app
+const express = require('express');
+const cors = require('cors');
+const fileSystem = require('./fileSystem/fileSystem');
 
-// define allowed origins (deployed & local development)
+const app = express();
+
+// Allowed origins for CORS
 const allowedOrigins = [
-    "https://co-space-together.vercel.app",
-    "http://127.0.0.1:5501"
+    'https://co-space-together.vercel.app',
+    'http://127.0.0.1:5501'
 ];
 
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         // Allow requests with no origin (like mobile apps, curl, etc.)
-//         if (!origin) return callback(null, true);
-
-//         if (allowedOrigins.indexOf(origin) !== -1) {
-//             callback(null, true);
-//         } else {
-//             console.log("Blocked origin:", origin);
-//             callback(null, false);
-//         }
-//     },
-//     methods: "POST, PUT, GET, DELETE, OPTIONS", // explicitly include OPTIONS
-//     allowedHeaders: "Content-Type, Authorization",
-//     credentials: true, // Allow cookies to be sent with requests
-//     optionsSuccessStatus: 204, // quick response for preflight requests
-//     maxAge: 86400 // Cache preflight response for 24 hours
-// };
-
-// // Apply CORS middleware to all routes
-// app.use(cors(corsOptions));
-
+// CORS Middleware
 app.use(cors({
-    origin: "https://co-space-together.vercel.app"
-}
-))
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('Blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
-// Add a specific handler for OPTIONS requests
-app.options('*', cors());
+app.use(express.json()); // Body parsing middleware
 
-// Body parsing middleware
-app.use(express.json());
-
-// Add error handling middleware
+// Global error handler
 app.use((err, req, res, next) => {
-    console.error("Global error handler:", err);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Global error handler:', err);
+    res.status(500).json({ error: 'Internal server error' });
 });
+
+// Utility function to set CORS headers dynamically
+const setCorsHeaders = (req, res) => {
+    const origin = allowedOrigins.includes(req.headers.origin) ? req.headers.origin : allowedOrigins[0];
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    console.log(`SET to origin: ${origin}`);
+};
 
 // API Endpoints
 
-// POST and PUT Data
-app.post("/data/:objectName", (req, res) => {
-    const objectName = req.params.objectName;
+// POST Data
+app.post('/data/:objectName', (req, res) => {
+    const { objectName } = req.params;
     const data = req.body;
-
-        // Log the request for debugging
-        console.log(`POST request for /data/${objectName} from origin: ${req.headers.origin}`);
-
-        // Explicitly set CORS headers for this route
-        const origin = allowedOrigins.includes(req.headers.origin)
-            ? req.headers.origin
-            : req.headers.origin ?? allowedOrigins[0];
-   
-        res.header("Access-Control-Allow-Origin", origin);
-        res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
-        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-   
-        // Log the request for debugging
-        console.log(`SET request for /data/${objectName} from origin: ${origin}`);
+    console.log(`POST request for /data/${objectName} from origin: ${req.headers.origin}`);
+    setCorsHeaders(req, res);
 
     try {
         fileSystem.saveToFile(objectName, data);
         res.json({ message: `Data saved for ${objectName}` });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error saving data." });
+        res.status(500).json({ error: 'Error saving data.' });
     }
 });
 
-// GET list of data (Array)
-app.get("/data/:objectName", (req, res) => {
-    const objectName = req.params.objectName;
-
-     // Log the request for debugging
-     console.log(`GET request for /data/${objectName} from origin: ${req.headers.origin}`);
-
-     // Explicitly set CORS headers for this route
-     const origin = allowedOrigins.includes(req.headers.origin)
-         ? req.headers.origin
-         : req.headers.origin ?? allowedOrigins[0];
-
-     res.header("Access-Control-Allow-Origin", origin);
-     res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-     // Log the request for debugging
-     console.log(`SET request for /data/${objectName} from origin: ${origin}`);
+// GET List of Data
+app.get('/data/:objectName', (req, res) => {
+    const { objectName } = req.params;
+    console.log(`GET request for /data/${objectName} from origin: ${req.headers.origin}`);
+    setCorsHeaders(req, res);
 
     try {
         const data = fileSystem.getList(objectName);
         res.json(data);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error reading data." });
+        res.status(500).json({ error: 'Error reading data.' });
     }
 });
 
-// GET a single object with a delay
-app.get("/data/user/:objectName", (req, res) => {
-    const objectName = req.params.objectName;
+// GET a Single Object
+app.get('/data/user/:objectName', (req, res) => {
+    const { objectName } = req.params;
+    console.log(`GET request for /data/user/${objectName} from origin: ${req.headers.origin}`);
+    setCorsHeaders(req, res);
 
     try {
-        // Log the request for debugging
-        console.log(`GET request for /data/user/${objectName} from origin: ${req.headers.origin}`);
-
-        // Explicitly set CORS headers for this route
-        const origin = allowedOrigins.includes(req.headers.origin)
-            ? req.headers.origin
-            : req.headers.origin ?? allowedOrigins[0];
-
-        res.header("Access-Control-Allow-Origin", origin);
-        res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-        // Log the request for debugging
-        console.log(`SET request for /data/user/${objectName} from origin: ${origin}`);
-
         const data = fileSystem.getOne(objectName);
         res.json(data);
     } catch (error) {
-        console.error("Error retrieving data:", error);
-        res.status(500).json({ error: "Error retrieving data." });
+        console.error('Error retrieving data:', error);
+        res.status(500).json({ error: 'Error retrieving data.' });
     }
 });
 
-// Get the base URL and port
-const BASE_URL = process.env.BASE_URL || "http://localhost:";
-const PORT = process.env.PORT || 8080;
-const URL = `${BASE_URL}${PORT}`;
-
 // Start server
-app.listen(PORT, () => console.log(`Server running on ${URL}`));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
