@@ -80,7 +80,7 @@ async function workspaceFormSubmitHandler() {
 
             // route to wokspace page and load workspace cards
             setTimeout(() => {
-                routerService.redirectToOwnerWorkspacePage(workspaceData.propertyId);
+                routerService.redirectToWorkspacePage(workspaceData.propertyId, true);
             }, 1000);
 
         } catch (error) {

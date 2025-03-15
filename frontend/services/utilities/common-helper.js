@@ -139,17 +139,24 @@ class CommonHelperService {
         $propertyList.empty();
 
         let propertyList = role === enumService.workspaceOwner
-            ? await propertyRepository.getPropertyListByCurrentUser()
-            : await propertyRepository.getPropertyList();
+            ? await propertyRepository.getPropertyListByCurrentUser() // owners
+            : await propertyRepository.getPropertyList(); // workers
 
         if (propertyList.length === 0) {
             $propertyList.append('<p>No properties listed yet. Click "Add Property" to get started.</p>');
             return;
         }
 
-        propertyList.forEach(async (property) => {
-            const workspaces = await workspaceRepository.getWorkspaceListByUserPropertyId(property.id);
+        // sort properties by property name in ascending order
+        propertyList.sort((a, b) => a.pName.localeCompare(b.pName));
 
+        propertyList.forEach(async (property) => {
+
+            // workspaces by roles
+            const workspaces = role === enumService.workspaceOwner 
+                                        ? await workspaceRepository.getWorkspaceListByUserPropertyId(property.id)
+                                        : await workspaceRepository.getWorkspaceListByPropertyId(property.id);
+            // format the property details
             const pName = `${commonHelperService.formatTitle(property.pName)}`;
             const cityState = `${commonHelperService.formatTitle(property.city)}, ${commonHelperService.formatTitle(property.state)}, ${property.postalCode}`;
             const address = `${commonHelperService.formatTitle(property.street)}`;
@@ -360,17 +367,12 @@ class CommonHelperService {
         const currentUser = await databaseHelperService.getOne(enumService.currentUser);
 
         if (propertyId) {
-
             if (currentUser.role === enumService.coWorker) {
-
-                const urlParams = new URLSearchParams(window.location.search); // get the url params
-                const propertyId = urlParams.get('propertyId');
-
                 // get all workspaces when the role is worker
                 workspaces = await workspaceRepository.getWorkspaceListByPropertyId(propertyId);
                 workspaces = workspaces.filter(w => new Date(w.availabilityDate) >= new Date());
             } else {
-                // get workspaces by current user and property id
+                // get workspaces by owner and property id
                 workspaces = await workspaceRepository.getWorkspaceListByUserPropertyId(propertyId);
             }
 
@@ -386,16 +388,17 @@ class CommonHelperService {
                         window.location.href = enumService.ownerRoute;
                     });
 
-                // create add workspace button
-                var button = $('<button>')
-                    .addClass('btn btn-primary')
-                    .attr('data-bs-toggle', 'modal')
-                    .attr('data-bs-target', '#addWorkspaceModal')
-                    .attr('onclick', `addWorkspace('${propertyId}')`)
-                    .html('<i class="fas fa-plus me-2"></i>Add Workspace');
+                if (currentUser.role === enumService.workspaceOwner) {
+                    // create add workspace button
+                    var addWorkspaceBtn = $(`
+                    <button class="btn btn-primary addWorkspace" data-bs-toggle="modal" data-bs-target="#addWorkspaceModal" onclick="addWorkspace('${propertyId}')">
+                        <i class="fas fa-plus me-2"></i>Add Workspace
+                    </button>`
+                    );
 
-                // append the button inside the "workspaceHeader"
-                $('#workspaceHeader').closest('.d-flex').append(button);
+                    // append the button inside the "workspaceHeader"
+                    $('#workspaceHeader').closest('.d-flex').append(addWorkspaceBtn);
+                }
             }
         } else {
 
@@ -408,13 +411,6 @@ class CommonHelperService {
                 // get workspaces by user id when the role is owner
                 workspaces = await workspaceRepository.getWorkspacesByUserId(currentUser.id);
             }
-
-            // sort workspaces by propertyId in ascending order
-            workspaces.sort((a, b) => {
-                const numA = parseInt(a.propertyId.replace('property-', ''), 10);
-                const numB = parseInt(b.propertyId.replace('property-', ''), 10);
-                return numA - numB;
-            });
         }
 
         if (workspaces.length === 0) {
@@ -422,19 +418,30 @@ class CommonHelperService {
             return;
         }
 
+        // sort by type
+        workspaces.sort((a, b) => {
+            // sort by type alphabetically
+            let typeComparison = a.type.localeCompare(b.type);
+            if (typeComparison !== 0) return typeComparison;
+        
+            // if types are the same, sort by roomNum numerically
+            return parseInt(a.roomNum) - parseInt(b.roomNum);
+        });
+
         // append workspace cards
         workspaces.forEach(async (workspace) => {
             const workspaceProperty = await propertyRepository.getPropertyById(workspace.propertyId);
 
-            let eachWorkspace = '';
-
-            if (currentUser.role === enumService.coWorker) {
-                eachWorkspace = this.createWorkerWorkspaceCard(workspace, workspaceProperty);
-            } else {
-                eachWorkspace = this.createPropertyOwnerWorkspaceCard(workspace, workspaceProperty);
-            }
-
+            let eachWorkspace = this.createPropertyOwnerWorkspaceCard(workspace, workspaceProperty);;
             $workspaceList.append(eachWorkspace);
+
+            // Hide buttons immediately after appending
+            if (currentUser.role === enumService.coWorker) {
+                eachWorkspace.find(".editWorkspace, .deleteWorkspace, .addWorkspace").hide();
+            }
+            else if (currentUser.role === enumService.workspaceOwner) {
+                eachWorkspace.find(".viewWorkspace, .viewContact").hide();
+            }
         });
     }
 
@@ -455,19 +462,24 @@ class CommonHelperService {
                     <div class="property-header d-flex justify-content-between align-items-center">
                         <h5 class="property-name mb-0"> Room Number ${workspace.roomNum} </h5>
                         <div class="property-actions">
-                            <i class="fas fa-edit" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
-                            <i class="fas fa-trash-alt" data-bs-toggle="tooltip" title="Delete Workspace" onclick="deleteWorkspace('${workspace.id}')"></i>
+                            <i class="fas fa-edit editWorkspace" data-bs-toggle="modal" title="Edit Workspace" data-bs-target="#addWorkspaceModal" onclick="editWorkspace('${workspace.id}')"></i>
+                            <i class="fas fa-trash-alt deleteWorkspace" data-bs-toggle="tooltip" title="Delete Workspace" onclick="deleteWorkspace('${workspace.id}')"></i>
                         </div>
                     </div>
     
                     <div class="property-state mb-4">${workspaceType}</div>
-                    <div class="property-details">
+                    <div class="property-details mb-4">
                         <p class="mb-1"><strong>Address:</strong> ${workspaceAddress}</p>
                         <p class="mb-1"><strong>Capacity:</strong> ${workspace.capacity}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
                         <p class="mb-1 ${availabilityClass}" ><strong>Availability Date:</strong> ${this.formatDate(workspace.availabilityDate)} (${this.formatTitle(availabilityClass)})</p>
                         <p class="mb-1"><strong>Smoking Policy:</strong> ${workspace.smokingPolicy}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
+                    </div>
+
+                    <div class="property-actions d-flex justify-content-between align-items-center gap-2">
+                        <button class="btn-view w-100 viewWorkspace" data-bs-toggle="modal" title="Workspace Details" data-bs-target="#viewWorkspaceModal" onclick="viewWorkspace('${workspace.id}')">View</button>
+                        <button class="btn-edit w-100 viewContact" data-bs-toggle="modal" title="Contact Details" data-bs-target="#viewContactModal" onclick="viewContact('${workspace.id}')">Contact</button>
                     </div>
                 </div>
             </div>

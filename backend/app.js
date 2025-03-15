@@ -8,13 +8,19 @@
 const express = require('express');
 const cors = require('cors');
 const fileSystem = require('./fileSystem/fileSystem');
-
 const app = express();
 
-// Allowed origins for CORS
+/*
+    Render – API hosting for web services.
+    Vercel – Deployed the frontend.
+    Please note that Render may restart due to file changes, so I ignored those files to prevent the server from restarting, which could cause CORS errors.
+*/
+
+// https://stackoverflow.com/questions/75399430/cors-errors-after-deployment-to-render-worked-fine-locally
+// allowed origins for CORS
 const allowedOrigins = [
-    'https://co-space-together.vercel.app',
-    'http://127.0.0.1:5501'
+    'https://co-space-together.vercel.app',         // production co-space [UI] 
+    'http://127.0.0.1:5501'                         // local server [UI]
 ];
 
 // CORS Middleware

@@ -136,6 +136,10 @@ body {
   color: white;
 }
 
+#role option {
+  color: white;
+}
+
 #role option:disabled {
   color: white;
 }
