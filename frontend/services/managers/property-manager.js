@@ -73,7 +73,8 @@ async function propertyFormSubmitHandler() {
             $(propertyForm).removeData("property-id"); // remove stored property id value from cache
 
             // load property cards
-            await commonHelperService.displayPropertyCards();
+            const currentUser = await userRepository.getCurrentUser();
+            await commonHelperService.displayPropertyCards(currentUser.role);
 
             // display success message
             alertifyService.success("Property saved successfully!");
@@ -123,7 +124,8 @@ window.deleteProperty = async function (propertyId) {
             await propertyRepository.deleteProperty(propertyId);
 
             // load property cards
-            await commonHelperService.displayPropertyCards();
+            const currentUser = await userRepository.getCurrentUser();
+            await commonHelperService.displayPropertyCards(currentUser.role);
 
             // display message
             alertify.success("Property deleted successfully!");

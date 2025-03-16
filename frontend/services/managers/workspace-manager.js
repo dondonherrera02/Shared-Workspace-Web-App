@@ -111,7 +111,7 @@ window.deleteWorkspace = async function(workspaceId) {
             const workspace = await workspaceRepository.deleteWorkspace(workspaceId);
 
             setTimeout(() => {
-                routerService.redirectToOwnerWorkspacePage(workspace.propertyId);
+                routerService.redirectToWorkspacePage(workspace.propertyId, true);
             }, 1000);
 
              // display message
@@ -181,8 +181,6 @@ async function workspaceSearchHandler(){
             }
         });
 
-        const $workspaceList = $('#workspaceList'); // get the workspace list
-        $workspaceList.empty(); // reset the list
         $('#searchWorkspaceModal').modal('hide'); // hide the modal
         $(searchWorkspaceForm).trigger("reset"); // reset the form
 
@@ -191,7 +189,7 @@ async function workspaceSearchHandler(){
 
         // display message when no ws found
         if (results.length === 0) {
-            $workspaceList.append('<p>No workspaces found matching your search request.</p>');
+            $propertyList.append('<p>No workspaces found matching your search request.</p>');
             return;
         }
 
@@ -204,7 +202,7 @@ async function workspaceSearchHandler(){
             let eachWorkspace = await commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
         
             // append to dynamic list
-            $workspaceList.append(eachWorkspace);
+            $propertyList.append(eachWorkspace);
         }
     });
 }
