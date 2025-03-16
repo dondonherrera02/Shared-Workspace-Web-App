@@ -15,7 +15,11 @@ class RouterUtilService {
 
     redirectToWorkspacePage(propertyId, isOwner) {
         const page = isOwner ? "owner-ws-dashboard" : "co-worker-space";
-        window.location.assign(`/pages/${page}.html?propertyId=${propertyId}`);
+        if (propertyId) {
+            window.location.assign(`/pages/${page}.html?propertyId=${propertyId}`);
+        }else{
+            window.location.assign(`/pages/${page}.html`);
+        }
     }
 
     // REDIRECT page
