@@ -5,11 +5,11 @@
 * @author: Dondon Herrera
 */
 
-const BASE_URL = "http://localhost:";
-const PORT = 8080;
-//const URL = `${BASE_URL}${PORT}`; // For Local Testing
+const PORT = process.env.PORT || 8081;
+const LOCAL_URL = process.env.LOCAL_URL || "http://localhost";
+//const URL = `${LOCAL_URL}:${PORT}`; // For Local Testing
 
-const URL = `https://co-space.onrender.com`; // API Base URL - Production Environment using Render Site
+const URL = process.env.API_URL || `https://co-space-dev.onrender.com`; // API Base URL - Environment using Render Site
 
 class DatabaseHelperService {
 

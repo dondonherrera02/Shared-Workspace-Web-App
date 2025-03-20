@@ -20,6 +20,7 @@ const app = express();
 // allowed origins for CORS
 const allowedOrigins = [
     'https://co-space-together.vercel.app',         // production co-space [UI] 
+    'https://co-space-dev.vercel.app',              // dev co-space [UI] 
     'http://127.0.0.1:5501'                         // local server [UI]
 ];
 
