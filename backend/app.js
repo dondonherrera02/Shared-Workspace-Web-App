@@ -5,9 +5,11 @@
  * @Author: Dondon Herrera
  */
 
+
 const express = require('express');
+const apiRoutes = require('./routers/routes'); // import api routes or endpoints
+const { SwaggerDocs } = require('./swagger.js'); 
 const cors = require('cors');
-const fileSystem = require('./fileSystem/fileSystem');
 const app = express();
 
 /*
@@ -41,7 +43,8 @@ app.options('*', (req, res) => {
     res.sendStatus(204); // No Content
 });
 
-app.use(express.json()); // Body parsing middleware
+app.use(express.json()); // body parsing middleware
+app.use('/api', apiRoutes); // use API routes
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -49,63 +52,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
 });
 
-// Utility function to set CORS headers dynamically
-const setCorsHeaders = (req, res) => {
-    const origin = allowedOrigins.includes(req.headers.origin) ? req.headers.origin : allowedOrigins[0];
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    console.log(`SET to origin: ${origin}`);
-};
-
-// API Endpoints
-
-// POST Data
-app.post('/data/:objectName', (req, res) => {
-    const { objectName } = req.params;
-    const data = req.body;
-    console.log(`POST request for /data/${objectName} from origin: ${req.headers.origin}`);
-    setCorsHeaders(req, res);
-
-    try {
-        fileSystem.saveToFile(objectName, data);
-        res.json({ message: `Data saved for ${objectName}` });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error saving data.' });
-    }
-});
-
-// GET List of Data
-app.get('/data/:objectName', (req, res) => {
-    const { objectName } = req.params;
-    console.log(`GET request for /data/${objectName} from origin: ${req.headers.origin}`);
-    setCorsHeaders(req, res);
-
-    try {
-        const data = fileSystem.getList(objectName);
-        res.json(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error reading data.' });
-    }
-});
-
-// GET a Single Object
-app.get('/data/user/:objectName', (req, res) => {
-    const { objectName } = req.params;
-    console.log(`GET request for /data/user/${objectName} from origin: ${req.headers.origin}`);
-    setCorsHeaders(req, res);
-
-    try {
-        const data = fileSystem.getOne(objectName);
-        res.json(data);
-    } catch (error) {
-        console.error('Error retrieving data:', error);
-        res.status(500).json({ error: 'Error retrieving data.' });
-    }
-});
-
 // Start server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/swagger`));
+SwaggerDocs(app, PORT);

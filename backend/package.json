@@ -20,8 +20,14 @@
   },
   "homepage": "https://github.com/dondonherrera02/Shared-Workspace-Web-App#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "sequelize": "^6.37.6",
+    "sqlite3": "^5.1.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
