@@ -27,9 +27,35 @@ db.run(`
   )
 `, (err) => {
     if (err) {
-        console.error('Error creating the users table:', err.message);
+        console.error('Error creating users table:', err.message);
     } else {
-        console.log('Users table created (or already exists)');
+        console.log('Users table created.');
+    }
+});
+
+// Run the SQL query to create the 'properties' table
+db.run(`
+    CREATE TABLE IF NOT EXISTS properties (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,     -- Auto-generated unique identifier for the property
+      name TEXT NOT NULL,                       -- The property's name
+      street TEXT NOT NULL,                     -- The property's street name
+      city TEXT NOT NULL,                       -- The property's city
+      state TEXT NOT NULL,                      -- The property's state
+      postalCode TEXT NOT NULL,                 -- The property's postal code
+      neighborhood TEXT NOT NULL,               -- The property's neighborhood
+      squareFeet REAL NOT NULL,                 -- The property's sqft.
+      hasParkingGarage BOOLEAN NOT NULL,        -- If property has parking garage
+      hasTransportation BOOLEAN NOT NULL,       -- If property has transportation access
+      createdDate TEXT NOT NULL,                -- Date and time when the property was created
+      updatedDate TEXT NOT NULL,                -- Date and time when the property was last updated
+      ownerId INTEGER,                          -- Property's ownerId
+      FOREIGN KEY(ownerId) REFERENCES users(id) -- Foreign key linking to the users table
+    )
+`, (err) => {
+    if (err) {
+        console.error('Error creating properties table:', err.message);
+    } else {
+        console.log('Properties table created');
     }
 });
 

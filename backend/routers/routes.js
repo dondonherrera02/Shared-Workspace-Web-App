@@ -12,6 +12,7 @@ const routerUtilService = express.Router();
 
 // namespaces - controllers
 const userController = require('../controllers/userController');
+const propertyController = require('../controllers/propertyController');
 
 // USER Routes
 routerUtilService.post('/user', userController.createUser); // create user
@@ -19,5 +20,11 @@ routerUtilService.put('/user/:id', userController.updateUser); // update user
 routerUtilService.get('/user', userController.getUsers); // get users
 routerUtilService.get('/user/:id', userController.getUserById); // get user by id
 
+// PROPERTY Routes
+routerUtilService.post('/property', propertyController.createProperty); // create property
+routerUtilService.put('/property/:id', propertyController.updateProperty); // update property
+routerUtilService.delete('/property/:id', propertyController.deleteProperty); // delete property
+routerUtilService.get('/property', propertyController.getProperties); // get properties
+routerUtilService.get('/property/:id', propertyController.getPropertyById); // get property by id
 
 module.exports = routerUtilService;
