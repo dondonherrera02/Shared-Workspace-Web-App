@@ -11,11 +11,21 @@ const saveUser = async (user) => {
     await userModel.create(user);
 }
 
-const getUser = async (query) => {
+const getUserByParam = async (query) => {
     return await userModel.findOne(query);
+}
+
+const getUserById = async (id, query) => {
+    return await userModel.findByPk(id, query);
+}
+
+const getUsersByParam = async (query) => {
+    return await userModel.findAll(query);
 }
 
 module.exports = {
     saveUser,
-    getUser
+    getUserByParam,
+    getUserById,
+    getUsersByParam
 };
