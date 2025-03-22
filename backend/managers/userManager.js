@@ -7,94 +7,82 @@
 
 const userRepository = require('../repositories/userRepository');
 const bcrypt = require('bcrypt');
-const { ValidateEmail, ValidatePhone } = require('../utilities/validator');
+const { ValidateEmail, ValidatePhone, ValidateRequiredField } = require('../utilities/validator');
 const { RoleEnum } = require('../utilities/enum');
 const { Op } = require('sequelize');
 
 const createUser = async (req, res) => {
     try {
-
         const { fullName, phone, email, password, role } = req.body;
 
-        // validate fullname
-        if (!fullName) {
-            return res.status(400).json({ message: "Name is required." });
+        // Array of fields to validate
+        const validations = [
+            { field: fullName, name: "Name" },
+            { field: phone, name: "Phone" },
+            { field: email, name: "Email" },
+            { field: password, name: "Password" },
+            { field: role, name: "Role" }
+        ];
+
+        // Check if required fields are present
+        for (const { field, name } of validations) {
+            const validationError = ValidateRequiredField(field, name);
+            if (validationError) return res.status(400).json(validationError);
         }
 
-        //validate phone
-        if (!phone) {
-            return res.status(400).json({ message: "Phone is required." });
-        }
-
-        if(!ValidatePhone(phone)) {
+        // Validate phone number and email format
+        if (!ValidatePhone(phone)) {
             return res.status(400).json({ message: "Invalid Phone number" });
         }
 
-        //validate email
-        if (!email) {
-            return res.status(400).json({ message: "Email is required." });
-        }
-
-        if(!ValidateEmail(email)) {
+        if (!ValidateEmail(email)) {
             return res.status(400).json({ message: "Invalid Email" });
         }
 
-        // validate password
-        if (!password) {
-            return res.status(400).json({ message: "Password is required." });
-        }
-
-        // validate role
-        if (!role) {
-            return res.status(400).json({ message: "Role is required." });
-        }
-
+        // Validate role
         if (!RoleEnum.isValidRole(role)) {
             return res.status(400).json({ message: "Invalid role." });
         }
 
         // Check if the email or phone already exists
-        // https://www.linode.com/docs/guides/getting-started-with-nodejs-sqlite/
-        const existingUser = await userRepository.getUserByParam(
-            {
-                where: {
-                    [Op.or]: [
-                        { email: email },
-                        { phone: phone }
-                    ]
-                }
+        const existingUser = await userRepository.getUserByParam({
+            where: {
+                [Op.or]: [{ email }, { phone }]
             }
-        );
+        });
 
         if (existingUser) {
-            return res.status(400).json({
-                message: existingUser.email === email
-                    ? "Email already exists"
-                    : "Phone number already exists"
-            });
+            const message = existingUser.email === email
+                ? "Email already exists"
+                : "Phone number already exists";
+            return res.status(400).json({ message });
         }
 
-        // hash the password before storing
-        // https://www.freecodecamp.org/news/how-to-hash-passwords-with-bcrypt-in-nodejs/
+        // Hash the password before storing
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Prepare the new user object
         const requestUser = {
             fullName,
             phone,
             email,
             password: hashedPassword,
             role,
-            createdDate: new Date().toISOString(), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+            createdDate: new Date().toISOString(),
             updatedDate: new Date().toISOString()
         };
 
+        // Save the new user
         const createdUser = await userRepository.saveUser(requestUser);
 
-        return createdUser;
+        return res.status(201).json({
+            message: 'User created successfully',
+            user: createdUser
+        });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+};
 
 const updateUser = async (req, res) => {
     try {

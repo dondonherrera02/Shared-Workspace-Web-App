@@ -1,5 +1,5 @@
 /**
-* @name: Co-Space Web App - User Model
+* @name: Co-Space Web App - Property Model
 * @Course Code: SODV1201
 * @class: Software Development Diploma program.
 * @author: Dondon Herrera
@@ -14,34 +14,50 @@ const database = require('../databases/databaseConfig');
 const sequelize = database.connect();
 
 // user model
-const user = sequelize.define(
-  'User',
+const property = sequelize.define(
+  'Property',
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true, // auto-incremented unique identifier for the user
     },
-    fullName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    phone: {
+    street: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    city: {
       type: DataTypes.STRING, 
       allowNull: false
     },
-    email: {
+    state: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
-    password: {
+    postalCode: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    role: {
+    neighborhood: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    squareFeet: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    hasParkingGarage: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    hasTransportation: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
     },
     createdDate: {
       type: DataTypes.STRING,
@@ -51,11 +67,15 @@ const user = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
+    ownerId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   },
   {
-    tableName: 'users', // name of the table in the database
+    tableName: 'properties', // name of the table in the database
     timestamps: false, // disable automatic timestamp fields
   }
 );
 
-module.exports = user;
+module.exports = property;

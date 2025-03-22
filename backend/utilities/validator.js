@@ -19,8 +19,15 @@ const ValidatePhone = (phone) => {
     return phoneRegex.test(phone);
 };
 
+const ValidateRequiredField = (field, fieldName) => {
+    if (!field) {
+        return { message: `${fieldName} is required.` };
+    }
+    return null;
+};
 
 module.exports = {
     ValidateEmail, 
-    ValidatePhone
+    ValidatePhone,
+    ValidateRequiredField
 };

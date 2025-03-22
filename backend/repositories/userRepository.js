@@ -5,6 +5,8 @@
 * @author: Dondon Herrera
 */
 
+// Ref: https://sequelize.org/docs/v7/category/querying/
+
 const userModel = require('../models/userModel'); // Import the User model
 
 const saveUser = async (user) => {
