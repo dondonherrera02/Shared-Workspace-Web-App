@@ -12,10 +12,9 @@ const { Op } = require('sequelize');
 // Todo: ownerId must be authenticated
 const createProperty = async (req, res) => {
     try {
-        // Request Body
         const { name, street, city, state, postalCode, neighborhood, squareFeet, hasParkingGarage, hasTransportation } = req.body;
 
-        // Array of fields to validate
+        // Validate required fields
         const validations = [
             { field: name, name: "Property Name" },
             { field: street, name: "Street" },
@@ -23,18 +22,15 @@ const createProperty = async (req, res) => {
             { field: state, name: "State" },
             { field: postalCode, name: "Postal Code" },
             { field: neighborhood, name: "Neighborhood" },
-            { field: squareFeet, name: "Square Feet" },
-            { field: hasParkingGarage, name: "Parking Garage Availability" },
-            { field: hasTransportation, name: "Transportation Access" }
+            { field: squareFeet, name: "Square Feet" }
         ];
 
-        // Check if required fields are present
         for (const { field, name } of validations) {
             const validationError = ValidateRequiredField(field, name);
-            if (validationError) return res.status(400).json(validationError);
+            if (validationError) return res.status(400).json({ message: validationError });
         }
 
-        // Check if the property exists
+        // Check if the property already exists
         const existingProperty = await propertyRepository.getPropertyByParam({
             where: {
                 [Op.and]: [{ name }, { city }]
@@ -45,7 +41,7 @@ const createProperty = async (req, res) => {
             return res.status(400).json({ message: `Property '${name}' already exists.` });
         }
 
-        // Prepare the property object to save
+        // Prepare the property object
         const requestProperty = {
             name, 
             street, 
@@ -56,19 +52,20 @@ const createProperty = async (req, res) => {
             squareFeet, 
             hasParkingGarage, 
             hasTransportation,
-            ownerId : null,
-            createdDate: new Date().toISOString(), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+            ownerId: 1, // for testing purposes only
+            createdDate: new Date().toISOString(),
             updatedDate: new Date().toISOString()
         };
 
-        // Save property
+        // Save the property
         const createdProperty = await propertyRepository.saveProperty(requestProperty);
 
         return createdProperty;
+
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        return res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+};
 
 const updateProperty = async (req, res) => {
     try {

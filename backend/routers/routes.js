@@ -13,6 +13,7 @@ const routerUtilService = express.Router();
 // namespaces - controllers
 const userController = require('../controllers/userController');
 const propertyController = require('../controllers/propertyController');
+const workspaceController = require('../controllers/workspaceController');
 
 // USER Routes
 routerUtilService.post('/user', userController.createUser); // create user
@@ -26,5 +27,12 @@ routerUtilService.put('/property/:id', propertyController.updateProperty); // up
 routerUtilService.delete('/property/:id', propertyController.deleteProperty); // delete property
 routerUtilService.get('/property', propertyController.getProperties); // get properties
 routerUtilService.get('/property/:id', propertyController.getPropertyById); // get property by id
+
+// WORKSPACE Routes
+routerUtilService.post('/workspace/:propertyId', workspaceController.createWorkspace); // create workspace
+routerUtilService.put('/workspace/:id', workspaceController.updateWorkspace); // update workspace
+routerUtilService.delete('/workspace/:id', workspaceController.deleteWorkspace); // delete workspace
+routerUtilService.get('/workspace', workspaceController.getWorkspaces); // get workspaces
+routerUtilService.get('/workspace/:id', workspaceController.getWorkspaceById); // get workspace by id
 
 module.exports = routerUtilService;

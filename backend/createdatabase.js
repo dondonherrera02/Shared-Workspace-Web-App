@@ -43,7 +43,7 @@ db.run(`
       state TEXT NOT NULL,                      -- The property's state
       postalCode TEXT NOT NULL,                 -- The property's postal code
       neighborhood TEXT NOT NULL,               -- The property's neighborhood
-      squareFeet REAL NOT NULL,                 -- The property's sqft.
+      squareFeet DECIMAL(10,2) NOT NULL,        -- The property's sqft.
       hasParkingGarage BOOLEAN NOT NULL,        -- If property has parking garage
       hasTransportation BOOLEAN NOT NULL,       -- If property has transportation access
       createdDate TEXT NOT NULL,                -- Date and time when the property was created
@@ -55,7 +55,33 @@ db.run(`
     if (err) {
         console.error('Error creating properties table:', err.message);
     } else {
-        console.log('Properties table created');
+        console.log('Properties table created successfully');
+    }
+});
+
+// Run the SQL query to create the 'workspaces' table
+db.run(`
+    CREATE TABLE IF NOT EXISTS workspaces (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,                 -- Auto-generated unique identifier for the workspace
+      roomNumber TEXT NOT NULL,                             -- The workspace's room number
+      type TEXT NOT NULL,                                   -- Type of workspace (e.g., private, desk)
+      capacity INTEGER NOT NULL,                            -- Number of people the workspace can accommodate
+      leaseTerm TEXT NOT NULL,                              -- Lease term (e.g., monthly, yearly)
+      availabilityDate TEXT NOT NULL,                       -- Date when the workspace is available
+      isSmokingAllowed BOOLEAN NOT NULL,                    -- 0 or 1 for boolean values
+      price DECIMAL(10,2) NOT NULL,                         -- Price for leasing the workspace
+      createdDate TEXT NOT NULL,                            -- Auto-generated creation timestamp
+      updatedDate TEXT NOT NULL,                            -- Auto-generated update timestamp
+      ownerId INTEGER,                                      -- ID of the workspace owner
+      propertyId INTEGER,                                   -- ID of the associated property
+      FOREIGN KEY(ownerId) REFERENCES users(id),            -- Foreign key linking to the users table
+      FOREIGN KEY(propertyId) REFERENCES properties(id)     -- Foreign key linking to the properties table
+    )
+`, (err) => {
+    if (err) {
+        console.error('Error creating workspaces table:', err.message);
+    } else {
+        console.log('Workspaces table created successfully.');
     }
 });
 

@@ -10,7 +10,7 @@
 const propertyModel = require('../models/propertyModel'); // Import the Property model
 
 const saveProperty = async (property) => {
-    await propertyModel.create(property);
+    return await propertyModel.create(property);
 }
 
 const deleteProperty = async (property) => {

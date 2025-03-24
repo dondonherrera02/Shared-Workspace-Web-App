@@ -14,7 +14,29 @@ const RoleEnum = Object.freeze({
     }
 });
 
+const WorkspaceTypeEnum = Object.freeze({
+    MEETINGROOM: 'Meeting Room',
+    PRIVATEOFFICE: 'Private Office',
+    DESK: 'Desk',
+    
+    isValidType(type) {
+        return Object.values(this).includes(type);
+    }
+});
+
+const WorkspaceLeaseTermEnum = Object.freeze({
+    DAY: 'Day',
+    WEEK: 'Week',
+    MONTH: 'Month',
+    
+    isValidTerm(term) {
+        return Object.values(this).includes(term);
+    }
+});
+
 
 module.exports = {
-    RoleEnum
+    RoleEnum,
+    WorkspaceTypeEnum,
+    WorkspaceLeaseTermEnum
 };
