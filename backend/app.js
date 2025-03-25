@@ -5,12 +5,15 @@
  * @Author: Dondon Herrera
  */
 
-
 const express = require('express');
 const apiRoutes = require('./routers/routes'); // import api routes or endpoints
 const { SwaggerDocs } = require('./swagger.js'); 
 const cors = require('cors');
 const app = express();
+const dotenv = require('dotenv');
+
+// set up global configuration access - .env file
+dotenv.config();
 
 /*
     Render – API hosting for web services.
