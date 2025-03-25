@@ -10,29 +10,37 @@
 const express = require('express');
 const routerUtilService = express.Router();
 
-// namespaces - controllers
+// NAMESPACE - controllers
+const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
 const propertyController = require('../controllers/propertyController');
 const workspaceController = require('../controllers/workspaceController');
 
+// MIDDLEWAREs
+const { authenticateUser, isOwnerRole } = require('../utilities/middleware/authentication');
+
+// AUTH Routes
+routerUtilService.post('/login', authController.login); // login user
+routerUtilService.post('/logout', authController.logout); // logout user
+
 // USER Routes
 routerUtilService.post('/user', userController.createUser); // create user
-routerUtilService.put('/user/:id', userController.updateUser); // update user
-routerUtilService.get('/user', userController.getUsers); // get users
-routerUtilService.get('/user/:id', userController.getUserById); // get user by id
+routerUtilService.put('/user/:id', authenticateUser, userController.updateUser); // update user
+routerUtilService.get('/user', authenticateUser, userController.getUsers); // get users
+routerUtilService.get('/user/:id', authenticateUser, userController.getUserById); // get user by id
 
 // PROPERTY Routes
-routerUtilService.post('/property', propertyController.createProperty); // create property
-routerUtilService.put('/property/:id', propertyController.updateProperty); // update property
-routerUtilService.delete('/property/:id', propertyController.deleteProperty); // delete property
-routerUtilService.get('/property', propertyController.getProperties); // get properties
-routerUtilService.get('/property/:id', propertyController.getPropertyById); // get property by id
+routerUtilService.post('/property', authenticateUser, isOwnerRole, propertyController.createProperty); // create property
+routerUtilService.put('/property/:id', authenticateUser, isOwnerRole, propertyController.updateProperty); // update property
+routerUtilService.delete('/property/:id', authenticateUser, isOwnerRole, propertyController.deleteProperty); // delete property
+routerUtilService.get('/property', authenticateUser, propertyController.getProperties); // get properties
+routerUtilService.get('/property/:id', authenticateUser, propertyController.getPropertyById); // get property by id
 
 // WORKSPACE Routes
-routerUtilService.post('/workspace/:propertyId', workspaceController.createWorkspace); // create workspace
-routerUtilService.put('/workspace/:id', workspaceController.updateWorkspace); // update workspace
-routerUtilService.delete('/workspace/:id', workspaceController.deleteWorkspace); // delete workspace
-routerUtilService.get('/workspace', workspaceController.getWorkspaces); // get workspaces
-routerUtilService.get('/workspace/:id', workspaceController.getWorkspaceById); // get workspace by id
+routerUtilService.post('/workspace/:propertyId', authenticateUser, isOwnerRole, workspaceController.createWorkspace); // create workspace
+routerUtilService.put('/workspace/:id', authenticateUser, isOwnerRole, workspaceController.updateWorkspace); // update workspace
+routerUtilService.delete('/workspace/:id', authenticateUser, isOwnerRole, workspaceController.deleteWorkspace); // delete workspace
+routerUtilService.get('/workspace', authenticateUser, workspaceController.getWorkspaces); // get workspaces
+routerUtilService.get('/workspace/:id', authenticateUser, workspaceController.getWorkspaceById); // get workspace by id
 
 module.exports = routerUtilService;
