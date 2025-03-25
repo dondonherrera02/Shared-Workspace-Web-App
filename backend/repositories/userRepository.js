@@ -10,7 +10,7 @@
 const userModel = require('../models/userModel'); // Import the User model
 
 const saveUser = async (user) => {
-    await userModel.create(user);
+    return await userModel.create(user);
 }
 
 const getUserByParam = async (query) => {

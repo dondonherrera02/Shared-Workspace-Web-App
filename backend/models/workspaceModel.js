@@ -1,5 +1,5 @@
 /**
-* @name: Co-Space Web App - Property Model
+* @name: Co-Space Web App - Workspace Model
 * @Course Code: SODV1201
 * @class: Software Development Diploma program.
 * @author: Dondon Herrera
@@ -13,51 +13,42 @@ const database = require('../databases/databaseConfig');
 // connect to cospace database
 const sequelize = database.connect();
 
-// property model
-const property = sequelize.define(
-  'Property',
+// workspace model
+const workspace = sequelize.define(
+  'Workspace',
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, // auto-incremented unique identifier for the property
+      autoIncrement: true, // auto-incremented unique identifier for the workspace
     },
-    name: {
+    roomNumber: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    capacity: {
+      type: DataTypes.INTEGER, 
+      allowNull: false
+    },
+    leaseTerm: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
     },
-    street: {
+    availabilityDate: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    city: {
-      type: DataTypes.STRING, 
+    isSmokingAllowed : {
+      type: DataTypes.BOOLEAN,
       allowNull: false
     },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    postalCode: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    neighborhood: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    squareFeet: {
+    price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-    },
-    hasParkingGarage: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-    },
-    hasTransportation: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
     },
     createdDate: {
       type: DataTypes.STRING,
@@ -71,11 +62,15 @@ const property = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    propertyId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   },
   {
-    tableName: 'properties', // name of the table in the database
+    tableName: 'workspaces', // name of the table in the database
     timestamps: false, // disable automatic timestamp fields
   }
 );
 
-module.exports = property;
+module.exports = workspace;
