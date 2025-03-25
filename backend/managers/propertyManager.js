@@ -6,10 +6,10 @@
 */
 
 const propertyRepository = require('../repositories/propertyRepository');
+const workspaceRepository = require('../repositories/workspaceRepository');
 const { ValidateRequiredField } = require('../utilities/validator');
 const { Op } = require('sequelize');
 
-// Todo: ownerId must be authenticated
 const createProperty = async (req, res) => {
     try {
         const { name, street, city, state, postalCode, neighborhood, squareFeet, hasParkingGarage, hasTransportation } = req.body;
@@ -52,7 +52,7 @@ const createProperty = async (req, res) => {
             squareFeet, 
             hasParkingGarage, 
             hasTransportation,
-            ownerId: 1, // for testing purposes only
+            ownerId: req.user?.id ?? '', // this is from middleware
             createdDate: new Date().toISOString(),
             updatedDate: new Date().toISOString()
         };
@@ -80,6 +80,10 @@ const updateProperty = async (req, res) => {
         const currentProperty = await propertyRepository.getPropertyById(id);
         if (!currentProperty) return res.status(404).json({ message: "Property not found." });
 
+        // check if this user is allowed to update this property
+        const currentUserId = req.user?.id // this is from middleware
+        if(currentUserId !== currentProperty.ownerId) return res.status(401).json({ message: "Unauthorized to update this property." });
+
         // Update only provided fields
         if (name) currentProperty.name = name;
         if (street) currentProperty.street = street;
@@ -102,7 +106,6 @@ const updateProperty = async (req, res) => {
     }
 }
 
-// Todo: To delete as well all related workspaces here!
 const deleteProperty = async (req, res) => {
     try {
         // Request Body
@@ -115,8 +118,15 @@ const deleteProperty = async (req, res) => {
         const currentProperty = await propertyRepository.getPropertyById(id);
         if (!currentProperty) return res.status(404).json({ message: "Property not found." });
 
+        // check if this user is allowed to delete this property
+        const currentUserId = req.user?.id // this is from middleware
+        if(currentUserId !== currentProperty.ownerId) return res.status(401).json({ message: "Unauthorized to delete this property." });
+
         // delete property
         await propertyRepository.deleteProperty(currentProperty);
+
+        // delete related workspaces here
+        await workspaceRepository.deleteWorkspace({ where: { propertyId: id }})
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });

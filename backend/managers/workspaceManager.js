@@ -11,7 +11,6 @@ const { ValidateRequiredField } = require('../utilities/validator');
 const { WorkspaceTypeEnum, WorkspaceLeaseTermEnum } = require('../utilities/enum');
 const { Op } = require('sequelize');
 
-// Todo: ownerId must be authenticated
 // Create workspace
 const createWorkspace = async (req, res) => {
     try {
@@ -73,7 +72,7 @@ const createWorkspace = async (req, res) => {
             availabilityDate,
             isSmokingAllowed,
             price,
-            ownerId: 1, // for testing purposes only
+            ownerId: req.user?.id ?? '', // this is from middleware
             propertyId,
             createdDate: new Date().toISOString(), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
             updatedDate: new Date().toISOString()
@@ -102,10 +101,13 @@ const updateWorkspace = async (req, res) => {
         const currentWorkspace = await workspaceRepository.getWorkspaceById(id);
         if (!currentWorkspace) return res.status(404).json({ message: "Workspace not found." });
 
+        // check if this user is allowed to update this workspace
+        const currentUserId = req.user?.id // this is from middleware
+        if (currentUserId !== currentWorkspace.ownerId) return res.status(401).json({ message: "Unauthorized to update this workspace." });
+
         // Update only provided fields
         if (roomNumber) currentWorkspace.roomNumber = roomNumber;
         if (type) {
-
             // Validate workspace type
             if (!WorkspaceTypeEnum.isValidType(type)) {
                 return res.status(400).json({ message: "Invalid workspace type." });
@@ -147,6 +149,10 @@ const deleteWorkspace = async (req, res) => {
         // get existing workspace
         const currentWorkspace = await workspaceRepository.getWorkspaceById(id);
         if (!currentWorkspace) return res.status(404).json({ message: "Workspace not found." });
+
+        // check if this user is allowed to delete this workspace
+        const currentUserId = req.user?.id // this is from middleware
+        if (currentUserId !== currentWorkspace.ownerId) return res.status(401).json({ message: "Unauthorized to update this workspace." });
 
         // delete workspace
         await workspaceRepository.deleteWorkspace(currentWorkspace);

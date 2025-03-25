@@ -95,6 +95,10 @@ const updateUser = async (req, res) => {
         const currentUser = await userRepository.getUserById(id);
         if (!currentUser) return res.status(404).json({ message: "User not found." });
 
+         // check if this user is allowed to update this user
+         const currentUserId = req.user?.id // this is from middleware
+         if(currentUserId !== currentUser.ownerId) return res.status(401).json({ message: "Unauthorized to update this profile." });
+
         // Update only provided fields
         if (fullName) currentUser.fullName = fullName;
 
