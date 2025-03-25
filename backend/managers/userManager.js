@@ -6,8 +6,8 @@
 */
 
 const userRepository = require('../repositories/userRepository');
-const bcrypt = require('bcrypt');
 const { ValidateEmail, ValidatePhone, ValidateRequiredField } = require('../utilities/validator');
+const { HashPassword } = require('../utilities/commonHelper');
 const { RoleEnum } = require('../utilities/enum');
 const { Op } = require('sequelize');
 
@@ -59,7 +59,7 @@ const createUser = async (req, res) => {
         }
 
         // Hash the password before storing
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await HashPassword(password);
 
         // Prepare the new user object
         const requestUser = {
@@ -117,7 +117,7 @@ const updateUser = async (req, res) => {
 
         // Hash password if provided
         if (password) {
-            currentUser.password = await bcrypt.hash(password, 10);
+            currentUser.password = HashPassword(password);
         }
 
         currentUser.updatedDate = new Date().toISOString();

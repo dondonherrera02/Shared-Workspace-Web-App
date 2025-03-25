@@ -44,7 +44,7 @@ const updateProperty = async (req, res) => {
         const property = await propertyManager.updateProperty(req, res);
 
         res.status(200).json({
-            message: 'Property created successfully',
+            message: 'Property updated successfully',
             property: {
                 id: property.id,
                 name: property.name,
@@ -64,6 +64,7 @@ const updateProperty = async (req, res) => {
     }
 };
 
+// Delete property
 const deleteProperty = async (req, res) => {
     try {
         await propertyManager.deleteProperty(req, res);

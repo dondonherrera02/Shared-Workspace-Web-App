@@ -73,7 +73,7 @@ const createWorkspace = async (req, res) => {
             availabilityDate,
             isSmokingAllowed,
             price,
-            ownerId : 1, // for testing purposes only
+            ownerId: 1, // for testing purposes only
             propertyId,
             createdDate: new Date().toISOString(), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
             updatedDate: new Date().toISOString()
@@ -119,7 +119,7 @@ const updateWorkspace = async (req, res) => {
                 return res.status(400).json({ message: "Invalid lease term." });
             }
             currentWorkspace.leaseTerm = leaseTerm;
-        } 
+        }
         if (availabilityDate) currentWorkspace.availabilityDate = availabilityDate;
         if (isSmokingAllowed) currentWorkspace.isSmokingAllowed = isSmokingAllowed;
         if (price) currentWorkspace.price = price;
@@ -160,27 +160,40 @@ const deleteWorkspace = async (req, res) => {
 const getWorkspaces = async (req, res) => {
     try {
         // Request optional params
-        const { ownerId, propertyId, city, state, postalCode, neighborhood, hasParkingGarage, hasTransportation, squareFeet, availabilityDate, capacity, leaseTerm, price, isSmokingAllowed } = req.query;
+        const {
+            ownerId, propertyId, type, availabilityDate, capacity, leaseTerm, price, isSmokingAllowed,
+            city, state, postalCode, neighborhood, squareFeet, hasParkingGarage, hasTransportation
+        } = req.query;
 
         // Set params as filters
-        const filter = {};
-        if (ownerId) filter.ownerId = ownerId;
-        if (propertyId) filter.propertyId = propertyId;
-        if (city) filter.city = city;
-        if (state) filter.state = state;
-        if (postalCode) filter.postalCode = postalCode;
-        if (neighborhood) filter.neighborhood = neighborhood;
-        if (hasParkingGarage) filter.hasParkingGarage = hasParkingGarage;
-        if (hasTransportation) filter.hasTransportation = hasTransportation;
-        if (squareFeet) filter.squareFeet = squareFeet;
-        if (availabilityDate) filter.availabilityDate = availabilityDate;
-        if (capacity) filter.capacity = capacity;
-        if (leaseTerm) filter.leaseTerm = leaseTerm;
-        if (price) filter.price = price;
-        if (isSmokingAllowed) filter.isSmokingAllowed = isSmokingAllowed;
+        const workspaceFilters = {};
+        const propertyFilters = {};
 
-        // Get workspaces with optional filters 
-        const workspaces = await workspaceRepository.getWorkspacesByParam({ where: filter });
+        // Workspace filters
+        if (ownerId) workspaceFilters.ownerId = ownerId;
+        if (propertyId) workspaceFilters.propertyId = propertyId;
+
+        // Property filters
+        if (city) propertyFilters.city = city;
+        if (state) propertyFilters.state = state;
+        if (postalCode) propertyFilters.postalCode = postalCode;
+        if (neighborhood) propertyFilters.neighborhood = neighborhood;
+        if (squareFeet) propertyFilters.squareFeet = squareFeet;
+        if (hasParkingGarage) propertyFilters.hasParkingGarage = hasParkingGarage;
+        if (hasTransportation) propertyFilters.hasTransportation = hasTransportation;
+
+        // Workspace filters
+        if (type) propertyFilters.type = type;
+        if (leaseTerm) propertyFilters.leaseTerm = leaseTerm;
+        if (availabilityDate) propertyFilters.availabilityDate = availabilityDate;
+        if (isSmokingAllowed) propertyFilters.isSmokingAllowed = isSmokingAllowed;
+        if (capacity) propertyFilters.capacity = capacity;
+        if (price) propertyFilters.price = price;
+
+        const workspaces = await workspaceRepository.getWorkspacesByParam({
+            workspaceFilters,
+            propertyFilters
+        });
 
         return res.json(workspaces);
     } catch (error) {
