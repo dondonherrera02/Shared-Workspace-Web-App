@@ -6,12 +6,12 @@
 */
 
 import { alertifyService } from '../externalservices/alertify.js';
-import { databaseHelperService } from '../utilities/database-helper.js';
 import { enumService } from '../utilities/enum.js';
 import { routerService } from '../utilities/router.js';
-import { commonHelperService } from '../utilities/common-helper.js';
 import { userRepository } from '../repositories/user-repository.js';
 import { authRepository } from '../repositories/auth-repository.js';
+import { localStorageService } from '../utilities/localStorage-helper.js';
+import { userHelperService } from '../utilities/user-helper.js';
 
 $(document).ready(async function() {
     signUp();
@@ -26,9 +26,9 @@ function signUp() {
         event.preventDefault(); // Prevents form from submitting
 
         try {
-            // Store user input data
+            // user request
             const userData = {
-                fullname: $('#fullname').val().trim(),
+                fullName: $('#fullname').val().trim(),
                 phone: $('#phone').val().trim(),
                 email: $('#email').val().trim(),
                 password: $('#password').val().trim(),
@@ -36,7 +36,7 @@ function signUp() {
             };
 
             // Validate user input data
-            commonHelperService.validateUserData(userData);
+            userHelperService.validateUserData(userData);
 
             // Save user
             await userRepository.saveUser(userData);
@@ -96,7 +96,7 @@ async function checkUserAuthentication(){
     const currentPath = window.location.pathname;
 
     // get the current user
-    const currentUser = await databaseHelperService.getOne(enumService.currentUser);
+    const currentUser = await localStorageService.getOne(enumService.currentUser);
 
     // validate if current path includes in the public pages, if not return to index.html
     if(!publicPages.includes(currentPath) && !currentUser) {

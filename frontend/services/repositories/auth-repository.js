@@ -1,42 +1,61 @@
 /**
-* @name: Co-Space Web App - Mock Auth Repository - Database Layer
+* @name: Co-Space Web App - Mock Auth Repository - API Layer
 * @Course Code: SODV1201
 * @class: Software Development Diploma program.
 * @author: Dondon Herrera
 */
 
-import { databaseHelperService } from '../utilities/database-helper.js';
+import { APIHelperService } from '../utilities/api-helper.js';
 import { enumService } from '../utilities/enum.js';
+import { localStorageService } from '../utilities/localStorage-helper.js';
 
 class AuthRepositoryService {
 
-    async login(email, password){
-        
-        // get all registered users
-        const userList = await databaseHelperService.getList(enumService.users); // JSON Parsed Array
-        
-        // get the credentials, find vs. map, find means get the first element based on the condition, map means get list elements..
-        // Reference: https://stackoverflow.com/questions/66992214/find-vs-map-in-javascript
-        const requestor = userList.find(user => user.email === email && user.password === password);
-
-        // validate if the user is registered
-        if(requestor){
-            // get and set, replace the current user
-            let currentUser = await databaseHelperService.getOne(enumService.currentUser);
-            currentUser = requestor;
+    async login(email, password) {
+        try {
+            // prepare the request
+            const request = {
+                email: email,
+                password: password
+            }
             
-            // update the current user
-            await databaseHelperService.saveToLocalStorage(enumService.currentUser, currentUser);
-            return currentUser;
-        }
+            // call the login endpoint
+            const response = await APIHelperService.post(`${enumService.URL}/api/login`, request);
+            
+            // save the token during login
+            localStorageService.reset();
 
-        throw new Error('Invalid credentials');
+             // prepare the response
+             const userData = {
+                id: response.userId,
+                role: response.userRole,
+                token: response.user
+            }
+
+            // save to local storage
+            localStorageService.saveToLocalStorage(enumService.currentUser, userData);
+
+            // return user data
+            return userData;
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
     }
 
     async logout() {
-        let currentUser = await databaseHelperService.getOne(enumService.currentUser);
-        currentUser = null;
-        await databaseHelperService.deleteOne(enumService.currentUser);
+        try {
+            
+            // call the logout endpoint - clear the current user cookie
+            APIHelperService.post(`${enumService.URL}/api/logout`)
+
+            // to remove the user credentials in local storage
+            let currentUser = localStorageService.getOne(enumService.currentUser);
+            currentUser = null;
+            localStorageService.deleteOne(enumService.currentUser);
+
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     }
 }
 

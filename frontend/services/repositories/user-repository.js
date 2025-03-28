@@ -1,5 +1,5 @@
 /**
-* @name: Co-Space Web App - Mock User Repository - Database Layer
+* @name: Co-Space Web App - Mock User Repository - API Layer
 * @Course Code: SODV1201
 * @class: Software Development Diploma program.
 * @author: Dondon Herrera
@@ -10,33 +10,20 @@
 
 // Import the services
 import { databaseHelperService } from '../utilities/database-helper.js';
+import { APIHelperService } from '../utilities/api-helper.js';
 import { enumService } from '../utilities/enum.js';
 
 class UserRepositoryService {
 
-    // save to local storage
+    // register new user to the system
     async saveUser(userData) {
-        // get users
-        const userList = await databaseHelperService.getList(enumService.users);
-        
-        // find existing account
-        const existingUser = userList.find(user => user.email.toLowerCase() === userData.email.toLowerCase());
-        
-        // check if existing user
-        if (existingUser) {
-            throw new Error('Email already registered.');
+       
+        try {
+            // call to register new user endpoint
+            await APIHelperService.post(`${enumService.URL}/api/user`, userData);
+        } catch (error) {
+            console.error("Save user failed:", error);
         }
-
-        // set user identifier
-        userData.id = `${userData.role}-${Date.now().toString()}`;
-        
-        // add into array
-        userList.push(userData);
-
-        // save to local storage
-        await databaseHelperService.saveToLocalStorage(enumService.users, userList);
-        
-        return userData;
     }
 
     // get user info by workspace id
