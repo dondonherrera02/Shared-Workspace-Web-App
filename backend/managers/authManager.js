@@ -36,7 +36,11 @@ const login = async (req, res) => {
 
         // Generates token
         const token = GenerateToken(existingUser);
-        return token;
+        return { 
+            token, 
+            userId: existingUser.id,
+            userRole: existingUser.role
+         };
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -46,7 +50,7 @@ const login = async (req, res) => {
 // Logout - clear cookie
 const logout =  (req, res) => {
     // https://www.geeksforgeeks.org/express-js-res-clearcookie-function/
-    res.clearCookie('token'); // frontend set 'token' name in local storage.
+    res.clearCookie('currentUser'); // frontend set 'currentUser' name in local storage.
 };
 
 module.exports = {

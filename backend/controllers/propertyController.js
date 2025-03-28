@@ -68,7 +68,7 @@ const updateProperty = async (req, res) => {
 const deleteProperty = async (req, res) => {
     try {
         await propertyManager.deleteProperty(req, res);
-        res.status(200).json({ message: 'Property deleted successfully'});
+        res.status(200).json({ message: 'Property and related workspaces deleted successfully.' });
     } catch {
     }
 };
