@@ -20,6 +20,10 @@ const deleteWorkspace = async (workspace) => {
     await workspaceModel.destroy(workspace);
 }
 
+const deleteWorkspaceByParams = async (query) => {
+    await workspaceModel.destroy({ where: query });
+}
+
 const getWorkspaceByParam = async (query) => {
     return await workspaceModel.findOne(query);
 }
@@ -69,5 +73,6 @@ module.exports = {
     getWorkspaceByParam,
     getWorkspaceById,
     getWorkspacesByParam,
-    deleteWorkspace
+    deleteWorkspace,
+    deleteWorkspaceByParams
 };

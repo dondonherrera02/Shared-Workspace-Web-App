@@ -17,6 +17,10 @@ const deleteProperty = async (property) => {
     await propertyModel.destroy(property);
 }
 
+const deletePropertyByParams = async (query) => {
+    await propertyModel.destroy({where: query});
+}
+
 const getPropertyByParam = async (query) => {
     return await propertyModel.findOne(query);
 }
@@ -34,5 +38,6 @@ module.exports = {
     getPropertyByParam,
     getPropertyById,
     getPropertiesByParam,
-    deleteProperty
+    deleteProperty,
+    deletePropertyByParams
 };
