@@ -52,6 +52,12 @@ const createWorkspace = async (req, res) => {
             return res.status(400).json({ message: `Cannot create workspace because property '${propertyId}' not found.` });
         }
 
+        // Check if this property belongs to current user
+        const currentUserId = req.user?.id // this is from middleware
+        if(existingProperty.ownerId !== currentUserId) {
+            return res.status(400).json({ message: `You can’t create a workspace for property '${existingProperty.name}' because it doesn’t belong to you.` });
+        }
+
         // Check if the workspace exists
         const existingWorkspace = await workspaceRepository.getWorkspaceByParam({
             where: {
@@ -152,7 +158,7 @@ const deleteWorkspace = async (req, res) => {
 
         // check if this user is allowed to delete this workspace
         const currentUserId = req.user?.id // this is from middleware
-        if (currentUserId !== currentWorkspace.ownerId) return res.status(401).json({ message: "Unauthorized to update this workspace." });
+        if (currentUserId !== currentWorkspace.ownerId) return res.status(401).json({ message: "Unauthorized to delete this workspace." });
 
         // delete workspace
         await workspaceRepository.deleteWorkspace(currentWorkspace);

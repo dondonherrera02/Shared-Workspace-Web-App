@@ -40,7 +40,7 @@ const createProperty = async (req, res) => {
         if (existingProperty) {
             return res.status(400).json({ message: `Property '${name}' already exists.` });
         }
-
+        
         // Prepare the property object
         const requestProperty = {
             name, 
@@ -122,11 +122,11 @@ const deleteProperty = async (req, res) => {
         const currentUserId = req.user?.id // this is from middleware
         if(currentUserId !== currentProperty.ownerId) return res.status(401).json({ message: "Unauthorized to delete this property." });
 
-        // delete property
-        await propertyRepository.deleteProperty(currentProperty);
-
         // delete related workspaces here
-        await workspaceRepository.deleteWorkspace({ where: { propertyId: id }})
+        await workspaceRepository.deleteWorkspaceByParams({ propertyId: id });
+
+        // delete property
+        await propertyRepository.deletePropertyByParams({id: id});
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
