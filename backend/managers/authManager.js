@@ -6,7 +6,8 @@
 */
 
 const userRepository = require('../repositories/userRepository');
-const { VerifyPassword, GenerateToken } = require('../utilities/commonHelper');
+const { GenerateToken } = require('../utilities/commonHelper');
+const bcrypt = require('bcrypt');
 
 // Login user
 const login = async (req, res) => {
@@ -29,7 +30,7 @@ const login = async (req, res) => {
         }
 
         // Check if password is valid
-        const isPasswordValid = VerifyPassword(password, existingUser.password);
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid password' });
         }

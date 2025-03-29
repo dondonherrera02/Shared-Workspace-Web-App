@@ -19,11 +19,6 @@ const HashPassword = async (password) => {
     return await bcrypt.hash(password, saltRounds);
 };
 
-const VerifyPassword = async (requestPassword, currentPassword) => {
-    const isPasswordValid = await bcrypt.compare(requestPassword, currentPassword);
-    return isPasswordValid;
-};
-
 const GenerateToken = (existingUser) => {
     const token = jwt.sign(
         {
@@ -49,7 +44,6 @@ const MakeCaseInsensitiveFilters = (filters) => {
 
 module.exports = {
     HashPassword,
-    VerifyPassword,
     MakeCaseInsensitiveFilters,
     GenerateToken
 };

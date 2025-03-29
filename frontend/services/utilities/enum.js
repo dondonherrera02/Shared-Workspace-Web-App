@@ -34,6 +34,12 @@ class EnumService {
     meetingRoom = 'Meeting Room';
     privateOffice = 'Private Office';
     desk = 'Desk';
+
+    // DEV BASE URL
+    // URL = `https://co-space-dev.onrender.com`; 
+
+    // LOCAL
+    URL = `http://localhost:8080`
 }
 
 // export the service

@@ -1,5 +1,5 @@
 /**
-* @name: Co-Space Web App - Auth Manager - Business Logic Layer
+* @name: Co-Space Web App - Auth Manager - Business Logic Layer 2.0
 * @Course Code: SODV1201
 * @class: Software Development Diploma Program
 * @author: Dondon Herrera
@@ -68,6 +68,11 @@ function login() {
 
             // Login
             const currentUser = await authRepository.login(email, password);
+
+            // Check if token properly save
+            if (!currentUser || !currentUser.token) {
+                throw new Error('Invalid credentials.');
+            }
 
             // Redirect to role-specific page
             routerService.redirectPage(currentUser);

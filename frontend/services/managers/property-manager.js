@@ -7,11 +7,11 @@
 
 import { alertifyService } from '../externalservices/alertify.js';
 import { routerService } from '../utilities/router.js';
-import { commonHelperService } from '../utilities/common-helper.js';
 import { propertyRepository } from '../repositories/property-repository.js';
 import { userRepository } from '../repositories/user-repository.js';
 import { enumService } from '../utilities/enum.js';
-
+import { propertyHelperService } from '../utilities/property-helper.js';
+import { workspaceHelperService } from '../utilities/workspace-helper.js';
 
 $(document).ready(async function () {
     addProperty();
@@ -19,11 +19,11 @@ $(document).ready(async function () {
 
     // initial load property card
     const currentUser = await userRepository.getCurrentUser();
-    await commonHelperService.displayPropertyCards(currentUser.role);
+    await propertyHelperService.displayPropertyCards(currentUser);
 
     try {
         // populate city and state in selection
-        commonHelperService.getCityState();
+        propertyHelperService.getCityState();
     } catch (error) {
         alertifyService.error(error.message);
     }
@@ -31,7 +31,7 @@ $(document).ready(async function () {
 
 // set-up property form - preparation for save or edit.
 function addProperty() {
-    $('#addPropertyBtn').on('click', () => commonHelperService.setUpPropertyForm());
+    $('#addPropertyBtn').on('click', () => propertyHelperService.setUpPropertyForm());
 }
 
 // property form submit event handler
@@ -45,19 +45,19 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
-                pName: $('#pName').val(),
+                name: $('#pName').val(), // property name
                 street: $('#street').val(),
                 city: $('#city').val(),
                 state: $('#state').val(),
                 postalCode: $('#postalCode').val().replace(/\s+/g, ''), // remove spaces
                 neighborhood: $('#neighborhood').val(),
                 squareFeet: $('#squareFeet').val(),
-                parkingGarage: $('#parkingGarage').val(),
-                transportation: $('#transportation').val()
+                hasParkingGarage: $('#parkingGarage').val() === 'available' ? true : false,
+                hasTransportation: $('#transportation').val() === 'available' ? true : false
             };
 
             // validate the input property data
-            commonHelperService.validatePropertyData(propertyData);
+            propertyHelperService.validatePropertyData(propertyData);
 
             if ($propertyForm.data("property-id")) {
                 // update property
@@ -74,7 +74,7 @@ async function propertyFormSubmitHandler() {
 
             // load property cards
             const currentUser = await userRepository.getCurrentUser();
-            await commonHelperService.displayPropertyCards(currentUser.role);
+            await propertyHelperService.displayPropertyCards(currentUser);
 
             // display success message
             alertifyService.success("Property saved successfully!");
@@ -88,17 +88,12 @@ async function propertyFormSubmitHandler() {
 // get all workspaces and redirected to new page
 // this function is globally accessible through window object
 window.getPropertyWorkspaces = async function (propertyId, role) {
-   
-    // get workspaces by property id
-    await commonHelperService.displayWorkspaceCards(propertyId);
 
-    if (role === enumService.workspaceOwner) {
-         // owner
-        routerService.redirectToWorkspacePage(propertyId, true);
-    }else{
-        // worker
-        routerService.redirectToWorkspacePage(propertyId, false);
-    }
+    // get workspaces by property id
+    await workspaceHelperService.displayWorkspaceCards(propertyId);
+
+    const isOwner = role === enumService.workspaceOwner;
+    routerService.redirectToWorkspacePage(propertyId, isOwner);
 }
 
 // edit property - onclick event
@@ -109,7 +104,7 @@ window.editProperty = async function (propertyId) {
 
     if (propertyData) {
         // prepare the property form
-        commonHelperService.setUpPropertyForm(propertyData);
+        propertyHelperService.setUpPropertyForm(propertyData);
     }
 }
 
@@ -125,7 +120,7 @@ window.deleteProperty = async function (propertyId) {
 
             // load property cards
             const currentUser = await userRepository.getCurrentUser();
-            await commonHelperService.displayPropertyCards(currentUser.role);
+            await propertyHelperService.displayPropertyCards(currentUser);
 
             // display message
             alertify.success("Property deleted successfully!");
