@@ -30,10 +30,11 @@ class WorkspaceRepositoryService {
 
         try {
             // call save workspace API
-            const response = await APIHelperService.post(`${enumService.URL}/api/workspace`, workspaceData, currentUser.token);
+            const response = await APIHelperService.post(`${enumService.URL}/api/workspace/${propertyData.id}`, workspaceData, currentUser.token);
             return response.property;
         } catch (error) {
             console.error("Save workspace failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -59,6 +60,7 @@ class WorkspaceRepositoryService {
             return response;
         } catch (error) {
             console.error("Fetch workspace list failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -73,6 +75,7 @@ class WorkspaceRepositoryService {
             return response;
         } catch (error) {
             console.error("Fetch workspace by id failed:", error);
+            throw new Error(error);
         }
     }
   
@@ -92,6 +95,7 @@ class WorkspaceRepositoryService {
             return response.property;
         } catch (error) {
             console.error("Update workspace failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -105,7 +109,8 @@ class WorkspaceRepositoryService {
             const response = await APIHelperService.delete(`${enumService.URL}/api/workspace/${workspaceId}`, currentUser.token);
             return response;
         } catch (error) {
-            console.error("Deleteworkspace failed:", error);
+            console.error("Delete workspace failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -139,6 +144,7 @@ class WorkspaceRepositoryService {
             return response;
         } catch (error) {
             console.error("Search workspace list failed:", error);
+            throw new Error(error);
         }
     }
 }

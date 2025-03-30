@@ -13,26 +13,29 @@ class APIService {
             if (token) {
                 headers["Authorization"] = `Bearer ${token}`;
             }
-
+    
             const options = {
                 method,
                 headers
             };
-
+    
             if (data) {
                 options.body = JSON.stringify(data);
             }
-
+    
             const response = await fetch(url, options);
-
+    
             if (!response.ok) {
-                throw new Error(`${response.statusText}`);
+                const errorBody = await response.json();  // parse response body as JSON
+                const errorMessage = errorBody.message || "Unknown error";  // get the message if it exists
+                console.error("Response Error Message:", errorMessage);
+                throw errorMessage;  // throw the error message
             }
-
-            return await response.json();
+    
+            return await response.json();  // return the response body if successful
         } catch (error) {
             console.error("API request error:", error);
-            throw error;
+            throw error;  // throw the error message
         }
     }
 

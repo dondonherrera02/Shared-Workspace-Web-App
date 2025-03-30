@@ -45,19 +45,22 @@ async function propertyFormSubmitHandler() {
         try {
             // set up the property data to save
             const propertyData = {
-                name: $('#pName').val(), // property name
-                street: $('#street').val(),
-                city: $('#city').val(),
-                state: $('#state').val(),
+                name: $('#pName').val().trim(), // property name
+                street: $('#street').val().trim(),
+                city: $('#city').val().trim(),
+                state: $('#state').val().trim(),
                 postalCode: $('#postalCode').val().replace(/\s+/g, ''), // remove spaces
-                neighborhood: $('#neighborhood').val(),
-                squareFeet: $('#squareFeet').val(),
-                hasParkingGarage: $('#parkingGarage').val() === 'available' ? true : false,
-                hasTransportation: $('#transportation').val() === 'available' ? true : false
+                neighborhood: $('#neighborhood').val().trim(),
+                squareFeet: $('#squareFeet').val()
             };
 
-            // validate the input property data
+            // Validate only the necessary fields
             propertyHelperService.validatePropertyData(propertyData);
+
+            // Add extra fields after validation
+            propertyData.hasParkingGarage = $('#parkingGarage').val() === 'available';
+            propertyData.hasTransportation = $('#transportation').val() === 'available';
+            propertyData.squareFeet = parseInt($('#squareFeet').val(), 10) || 0
 
             if ($propertyForm.data("property-id")) {
                 // update property

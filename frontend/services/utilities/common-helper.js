@@ -17,14 +17,28 @@ class CommonHelperService {
 
     // FORMAT date string
     // https://www.freecodecamp.org/news/how-to-format-a-date-with-javascript-date-formatting-in-js/
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('en-CA', {
+    formatDateTime(dateString) {
+        return new Date(dateString).toLocaleString('en-CA', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            timeZone: 'Asia/Manila'
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZone: 'America/Edmonton'
         });
     }
+
+    formatDate(dateString) {
+        return new Date(dateString).toLocaleString('en-CA', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'America/Edmonton'
+        });
+    }
+    
 }
 
 // export the service

@@ -89,17 +89,8 @@ class PropertyHelperService {
             return;
         }
 
-        // sort properties by property name in ascending order
-        propertyList.sort((a, b) => a.name.localeCompare(b.name));
-
         // loop through each property
         propertyList.forEach(async (property) => {
-
-            const workspaces = await workspaceRepository.getWorkspaceList(
-                role === enumService.workspaceOwner
-                    ? { ownerId: currentUser.id, propertyId: property.id }
-                    : { propertyId: property.id }
-            );
 
             // format the property details
             const pName = `${commonHelperService.formatTitle(property.name)}`;
@@ -127,7 +118,8 @@ class PropertyHelperService {
                         <p class="mb-1"><strong>Square Feet:</strong> ${property.squareFeet} sqm</p>
                         <p class="mb-1"><strong>Parking Garage:</strong> ${parkingGarage}</p>
                         <p class="mb-1"><strong>Public Transportation:</strong> ${transportation}</p>
-                        <p class="mb-1"><strong>No. Workspace:</strong> ${workspaces.length}</p>
+                        <p class="mb-1"><strong>No. Workspace:</strong> ${property.workspaceCount}</p>
+                        <p class="mb-1"><strong>Posted on:</strong> ${commonHelperService.formatDateTime(property.createdDate)}</p>
                     </div>
 
                     <div class="property-actions d-flex justify-content-between align-items-center gap-2">

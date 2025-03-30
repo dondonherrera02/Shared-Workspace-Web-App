@@ -10,7 +10,6 @@ import { enumService } from '../utilities/enum.js';
 import { routerService } from '../utilities/router.js';
 import { userRepository } from '../repositories/user-repository.js';
 import { authRepository } from '../repositories/auth-repository.js';
-import { localStorageService } from '../utilities/localStorage-helper.js';
 import { userHelperService } from '../utilities/user-helper.js';
 
 $(document).ready(async function() {
@@ -101,7 +100,7 @@ async function checkUserAuthentication(){
     const currentPath = window.location.pathname;
 
     // get the current user
-    const currentUser = await localStorageService.getOne(enumService.currentUser);
+    const currentUser = await userRepository.getCurrentUser();
 
     // validate if current path includes in the public pages, if not return to index.html
     if(!publicPages.includes(currentPath) && !currentUser) {
@@ -110,11 +109,12 @@ async function checkUserAuthentication(){
 
     // redirect if user tries to direct access via url unauthorized pages
     // if worker tries to change the url to owner url, fallback to worker-dashboard
-    if (currentPath.includes('owner-dashboard') && currentUser.role !== enumService.workspaceOwner){
+    if (currentPath.includes('owner') && currentUser.role !== enumService.workspaceOwner) {
         window.location.href = 'co-worker-dashboard.html';
     }
+
     // if owner tries to change the url to worker url, fallback to owner-dashboard
-    else if (currentPath.includes('co-worker-dashboard') && currentUser.role !== enumService.coWorker){
+    else if (currentPath.includes('co-worker') && currentUser.role !== enumService.coWorker) {
         window.location.href = 'owner-dashboard.html';
     }
 }

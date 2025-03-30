@@ -30,6 +30,7 @@ class PropertyRepositoryService {
             return response.property;
         } catch (error) {
             console.error("Save property failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -54,6 +55,7 @@ class PropertyRepositoryService {
             return response;
         } catch (error) {
             console.error("Fetch property list failed:", error);
+            throw new Error(error);
         }
     }
    
@@ -68,6 +70,7 @@ class PropertyRepositoryService {
             return response;
         } catch (error) {
             console.error("Fetch property by id failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -87,6 +90,7 @@ class PropertyRepositoryService {
             return response.property;
         } catch (error) {
             console.error("Update property failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -101,6 +105,7 @@ class PropertyRepositoryService {
             return response;
         } catch (error) {
             console.error("Delete property and associated workspaces failed:", error);
+            throw new Error(error);
         }
     }
 }

@@ -23,6 +23,7 @@ class UserRepositoryService {
             await APIHelperService.post(`${enumService.URL}/api/user`, userData);
         } catch (error) {
             console.error("Save user failed:", error);
+            throw new Error(error);
         }
     }
 
@@ -42,21 +43,23 @@ class UserRepositoryService {
             return response;
         } catch (error) {
             console.error("Fetch user by id failed:", error);
+            throw new Error(error);
         }
     }
 
     // update user
-    async updateUser(userId, modifiedProfile) {
+    async updateUser(modifiedProfile) {
 
        // Get the current user
        const currentUser = await localStorageService.getOne(enumService.currentUser);
 
        try {
            // call save property API
-           const response = await APIHelperService.put(`${enumService.URL}/api/user/${userId}`, modifiedProfile, currentUser.token);
+           const response = await APIHelperService.put(`${enumService.URL}/api/user/${currentUser.id}`, modifiedProfile, currentUser.token);
            return response.user;
        } catch (error) {
            console.error("Update profile failed:", error);
+           throw new Error(error);
        }
     }
 }

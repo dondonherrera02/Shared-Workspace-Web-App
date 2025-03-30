@@ -48,7 +48,7 @@ class WorkspaceHelperService {
 
         if (workspace) {
             $('#typeView').text(`${workspace.type}`);
-            $('#availabilityDateView').text(this.formatDate(workspace.availabilityDate));
+            $('#availabilityDateView').text(commonHelperService.formatDate(workspace.availabilityDate));
             $('#leaseTermView').text(workspace.leaseTerm);
             $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
             $('#seatingView').text(workspace.capacity);
@@ -78,7 +78,7 @@ class WorkspaceHelperService {
 
         // check for empty fields
         const fieldMapping = {
-            roomNumber: 'Property name',
+            roomNumber: 'Room number',
             type: 'Workspace type',
             leaseTerm: 'Lease Term',
             availabilityDate: 'Availability Date',
@@ -94,11 +94,6 @@ class WorkspaceHelperService {
         }
 
         let numberPattern = /^[0-9]+$/;
-
-        // Room number - positive number
-        if (!workspaceData.roomNumber.match(numberPattern)) {
-            throw new Error('Room number must be a positive number.');
-        }
 
         // Seating capacity - positive number
         if (!workspaceData.capacity.match(numberPattern)) {
@@ -278,9 +273,9 @@ class WorkspaceHelperService {
                     <div class="property-state mb-4">${workspaceAddress}</div>
 
                     <div class="property-details mb-3">
-                        <p class="mb-1"><strong>Room Number:</strong> ${workspace.roomNum}</p>
+                        <p class="mb-1"><strong>Room Number:</strong> ${workspace.roomNumber}</p>
                         <p class="mb-1"><strong>Type:</strong> ${workspaceType}</p>
-                        <p class="mb-1"><strong>Availability Date:</strong>  ${this.formatDate(workspace.availabilityDate)}</p>
+                        <p class="mb-1"><strong>Availability Date:</strong>  ${commonHelperService.formatDate(workspace.availabilityDate)}</p>
                         <p class="mb-1"><strong>Lease Term:</strong> ${workspace.leaseTerm}</p>
                         <p class="mb-1"><strong>Price:</strong> $${workspace.price}/${workspace.leaseTerm} </p>
                     </div>

@@ -39,7 +39,7 @@ class AuthRepositoryService {
             return userData;
         } catch (error) {
             console.error("Login failed:", error);
-            throw new Error("Invalid credentials.");
+            throw new Error(error);
         }
     }
 
@@ -56,7 +56,7 @@ class AuthRepositoryService {
 
         } catch (error) {
             console.error("Logout failed:", error);
-            throw new Error("Unable to logout.");
+            throw new Error(error);
         }
     }
 }

@@ -15,7 +15,7 @@ class UserHelperService {
 
         // full name validation
         if (userData.fullName.length < 5) {
-            throw new Error('Fullname must be atleast 3 characters long');
+            throw new Error('Fullname must be atleast 5 characters long');
         }
 
         // phone number validation

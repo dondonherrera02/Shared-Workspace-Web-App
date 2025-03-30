@@ -55,12 +55,14 @@ async function workspaceFormSubmitHandler() {
                 capacity: $('#capacity').val(),
                 leaseTerm: $('#leaseTerm').val(),
                 availabilityDate: $('#availabilityDate').val(),
-                isSmokingAllowed: $('#smokingPolicy').val() === 'Allowed' ? true : false,
                 price: $('#price').val()
             };
 
             // validate the input workspace data
             workspaceHelperService.validateWorkspaceData(workspaceData);
+
+            workspaceData.isSmokingAllowed = $('#smokingPolicy').val() === 'Allowed';
+            workspaceData.price = parseInt($('#price').val(), 10) || 0
 
             if ($workspaceForm.data("workspace-id")) {
                 // update workspace

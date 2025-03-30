@@ -97,7 +97,7 @@ const updateUser = async (req, res) => {
 
          // check if this user is allowed to update this user
          const currentUserId = req.user?.id // this is from middleware
-         if(currentUserId !== currentUser.ownerId) return res.status(401).json({ message: "Unauthorized to update this profile." });
+         if(currentUserId !== currentUser.id) return res.status(401).json({ message: "Unauthorized to update this profile." });
 
         // Update only provided fields
         if (fullName) currentUser.fullName = fullName;
@@ -120,9 +120,11 @@ const updateUser = async (req, res) => {
         }
 
         // Hash password if provided
-        if (password) {
-            currentUser.password = HashPassword(password);
-        }
+        async (password) => {
+            if (password) {
+                currentUser.password = await HashPassword(password);
+            }
+        };
 
         currentUser.updatedDate = new Date().toISOString();
         const updatedUser = await currentUser.save();
