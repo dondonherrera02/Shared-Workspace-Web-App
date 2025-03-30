@@ -148,7 +148,8 @@ const getProperties = async (req, res) => {
         // Get properties with optional filters 
         const properties = await propertyRepository.getPropertiesByParam({
             attributes: ["id", "name", "street", "city", "state", "postalCode", "neighborhood", "squareFeet", "hasParkingGarage", "hasTransportation", "ownerId", "createdDate", "updatedDate"],
-            where: filter
+            where: filter,
+            order: [["createdDate", "DESC"]]
         });
 
         return res.json(properties);

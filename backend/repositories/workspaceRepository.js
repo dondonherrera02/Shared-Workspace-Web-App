@@ -41,7 +41,8 @@ const getWorkspaceById = async (id) => {
         include: [
             {
                 model: userModel,
-                as: 'User'
+                as: 'User',
+                attributes: ["id", "fullName", "phone", "email", "role", "createdDate", "updatedDate"]
             },
             {
                 model: propertyModel,

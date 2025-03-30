@@ -6,7 +6,8 @@
 */
 
 const userRepository = require('../repositories/userRepository');
-const { VerifyPassword, GenerateToken } = require('../utilities/commonHelper');
+const { GenerateToken } = require('../utilities/commonHelper');
+const bcrypt = require('bcrypt');
 
 // Login user
 const login = async (req, res) => {
@@ -29,14 +30,18 @@ const login = async (req, res) => {
         }
 
         // Check if password is valid
-        const isPasswordValid = VerifyPassword(password, existingUser.password);
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid password' });
         }
 
         // Generates token
         const token = GenerateToken(existingUser);
-        return token;
+        return { 
+            token, 
+            userId: existingUser.id,
+            userRole: existingUser.role
+         };
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -46,7 +51,7 @@ const login = async (req, res) => {
 // Logout - clear cookie
 const logout =  (req, res) => {
     // https://www.geeksforgeeks.org/express-js-res-clearcookie-function/
-    res.clearCookie('token'); // frontend set 'token' name in local storage.
+    res.clearCookie('currentUser'); // frontend set 'currentUser' name in local storage.
 };
 
 module.exports = {

@@ -6,14 +6,17 @@
 */
 
 const authManager = require('../managers/authManager');
+const user = require('../models/userModel');
 
 const login = async (req, res) => {
     try {
-        const token = await authManager.login(req, res);
+        const userCredentials = await authManager.login(req, res);
 
         res.status(200).json({
             message: 'User login successfully',
-            user: token
+            userId: userCredentials.userId,
+            userRole: userCredentials.userRole,
+            user: userCredentials.token
         });
     } catch {
     }

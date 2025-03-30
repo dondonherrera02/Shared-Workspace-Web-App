@@ -7,7 +7,7 @@
 
 import { alertifyService } from '../externalservices/alertify.js';
 import { routerService } from '../utilities/router.js';
-import { commonHelperService } from '../utilities/common-helper.js';
+import { workspaceHelperService } from '../utilities/workspace-helper.js';
 import { userRepository } from '../repositories/user-repository.js';
 import { propertyRepository } from '../repositories/property-repository.js';
 import { workspaceRepository } from '../repositories/workspace-repository.js';
@@ -22,7 +22,7 @@ $(document).ready(async function () {
 // set-up workspace form - preparation for save or edit.
 // this function globally accessible through window object
 window.addWorkspace = function(propertyId) {
-    commonHelperService.setUpWorkspaceForm(propertyId, null);
+    workspaceHelperService.setUpWorkspaceForm(propertyId, null);
 }
 
 async function loadWorkspaceCards(){
@@ -33,9 +33,9 @@ async function loadWorkspaceCards(){
 
     // If propertyId exists, filter workspaces by it
     if (propertyId) {
-        await commonHelperService.displayWorkspaceCards(propertyId);
+        await workspaceHelperService.displayWorkspaceCards(propertyId);
     } else {
-        await commonHelperService.displayWorkspaceCards();
+        await workspaceHelperService.displayWorkspaceCards();
     }
 }
 
@@ -50,17 +50,19 @@ async function workspaceFormSubmitHandler() {
             // set up the workspace data to save
             const workspaceData = {
                 propertyId: $('#propertyId').val(), // this foreign key set up during preparation step, should always have value
-                roomNum: $('#roomNum').val(),
+                roomNumber: $('#roomNum').val(),
                 type: $('#type').val(),
                 capacity: $('#capacity').val(),
                 leaseTerm: $('#leaseTerm').val(),
                 availabilityDate: $('#availabilityDate').val(),
-                smokingPolicy: $('#smokingPolicy').val(),
                 price: $('#price').val()
             };
 
             // validate the input workspace data
-            commonHelperService.validateWorkspaceData(workspaceData);
+            workspaceHelperService.validateWorkspaceData(workspaceData);
+
+            workspaceData.isSmokingAllowed = $('#smokingPolicy').val() === 'Allowed';
+            workspaceData.price = parseInt($('#price').val(), 10) || 0
 
             if ($workspaceForm.data("workspace-id")) {
                 // update workspace
@@ -94,7 +96,7 @@ async function workspaceFormSubmitHandler() {
 window.editWorkspace = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
-        commonHelperService.setUpWorkspaceForm(workspaceData.propertyId, workspaceData);
+        workspaceHelperService.setUpWorkspaceForm(workspaceData.propertyId, workspaceData);
     } catch (error) {
         alertifyService.error(error.message);
     }
@@ -128,8 +130,7 @@ window.deleteWorkspace = async function(workspaceId) {
 window.viewWorkspace = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
-        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
-        commonHelperService.setUpWorkspaceView(propertyData, workspaceData);
+        workspaceHelperService.setUpWorkspaceView(workspaceData);
     } catch (error) {
         alertifyService.error(error.message);
     }
@@ -140,9 +141,7 @@ window.viewWorkspace = async function(workspaceId) {
 window.viewContact = async function(workspaceId) {
     try {
         const workspaceData = await workspaceRepository.getWorkspaceById(workspaceId);
-        const userData = await userRepository.getUserInfo(workspaceData.ownerId);
-        const propertyData = await propertyRepository.getPropertyById(workspaceData.propertyId);
-        commonHelperService.setUpContactView(propertyData, userData, workspaceData);
+        workspaceHelperService.setUpContactView(workspaceData);
     } catch (error) {
         alertifyService.error(error.message);
     }
@@ -162,14 +161,14 @@ async function workspaceSearchHandler(){
             state: $('#stateSearch').val(),
             postalCode: $('#postalCodeSearch').val(),
             neighborhood: $('#neighborhoodSearch').val(),
-            parkingGarage: $('#parkingSearch').val(),
+            hasParkingGarage: $('#parkingSearch').val() === 'available' ? true : false,
             squareFeet: $('#squareFeetSearch').val(),
-            transportation: $('#transportationSearch').val(),
+            hasTransportation: $('#transportationSearch').val() === 'available' ? true : false,
             availabilityDate: $('#availabilityDateSearch').val(),
             capacity: $('#capacitySearch').val(),
             leaseTerm: $('#leaseTermSearch').val(),
             price: $('#minPriceSearch').val(),
-            smokingPolicy: $('#smokingPolicySearch').val()
+            isSmokingAllowed: $('#smokingPolicySearch').val() === 'Allowed' ? true : false
         };
 
         // remove empty values
@@ -195,11 +194,9 @@ async function workspaceSearchHandler(){
 
         // append workspace cards
         for (const workspace of results) {
-            // get property linked to ws
-            const workspaceProperty = await propertyRepository.getPropertyById(workspace.propertyId);
         
             // call the helper to create worker workspace card
-            let eachWorkspace = await commonHelperService.createWorkerWorkspaceCard(workspace, workspaceProperty);
+            let eachWorkspace = await workspaceHelperService.createWorkerWorkspaceCard(workspace);
         
             // append to dynamic list
             $propertyList.append(eachWorkspace);

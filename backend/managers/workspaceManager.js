@@ -161,7 +161,7 @@ const deleteWorkspace = async (req, res) => {
         if (currentUserId !== currentWorkspace.ownerId) return res.status(401).json({ message: "Unauthorized to delete this workspace." });
 
         // delete workspace
-        await workspaceRepository.deleteWorkspace(currentWorkspace);
+        await workspaceRepository.deleteWorkspaceByParams({ id: id });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
