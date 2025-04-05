@@ -52,7 +52,7 @@ class WorkspaceHelperService {
             $('#leaseTermView').text(workspace.leaseTerm);
             $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
             $('#seatingView').text(workspace.capacity);
-            $('#smokingView').text(property.isSmokingAllowed ? 'Allowed' : 'Not Allowed');
+            $('#smokingView').text(workspace.isSmokingAllowed ? 'Allowed' : 'Not Allowed');
             $('#parkingView').text(property.hasParkingGarage ? 'Available' : 'Not Available');
             $('#transportationView').text(property.hasTransportation ? 'Available' : 'Not Available');
         }
