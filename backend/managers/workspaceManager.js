@@ -54,7 +54,7 @@ const createWorkspace = async (req, res) => {
 
         // Check if this property belongs to current user
         const currentUserId = req.user?.id // this is from middleware
-        if(existingProperty.ownerId !== currentUserId) {
+        if (existingProperty.ownerId !== currentUserId) {
             return res.status(400).json({ message: `You can’t create a workspace for property '${existingProperty.name}' because it doesn’t belong to you.` });
         }
 
@@ -129,7 +129,7 @@ const updateWorkspace = async (req, res) => {
             currentWorkspace.leaseTerm = leaseTerm;
         }
         if (availabilityDate) currentWorkspace.availabilityDate = availabilityDate;
-        if (isSmokingAllowed) currentWorkspace.isSmokingAllowed = isSmokingAllowed;
+        if (isSmokingAllowed !== undefined) currentWorkspace.isSmokingAllowed = isSmokingAllowed;
         if (price) currentWorkspace.price = price;
 
         // Updates updated date
@@ -191,16 +191,24 @@ const getWorkspaces = async (req, res) => {
         if (postalCode) propertyFilters.postalCode = postalCode;
         if (neighborhood) propertyFilters.neighborhood = neighborhood;
         if (squareFeet) propertyFilters.squareFeet = squareFeet;
-        if (hasParkingGarage) propertyFilters.hasParkingGarage = hasParkingGarage;
-        if (hasTransportation) propertyFilters.hasTransportation = hasTransportation;
 
         // Workspace filters
-        if (type) propertyFilters.type = type;
-        if (leaseTerm) propertyFilters.leaseTerm = leaseTerm;
-        if (availabilityDate) propertyFilters.availabilityDate = availabilityDate;
-        if (isSmokingAllowed) propertyFilters.isSmokingAllowed = isSmokingAllowed;
-        if (capacity) propertyFilters.capacity = capacity;
-        if (price) propertyFilters.price = price;
+        if (type) workspaceFilters.type = type;
+        if (leaseTerm) workspaceFilters.leaseTerm = leaseTerm;
+        if (availabilityDate) workspaceFilters.availabilityDate = availabilityDate;
+        if (capacity) workspaceFilters.capacity = capacity;
+        if (price) workspaceFilters.price = price;
+
+        // 1 = true, 0 = false
+        if (hasParkingGarage !== undefined) {
+            propertyFilters.hasParkingGarage = Number(hasParkingGarage) === 1;
+        }
+        if (hasTransportation !== undefined) {
+            propertyFilters.hasTransportation = Number(hasTransportation) === 1;
+        }
+        if (isSmokingAllowed !== undefined) {
+            workspaceFilters.isSmokingAllowed = Number(isSmokingAllowed) === 1;
+        }
 
         const workspaces = await workspaceRepository.getWorkspacesByParam({
             workspaceFilters,

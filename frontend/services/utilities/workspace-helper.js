@@ -52,9 +52,9 @@ class WorkspaceHelperService {
             $('#leaseTermView').text(workspace.leaseTerm);
             $('#priceView').text(`$${workspace.price}/${workspace.leaseTerm}`);
             $('#seatingView').text(workspace.capacity);
-            $('#smokingView').text(workspace.isSmokingAllowed);
-            $('#parkingView').text(workspace.hasParkingGarage);
-            $('#transportationView').text(workspace.hasTransportation);
+            $('#smokingView').text(property.isSmokingAllowed ? 'Allowed' : 'Not Allowed');
+            $('#parkingView').text(property.hasParkingGarage ? 'Available' : 'Not Available');
+            $('#transportationView').text(property.hasTransportation ? 'Available' : 'Not Available');
         }
     }
 

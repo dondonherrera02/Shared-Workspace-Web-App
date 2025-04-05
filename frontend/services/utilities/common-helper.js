@@ -26,7 +26,7 @@ class CommonHelperService {
             minute: '2-digit',
             second: '2-digit',
             hour12: true,
-            timeZone: 'America/Edmonton'
+            timeZone: 'Asia/Manila'
         });
     }
 
@@ -35,7 +35,7 @@ class CommonHelperService {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
-            timeZone: 'America/Edmonton'
+            timeZone: 'Asia/Manila'
         });
     }
     

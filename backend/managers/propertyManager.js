@@ -92,8 +92,8 @@ const updateProperty = async (req, res) => {
         if (postalCode) currentProperty.postalCode = postalCode;
         if (neighborhood) currentProperty.neighborhood = neighborhood;
         if (squareFeet) currentProperty.squareFeet = squareFeet;
-        if (hasParkingGarage) currentProperty.hasParkingGarage = hasParkingGarage;
-        if (hasTransportation) currentProperty.hasTransportation = hasTransportation;
+        if (hasParkingGarage !== undefined) currentProperty.hasParkingGarage = hasParkingGarage;
+        if (hasTransportation !== undefined) currentProperty.hasTransportation = hasTransportation;
         
         // Updates updated date
         currentProperty.updatedDate = new Date().toISOString();

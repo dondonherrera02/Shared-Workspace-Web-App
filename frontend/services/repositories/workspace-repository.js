@@ -127,14 +127,23 @@ class WorkspaceRepositoryService {
             if (searchWorkspaceRequest.state) queryParams.append("state", searchWorkspaceRequest.state);
             if (searchWorkspaceRequest.postalCode) queryParams.append("postalCode", searchWorkspaceRequest.postalCode);
             if (searchWorkspaceRequest.neighborhood) queryParams.append("neighborhood", searchWorkspaceRequest.neighborhood);
-            if (searchWorkspaceRequest.hasParkingGarage) queryParams.append("hasParkingGarage", searchWorkspaceRequest.hasParkingGarage);
             if (searchWorkspaceRequest.squareFeet) queryParams.append("squareFeet", searchWorkspaceRequest.squareFeet);
-            if (searchWorkspaceRequest.hasTransportation) queryParams.append("hasTransportation", searchWorkspaceRequest.hasTransportation);
             if (searchWorkspaceRequest.availabilityDate) queryParams.append("availabilityDate", searchWorkspaceRequest.availabilityDate);
             if (searchWorkspaceRequest.capacity) queryParams.append("capacity", searchWorkspaceRequest.capacity);
             if (searchWorkspaceRequest.leaseTerm) queryParams.append("leaseTerm", searchWorkspaceRequest.leaseTerm);
             if (searchWorkspaceRequest.price) queryParams.append("price", searchWorkspaceRequest.price);
-            if (searchWorkspaceRequest.isSmokingAllowed) queryParams.append("isSmokingAllowed", searchWorkspaceRequest.isSmokingAllowed);
+
+            if (searchWorkspaceRequest.hasTransportation !== undefined) {
+                queryParams.append("hasTransportation", searchWorkspaceRequest.hasTransportation === 'available' ? 1 : 0);
+            }
+
+            if (searchWorkspaceRequest.hasParkingGarage !== undefined) {
+                queryParams.append("hasParkingGarage", searchWorkspaceRequest.hasParkingGarage === 'available' ? 1 : 0);
+            }
+
+            if (searchWorkspaceRequest.isSmokingAllowed !== undefined) {
+                queryParams.append("isSmokingAllowed", searchWorkspaceRequest.isSmokingAllowed === 'Allowed' ? 1 : 0);
+            }
 
             // build the complete URL
             const url = `${enumService.URL}/api/workspace?${queryParams.toString()}`;

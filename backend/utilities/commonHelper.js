@@ -34,12 +34,24 @@ const GenerateToken = (existingUser) => {
 
 // https://sequelize.org/docs/v7/querying/operators/
 const MakeCaseInsensitiveFilters = (filters) => {
-    return Object.entries(filters || {})  // converts object to array of key-value pairs
+    const where = Object.entries(filters || {})  // converts object to array of key-value pairs
         .reduce((filter, [key, value]) => {  // iterates over each key-value pair
-            // ensure value is a string
-            filter[key] = { [Op.like]: `%${String(value)}%` }; // case-insensitive matching
+            
+            // Check if the value is a boolean
+            if (typeof value === "boolean") {
+                // Direct boolean match (no like operator needed)
+                filter[key] = value;
+            } else {
+                // Ensure value is treated as a string for case-insensitive matching
+                filter[key] = { [Op.like]: `%${String(value)}%` };  // case-insensitive matching
+            }
+
             return filter;
         }, {});  // initial accumulator is an empty object
+    
+    console.log("Filter being applied:", where);
+    
+    return where;
 };
 
 module.exports = {

@@ -8,8 +8,6 @@
 import { alertifyService } from '../externalservices/alertify.js';
 import { routerService } from '../utilities/router.js';
 import { workspaceHelperService } from '../utilities/workspace-helper.js';
-import { userRepository } from '../repositories/user-repository.js';
-import { propertyRepository } from '../repositories/property-repository.js';
 import { workspaceRepository } from '../repositories/workspace-repository.js';
 
 $(document).ready(async function () {
@@ -161,14 +159,14 @@ async function workspaceSearchHandler(){
             state: $('#stateSearch').val(),
             postalCode: $('#postalCodeSearch').val(),
             neighborhood: $('#neighborhoodSearch').val(),
-            hasParkingGarage: $('#parkingSearch').val() === 'available' ? true : false,
             squareFeet: $('#squareFeetSearch').val(),
-            hasTransportation: $('#transportationSearch').val() === 'available' ? true : false,
             availabilityDate: $('#availabilityDateSearch').val(),
             capacity: $('#capacitySearch').val(),
             leaseTerm: $('#leaseTermSearch').val(),
             price: $('#minPriceSearch').val(),
-            isSmokingAllowed: $('#smokingPolicySearch').val() === 'Allowed' ? true : false
+            hasTransportation: $('#transportationSearch').val(),
+            hasParkingGarage: $('#parkingSearch').val(),
+            isSmokingAllowed: $('#smokingPolicySearch').val()
         };
 
         // remove empty values
