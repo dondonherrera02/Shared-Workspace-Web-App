@@ -7,7 +7,6 @@
 
 import { enumService } from '../utilities/enum.js';
 import { propertyRepository } from '../repositories/property-repository.js';
-import { workspaceRepository } from '../repositories/workspace-repository.js';
 import { commonHelperService } from '../utilities/common-helper.js';
 
 // Generic function
@@ -61,8 +60,6 @@ class PropertyHelperService {
         // postal code for Canada - Validation
         if (propertyData.postalCode.length !== 6) {
             throw new Error('Postal code must be 6 characters long.');
-        } else {
-            propertyData.postalCode = propertyData.postalCode.slice(0, 3).toUpperCase() + '-' + propertyData.postalCode.slice(3).toUpperCase();
         }
 
         // validate square feet (must be numbers)
